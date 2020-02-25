@@ -40,6 +40,20 @@ public class UserController {
         return userGetDTOs;
     }
 
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<UserGetDTO> getSpecificUser(@PathVariable("username") String username) {
+        List<User> users = userService.getUsers();
+        List<UserGetDTO> userGetDTOs = new ArrayList<>();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+            }
+        }
+        return userGetDTOs;
+    }
+
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
