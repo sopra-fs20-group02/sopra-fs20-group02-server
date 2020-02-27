@@ -1,11 +1,14 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,18 +43,18 @@ public class UserController {
         return userGetDTOs;
     }
 
-    @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<UserGetDTO> getSpecificUser(@PathVariable("username") String username) {
+    public UserGetDTO getSpecificUser(@PathVariable("id") Long id) {
         List<User> users = userService.getUsers();
-        List<UserGetDTO> userGetDTOs = new ArrayList<>();
         for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+            if (user.getId().equals(id)) {
+                return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
             }
         }
-        return userGetDTOs;
+        //return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserById(id));
+        throw new SopraServiceException("user with id: "+id+" was not found");
     }
 
     @PostMapping("/users")
@@ -67,4 +70,23 @@ public class UserController {
         // convert internal representation of user back to API
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
     }
+
+    @PutMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO findUser(@RequestBody UserPostDTO userPostDTO) {
+        // convert API user to internal representation
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+        // find user
+        //User foundedUser = userService.getUserByUsername(userInput.getUsername(), userInput.getPassword());
+        User foundedUser = userService.getUserByUsername(userInput.getUsername());
+        if(userInput.getPassword().equals(foundedUser.getPassword())){
+            return DTOMapper.INSTANCE.convertEntityToUserGetDTO(foundedUser);
+        }
+        else {
+            throw new SopraServiceException("incorrect password");
+        }
+    }
+
 }

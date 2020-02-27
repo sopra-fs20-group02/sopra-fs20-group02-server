@@ -36,6 +36,21 @@ public class UserService {
     public List<User> getUsers() {
         return this.userRepository.findAll();
     }
+    //------------
+    public User getUserByUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
+    public User getUserById(long id){
+        List<User> allUsers = this.userRepository.findAll();
+        User foundedUser = null;
+        for(User user: allUsers) {
+            if(user.getId() == id){
+                foundedUser = user;
+            }
+        }
+        return foundedUser;
+    }
 
     public User createUser(User newUser) {
         newUser.setToken(UUID.randomUUID().toString());
