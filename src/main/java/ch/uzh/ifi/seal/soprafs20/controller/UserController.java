@@ -43,18 +43,18 @@ public class UserController {
         return userGetDTOs;
     }
 
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO getSpecificUser(@PathVariable("id") Long id) {
-        List<User> users = userService.getUsers();
+        /*List<User> users = userService.getUsers();
         for (User user : users) {
             if (user.getId().equals(id)) {
                 return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
             }
-        }
-        //return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserById(id));
-        throw new SopraServiceException("user with id: "+id+" was not found");
+        }*/
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserById(id));
+        //throw new SopraServiceException("user with id: "+id+" was not found");
     }
 
     @PostMapping("/users")
@@ -86,6 +86,19 @@ public class UserController {
         }
         else {
             throw new SopraServiceException("incorrect password");
+        }
+    }
+
+    @PutMapping(value = "/users/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void updateSpecificUser(@PathVariable("id") long id, @RequestBody UserPostDTO userPostDTO) {
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        if(userInput.getUsername() != null) {
+            userService.updateUsername(id, userInput);
+        }
+        else if(userInput.getBirthDate() != null) {
+            userService.updateBirthDate(id, userInput);
         }
     }
 

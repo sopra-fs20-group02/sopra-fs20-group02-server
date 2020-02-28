@@ -42,14 +42,27 @@ public class UserService {
     }
 
     public User getUserById(long id){
-        List<User> allUsers = this.userRepository.findAll();
-        User foundedUser = null;
+        List<User> allUsers = getUsers();
         for(User user: allUsers) {
             if(user.getId() == id){
-                foundedUser = user;
+                return user;
             }
         }
-        return foundedUser;
+        throw new SopraServiceException("user with id: "+id+" was not found");
+    }
+
+    public void updateUsername(long id, User userInput){
+        User user = getUserById(id);
+        user.setUsername(userInput.getUsername());
+        userRepository.save(user);
+        userRepository.flush();
+    }
+
+    public void updateBirthDate(long id, User userInput){
+        User user = getUserById(id);
+        user.setBirthDate(userInput.getBirthDate());
+        userRepository.save(user);
+        userRepository.flush();
     }
 
     public User createUser(User newUser) {
