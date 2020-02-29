@@ -92,14 +92,9 @@ public class UserController {
     @PutMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public void updateSpecificUser(@PathVariable("id") long id, @RequestBody UserPostDTO userPostDTO) {
+    public void updateSpecificUser(@PathVariable("id") Long id, @RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        if(userInput.getUsername() != null) {
-            userService.updateUsername(id, userInput);
-        }
-        else if(userInput.getBirthDate() != null) {
-            userService.updateBirthDate(id, userInput);
-        }
+        userService.updateUser(userService.getUserById(id), userInput);
     }
 
 }

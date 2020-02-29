@@ -41,26 +41,37 @@ public class UserService {
         return this.userRepository.findByUsername(username);
     }
 
-    public User getUserById(long id){
+    public User getUserById(Long id){
         List<User> allUsers = getUsers();
         for(User user: allUsers) {
-            if(user.getId() == id){
+            if(user.getId().equals(id)){
                 return user;
             }
         }
-        throw new SopraServiceException("user with id: "+id+" was not found");
+        throw new SopraServiceException("User with id: "+id+" was not found");
     }
 
-    public void updateUsername(long id, User userInput){
+    /*public void updateUsername(Long id, User userInput){
         User user = getUserById(id);
         user.setUsername(userInput.getUsername());
         userRepository.save(user);
         userRepository.flush();
     }
 
-    public void updateBirthDate(long id, User userInput){
+    public void updateBirthDate(Long id, User userInput){
         User user = getUserById(id);
         user.setBirthDate(userInput.getBirthDate());
+        userRepository.save(user);
+        userRepository.flush();
+    }*/
+
+    public void updateUser(User user, User userInput){
+        if(userInput.getUsername() != null) {
+            user.setUsername(userInput.getUsername());
+        }
+        if(userInput.getBirthDate() != null) {
+            user.setBirthDate(userInput.getBirthDate());
+        }
         userRepository.save(user);
         userRepository.flush();
     }
@@ -69,7 +80,7 @@ public class UserService {
         newUser.setToken(UUID.randomUUID().toString());
         newUser.setStatus(UserStatus.ONLINE);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         newUser.setCreationDate(dateFormat.format(date));
 
