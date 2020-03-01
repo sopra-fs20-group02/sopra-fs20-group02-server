@@ -3,6 +3,8 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +39,23 @@ public class UserService {
         return this.userRepository.findAll();
     }
     //------------
-    public User getUserByUsername(String username) {
+    public User findUserByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
 
-    public User getUserById(Long id){
+    public User findUserByToken(String token) {
+        return this.userRepository.findByToken(token);
+    }
+
+
+    public User findUserById(Long id){
         List<User> allUsers = getUsers();
         for(User user: allUsers) {
             if(user.getId().equals(id)){
                 return user;
             }
         }
-        throw new SopraServiceException("User with id: "+id+" was not found");
+        throw new UserException("User with id: "+id+" was not found.");
     }
 
     /*public void updateUsername(Long id, User userInput){
@@ -65,14 +72,26 @@ public class UserService {
         userRepository.flush();
     }*/
 
-    public void updateUser(User user, User userInput){
+    public String loginUser(User userInput){
+        User foundUser = findUserByUsername(userInput.getUsername());
+        if(foundUser != null && userInput.getPassword().equals(foundUser.getPassword())){
+            return foundUser.getToken();
+        }
+        else {
+            throw new LoginException("Login failed because credentials are incorrect.");
+        }
+
+    }
+
+    public void updateUser(Long id, User userInput){
+        User foundUser = findUserById(id);
         if(userInput.getUsername() != null) {
-            user.setUsername(userInput.getUsername());
+            foundUser.setUsername(userInput.getUsername());
         }
         if(userInput.getBirthDate() != null) {
-            user.setBirthDate(userInput.getBirthDate());
+            foundUser.setBirthDate(userInput.getBirthDate());
         }
-        userRepository.save(user);
+        userRepository.save(foundUser);
         userRepository.flush();
     }
 

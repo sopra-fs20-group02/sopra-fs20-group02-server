@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -47,14 +48,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO getSpecificUser(@PathVariable("id") Long id) {
-        /*List<User> users = userService.getUsers();
-        for (User user : users) {
-            if (user.getId().equals(id)) {
-                return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
-            }
-        }*/
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.getUserById(id));
-        //throw new SopraServiceException("user with id: "+id+" was not found");
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.findUserById(id));
     }
 
     @PostMapping("/users")
@@ -74,19 +68,11 @@ public class UserController {
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO findUser(@RequestBody UserPostDTO userPostDTO) {
+    public String findUser(@RequestBody UserPostDTO userPostDTO) {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
-        // find user
-        //User foundedUser = userService.getUserByUsername(userInput.getUsername(), userInput.getPassword());
-        User foundedUser = userService.getUserByUsername(userInput.getUsername());
-        if(userInput.getPassword().equals(foundedUser.getPassword())){
-            return DTOMapper.INSTANCE.convertEntityToUserGetDTO(foundedUser);
-        }
-        else {
-            throw new SopraServiceException("incorrect password");
-        }
+        return userService.loginUser(userInput);
     }
 
     @PutMapping(value = "/users/{id}")
@@ -94,7 +80,7 @@ public class UserController {
     @ResponseBody
     public void updateSpecificUser(@PathVariable("id") Long id, @RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        userService.updateUser(userService.getUserById(id), userInput);
+        userService.updateUser(id, userInput);
     }
 
 }
