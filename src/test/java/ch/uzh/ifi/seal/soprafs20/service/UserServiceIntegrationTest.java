@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UserServiceIntegrationTest {
 
+    @Qualifier("userRepository")
     @Autowired
     private UserRepository userRepository;
 
@@ -41,6 +43,8 @@ public class UserServiceIntegrationTest {
         testUser.setName("testName");
         testUser.setUsername("testUsername");
 
+        testUser.setPassword("password");
+
         // when
         User createdUser = userService.createUser(testUser);
 
@@ -49,7 +53,7 @@ public class UserServiceIntegrationTest {
         assertEquals(testUser.getName(), createdUser.getName());
         assertEquals(testUser.getUsername(), createdUser.getUsername());
         assertNotNull(createdUser.getToken());
-        assertEquals(UserStatus.ONLINE, createdUser.getStatus());
+        assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
     }
 
     @Test
@@ -59,6 +63,7 @@ public class UserServiceIntegrationTest {
         User testUser = new User();
         testUser.setName("testName");
         testUser.setUsername("testUsername");
+        testUser.setPassword("password1");
         User createdUser = userService.createUser(testUser);
 
         // attempt to create second user with same username
@@ -67,6 +72,7 @@ public class UserServiceIntegrationTest {
         // change the name but forget about the username
         testUser2.setName("testName2");
         testUser2.setUsername("testUsername");
+        testUser2.setPassword("password2");
 
         // check that an error is thrown
         String exceptionMessage = "The username provided is not unique. Therefore, the user could not be created!";
