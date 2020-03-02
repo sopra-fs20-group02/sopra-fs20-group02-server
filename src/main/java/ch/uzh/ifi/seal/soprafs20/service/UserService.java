@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.exceptions.AlreadyLoggedInException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
@@ -75,6 +76,14 @@ public class UserService {
     public String loginUser(User userInput){
         User foundUser = findUserByUsername(userInput.getUsername());
         if(foundUser != null && userInput.getPassword().equals(foundUser.getPassword())){
+            if(foundUser.getStatus().equals(UserStatus.OFFLINE)) {
+                foundUser.setStatus(UserStatus.ONLINE);
+                userRepository.save(foundUser);
+                userRepository.flush();
+            }
+            /*else {
+                throw new AlreadyLoggedInException();
+            }*/
             return foundUser.getToken();
         }
         else {
@@ -91,13 +100,14 @@ public class UserService {
         if(userInput.getBirthDate() != null) {
             foundUser.setBirthDate(userInput.getBirthDate());
         }
+
         userRepository.save(foundUser);
         userRepository.flush();
     }
 
     public User createUser(User newUser) {
         newUser.setToken(UUID.randomUUID().toString());
-        newUser.setStatus(UserStatus.ONLINE);
+        newUser.setStatus(UserStatus.OFFLINE);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
