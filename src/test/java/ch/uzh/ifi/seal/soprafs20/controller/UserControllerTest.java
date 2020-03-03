@@ -176,8 +176,33 @@ public class UserControllerTest {
                 .content(asJsonString(userPostDTO));
 
         // then
-        mockMvc.perform(putRequest)
-                .andExpect(status().isNoContent());
+        mockMvc.perform(putRequest).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void logoutUser_whenPut() throws Exception {
+        // given
+        User user = new User();
+        user.setId(1L);
+        user.setName("Test User");
+        user.setUsername("testUsername");
+        user.setToken("1");
+        user.setStatus(UserStatus.ONLINE);
+        user.setPassword("testPassword");
+        user.setCreationDate("00/00/0000");
+        user.setBirthDate("00/00/0000");
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setToken("1");
+
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder putRequest = put("/logout/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(putRequest).andExpect(status().isNoContent());
     }
 
     /**

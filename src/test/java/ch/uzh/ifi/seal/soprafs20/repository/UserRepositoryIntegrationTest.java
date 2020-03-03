@@ -49,4 +49,62 @@ public class UserRepositoryIntegrationTest {
         assertEquals(found.getToken(), user.getToken());
         assertEquals(found.getStatus(), user.getStatus());
     }
+
+    @Test
+    public void findByUsername_success() {
+        // given
+        User user = new User();
+        user.setName("Firstname Lastname");
+        user.setUsername("firstname@lastname");
+        user.setStatus(UserStatus.OFFLINE);
+        user.setToken("1");
+
+        user.setId(1L);
+        user.setPassword("password");
+        user.setCreationDate("00/00/0000");
+
+        //entityManager.persist(user);
+        //entityManager.flush();
+        userRepository.save(user);
+        userRepository.flush();
+
+        // when
+        User found = userRepository.findByUsername(user.getUsername());
+
+        // then
+        assertNotNull(found.getId());
+        assertEquals(found.getName(), user.getName());
+        assertEquals(found.getUsername(), user.getUsername());
+        assertEquals(found.getToken(), user.getToken());
+        assertEquals(found.getStatus(), user.getStatus());
+    }
+
+    @Test
+    public void findByToken_success() {
+        // given
+        User user = new User();
+        user.setName("Firstname Lastname");
+        user.setUsername("firstname@lastname");
+        user.setStatus(UserStatus.OFFLINE);
+        user.setToken("1");
+
+        user.setId(1L);
+        user.setPassword("password");
+        user.setCreationDate("00/00/0000");
+
+        //entityManager.persist(user);
+        //entityManager.flush();
+        userRepository.save(user);
+        userRepository.flush();
+
+        // when
+        User found = userRepository.findByToken(user.getToken());
+
+        // then
+        assertNotNull(found.getId());
+        assertEquals(found.getName(), user.getName());
+        assertEquals(found.getUsername(), user.getUsername());
+        assertEquals(found.getToken(), user.getToken());
+        assertEquals(found.getStatus(), user.getStatus());
+    }
 }
