@@ -81,9 +81,9 @@ public class UserService {
                 userRepository.save(foundUser);
                 userRepository.flush();
             }
-            /*else {
+            else {
                 throw new AlreadyLoggedInException();
-            }*/
+            }
             return foundUser.getToken();
         }
         else {
@@ -121,6 +121,13 @@ public class UserService {
 
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    public void logoutUser(String token){
+        User foundUser = findUserByToken(token);
+        foundUser.setStatus(UserStatus.OFFLINE);
+        userRepository.save(foundUser);
+        userRepository.flush();
     }
 
     /**

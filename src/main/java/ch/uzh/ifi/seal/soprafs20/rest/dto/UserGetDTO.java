@@ -8,7 +8,7 @@ public class UserGetDTO {
     private String name;
     private String username;
     private UserStatus status;
-    private String password;
+    //private String password;
     private String creationDate;
     private String birthDate;
     private String token;
@@ -45,13 +45,13 @@ public class UserGetDTO {
         this.status = status;
     }
 
-    public String getPassword() {
+    /*public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
