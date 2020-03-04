@@ -39,7 +39,7 @@ public class UserService {
     public List<User> getUsers() {
         return this.userRepository.findAll();
     }
-    //------------
+
     public User findUserByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
@@ -59,20 +59,8 @@ public class UserService {
         throw new UserException("User with id: "+id+" was not found.");
     }
 
-    /*public void updateUsername(Long id, User userInput){
-        User user = getUserById(id);
-        user.setUsername(userInput.getUsername());
-        userRepository.save(user);
-        userRepository.flush();
-    }
-
-    public void updateBirthDate(Long id, User userInput){
-        User user = getUserById(id);
-        user.setBirthDate(userInput.getBirthDate());
-        userRepository.save(user);
-        userRepository.flush();
-    }*/
-
+    // Returns the user which matches the given username and password
+    // Otherwise it throws an exception
     public User loginUser(User userInput){
         User foundUser = findUserByUsername(userInput.getUsername());
         if(foundUser != null && userInput.getPassword().equals(foundUser.getPassword())){
@@ -92,6 +80,7 @@ public class UserService {
 
     }
 
+    // Updates the username and birthdate of a specific user
     public void updateUser(Long id, User userInput){
         User foundUser = findUserById(id);
         if(userInput.getUsername() != null) {
@@ -105,6 +94,7 @@ public class UserService {
         userRepository.flush();
     }
 
+    // creates a new user with the given input
     public User createUser(User newUser) {
         newUser.setToken(UUID.randomUUID().toString());
         newUser.setStatus(UserStatus.OFFLINE);
@@ -123,6 +113,7 @@ public class UserService {
         return newUser;
     }
 
+    // sets the status of the user which matches the given token to OFFLINE
     public void logoutUser(String token){
         User foundUser = findUserByToken(token);
         foundUser.setStatus(UserStatus.OFFLINE);

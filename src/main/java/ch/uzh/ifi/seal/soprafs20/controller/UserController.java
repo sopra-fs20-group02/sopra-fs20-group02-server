@@ -31,6 +31,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Handles the get request to get all users
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -46,6 +47,7 @@ public class UserController {
         return userGetDTOs;
     }
 
+    // Handles the get request to get a specific users
     @GetMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -53,6 +55,7 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserProfileDTO(userService.findUserById(id));
     }
 
+    // Handles the post request to create a user
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -67,6 +70,7 @@ public class UserController {
         return "http://localhost:8080/users/"+user.getId();
     }
 
+    // Handles the put request to login the user
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -77,6 +81,7 @@ public class UserController {
         return DTOMapper.INSTANCE.convertEntityToUserLoginDTO(userService.loginUser(userInput));
     }
 
+    // Handles the put request to update a specific user
     @PutMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
@@ -85,6 +90,7 @@ public class UserController {
         userService.updateUser(id, userInput);
     }
 
+    // Handles the put request to logout the user
     @PutMapping(value = "/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
