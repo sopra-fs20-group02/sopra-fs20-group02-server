@@ -5,6 +5,8 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserLoginDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserProfileDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,8 +49,8 @@ public class UserController {
     @GetMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO getSpecificUser(@PathVariable("id") Long id) {
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.findUserById(id));
+    public UserProfileDTO getSpecificUser(@PathVariable("id") Long id) {
+        return DTOMapper.INSTANCE.convertEntityToUserProfileDTO(userService.findUserById(id));
     }
 
     @PostMapping("/users")
@@ -68,11 +70,11 @@ public class UserController {
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String findUser(@RequestBody UserPostDTO userPostDTO) {
+    public UserLoginDTO findUser(@RequestBody UserPostDTO userPostDTO) {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
-        return userService.loginUser(userInput);
+        return DTOMapper.INSTANCE.convertEntityToUserLoginDTO(userService.loginUser(userInput));
     }
 
     @PutMapping(value = "/users/{id}")

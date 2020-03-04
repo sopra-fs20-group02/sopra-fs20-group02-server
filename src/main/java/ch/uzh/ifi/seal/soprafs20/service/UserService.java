@@ -73,7 +73,7 @@ public class UserService {
         userRepository.flush();
     }*/
 
-    public String loginUser(User userInput){
+    public User loginUser(User userInput){
         User foundUser = findUserByUsername(userInput.getUsername());
         if(foundUser != null && userInput.getPassword().equals(foundUser.getPassword())){
             if(foundUser.getStatus().equals(UserStatus.OFFLINE)) {
@@ -84,7 +84,7 @@ public class UserService {
             else {
                 throw new AlreadyLoggedInException();
             }
-            return foundUser.getToken();
+            return foundUser;
         }
         else {
             throw new LoginException("Login failed because credentials are incorrect.");
