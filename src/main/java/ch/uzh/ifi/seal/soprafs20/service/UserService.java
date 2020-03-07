@@ -63,7 +63,10 @@ public class UserService {
     // Otherwise it throws an exception
     public User loginUser(User userInput){
         User foundUser = findUserByUsername(userInput.getUsername());
-        if(foundUser != null && userInput.getPassword().equals(foundUser.getPassword())){
+        if(foundUser == null){
+            throw new LoginException("Login failed because credentials are incorrect.");
+        }
+        else if(userInput.getPassword().equals(foundUser.getPassword())){
             if(foundUser.getStatus().equals(UserStatus.OFFLINE)) {
                 foundUser.setStatus(UserStatus.ONLINE);
                 userRepository.save(foundUser);
@@ -77,11 +80,10 @@ public class UserService {
         else {
             throw new LoginException("Login failed because credentials are incorrect.");
         }
-
     }
 
     // Updates the username and birthdate of a specific user
-    public void updateUser(Long id, User userInput){
+    public User updateUser(Long id, User userInput){
         User foundUser = findUserById(id);
         if(userInput.getUsername() != null) {
             foundUser.setUsername(userInput.getUsername());
@@ -92,6 +94,7 @@ public class UserService {
 
         userRepository.save(foundUser);
         userRepository.flush();
+        return foundUser;
     }
 
     // creates a new user with the given input
@@ -114,11 +117,17 @@ public class UserService {
     }
 
     // sets the status of the user which matches the given token to OFFLINE
-    public void logoutUser(String token){
+    public User logoutUser(String token){
         User foundUser = findUserByToken(token);
-        foundUser.setStatus(UserStatus.OFFLINE);
-        userRepository.save(foundUser);
-        userRepository.flush();
+        if(foundUser != null) {
+            foundUser.setStatus(UserStatus.OFFLINE);
+            userRepository.save(foundUser);
+            userRepository.flush();
+        }
+        else {
+            throw new UserException("Invalid token! You will be redirected to the login page.");
+        }
+        return foundUser;
     }
 
     /**
