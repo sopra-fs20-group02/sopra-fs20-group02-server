@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.rest.mapper;
+package ch.uzh.ifi.seal.soprafs20.rest;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserLoginDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserProfileDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
