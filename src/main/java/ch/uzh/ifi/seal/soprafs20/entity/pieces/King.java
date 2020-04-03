@@ -7,10 +7,12 @@ import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Rook extends Piece {
-    public Rook(Vector position, Color color){
+// TODO: make sure castling works
+public class King extends Piece {
+    King(Vector position, Color color){
         super(position, color);
         this.movementVectors.addAll(this.straights);
-        this.movementSteps = 8;
+        this.movementVectors.addAll(this.diagonals);
+        this.movementSteps = 1;
     }
 }
