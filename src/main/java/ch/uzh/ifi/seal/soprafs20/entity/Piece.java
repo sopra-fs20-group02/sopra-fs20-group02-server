@@ -13,7 +13,7 @@ A possible move is not yet checked for other pieces on the field
 public abstract class Piece {
     protected Color color;
     protected Vector position;
-    protected Integer id;
+    protected Integer localId;
 
     protected Board board;
 
@@ -29,9 +29,10 @@ public abstract class Piece {
     protected ArrayList<Vector> verticals;
     protected ArrayList<Vector> straights;
 
-    public Piece(Vector initial, Color color){
+    public Piece(Vector initial, Color color, Integer localId){
         this.position = initial;
         this.color = color;
+        this.localId = localId;
         this.captured = false;
         this.hasMoved = false;
 
@@ -43,32 +44,12 @@ public abstract class Piece {
         this.straights = new ArrayList<Vector>();
 
         // initialize default vector lists
-        this.diagonalsFront.addAll(
-                Arrays.asList(
-                        new Vector(1,1),
-                        new Vector(1,-1)
-                )
-        );
-        this.diagonalsBack.addAll(
-                Arrays.asList(
-                        new Vector(-1,1),
-                        new Vector(-1,-1)
-                )
-        );
+        this.diagonalsFront.addAll(Arrays.asList(new Vector(1,1), new Vector(1,-1)));
+        this.diagonalsBack.addAll(Arrays.asList(new Vector(-1,1), new Vector(-1,-1)));
         this.diagonals.addAll(this.diagonalsFront);
         this.diagonals.addAll(this.diagonalsBack);
-        this.verticals.addAll(
-                Arrays.asList(
-                        new Vector(0,1),
-                        new Vector(0,-1)
-                )
-        );
-        this.horizontals.addAll(
-                Arrays.asList(
-                        new Vector(1,0),
-                        new Vector(-1,0)
-                )
-        );
+        this.verticals.addAll(Arrays.asList(new Vector(0,1), new Vector(0,-1)));
+        this.horizontals.addAll(Arrays.asList(new Vector(1,0), new Vector(-1,0)));
         this.straights.addAll(this.verticals);
         this.straights.addAll(this.horizontals);
     }
@@ -79,8 +60,13 @@ public abstract class Piece {
         this.position.set(new Vector(moveTo));
     }
 
+    public void setCaptured(){
+        this.captured = true;
+    }
+
     public ArrayList<Vector> getPossibleMoves(){
         // TODO: test this !!
+        // TODO: needs different logic for pawn
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
         for (Vector vector : movementVectors){
             for (int i = 1; i < 8; i++) {

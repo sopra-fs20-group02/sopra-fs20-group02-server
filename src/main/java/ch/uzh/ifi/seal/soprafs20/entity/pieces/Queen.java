@@ -5,8 +5,8 @@ import ch.uzh.ifi.seal.soprafs20.constant.Vector;
 import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 
 public class Queen extends Piece {
-    public Queen(Vector position, Color color){
-        super(position, color);
+    public Queen(Vector position, Color color, Integer localId){
+        super(position, color, localId);
         this.movementVectors.addAll(this.straights);
         this.movementVectors.addAll(this.diagonals);
         this.movementSteps = 8;

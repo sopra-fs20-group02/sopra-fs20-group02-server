@@ -6,8 +6,8 @@ import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 
 // TODO: make sure castling works
 public class Bishop extends Piece {
-    public Bishop(Vector position, Color color){
-        super(position, color);
+    public Bishop(Vector position, Color color, Integer localId){
+        super(position, color, localId);
         this.movementVectors.addAll(this.diagonals);
         this.movementSteps = 8;
     }

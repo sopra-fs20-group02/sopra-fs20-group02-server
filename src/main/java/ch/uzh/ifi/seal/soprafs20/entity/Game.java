@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs20.entity;
 
 import ch.uzh.ifi.seal.soprafs20.constant.Vector;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class Game {
@@ -9,11 +11,18 @@ public class Game {
     User playerBlack;
     Board board;
 
+    Instant startTime;
+    Instant endTime;
+
+    Duration playerWhiteElapsedTime;
+    Duration playerBlackElapsedTime;
+
     Long gameID;
     Boolean isFinished;
     User winner;
 
     Game(User playerWhite, User playerBlack){
+
         this.playerWhite = playerWhite;
         this.playerBlack = playerBlack;
         board = new Board();
@@ -33,5 +42,9 @@ public class Game {
             // TODO: throw game not finished exception
         }
         return winner;
+    }
+
+    public Duration elapsed(){
+        return Duration.between(startTime, Instant.now());
     }
 }

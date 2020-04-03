@@ -9,8 +9,8 @@ import java.util.ArrayList;
 // TODO: make sure this class works, as it has differenct functionalities during different steps of the game
 public class Pawn extends Piece {
     ArrayList<Vector> captureVectors;
-    public Pawn(Vector position, Color color){
-        super(position, color);
+    public Pawn(Vector position, Color color, Integer localId ){
+        super(position, color, localId);
         this.captureVectors = new ArrayList<Vector>();
 
         if (color == Color.WHITE){

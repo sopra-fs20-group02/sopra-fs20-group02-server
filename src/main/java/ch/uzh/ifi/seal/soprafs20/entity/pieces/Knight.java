@@ -7,8 +7,8 @@ import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 import java.util.Arrays;
 
 public class Knight extends Piece {
-    public Knight(Vector position, Color color){
-        super(position, color);
+    public Knight(Vector position, Color color, Integer localId){
+        super(position, color, localId);
         this.movementVectors.addAll(Arrays.asList(
                 new Vector(-1,2),
                 new Vector(1,2),
