@@ -1,45 +1,54 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.Vector;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 
 @Entity
 @Table(name = "GAME")
-public class Game {
+public class Game implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
-    Long gameId;
+    private Long gameId;
 
+    @OneToOne
     @Column(nullable = false)
-    User playerWhite;
+    private User playerWhite;
 
-    @Column
-    User playerBlack;
+    @OneToOne
+    @Column()
+    private User playerBlack;
 
-    @Column(nullable = false, unique = true)
-    Board board;
+    @OneToOne
+    @Column(nullable = false)
+    private Board board;
 
-    @Column
-    Instant startTime;
+    @Column()
+    private Instant startTime;
 
-    @Column
-    Instant endTime;
+    @Column()
+    private Instant endTime;
 
-    @Column
-    Duration playerWhiteElapsedTime;
+    @Column()
+    private Duration playerWhiteElapsedTime;
 
-    @Column
-    Duration playerBlackElapsedTime;
+    @Column()
+    private Duration playerBlackElapsedTime;
 
-    @Column
-    Boolean isFinished;
+    @Column()
+    private GameStatus gameStatus;
 
-    @Column
-    User winner;
+    @OneToOne
+    @Column()
+    private User winner;
 
     public Game(User playerWhite){
         this.playerWhite = playerWhite;
@@ -60,7 +69,7 @@ public class Game {
     }
 
     public User getWinner() {
-        if (!isFinished){
+        if (gameStatus != GameStatus.FINISHED){
             // TODO: throw game not finished exception
         }
         return winner;

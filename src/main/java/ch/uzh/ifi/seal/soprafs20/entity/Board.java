@@ -4,7 +4,10 @@ import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.Vector;
 import ch.uzh.ifi.seal.soprafs20.entity.pieces.*;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 COORDINATE SPACE:
@@ -12,16 +15,29 @@ White always plays positive Y axis
 Black plays negative Y axis
 Tile at (1,1) is of BLACK color
  */
-public class Board {
-    private ArrayList<Piece> piecesInGame;
-    private ArrayList<Piece> piecesOutGame;
+@Entity
+@Table(name = "BOARD")
+public class Board implements Serializable {
+    @Id
+    @GeneratedValue
+    private Long boardId;
+
+    @OneToMany
+    @Column
+    private List<Piece> piecesInGame;
+
+    @OneToMany
+    @Column
+    private List<Piece> piecesOutGame;
 
     // All indices are from 1 - 8 (including 8)
     // We ignore the piece at 0, to avoid confusion
     // Empty fields is indicated with a null
+    @OneToMany
+    @Column
     private Piece[][] board = new Piece[9][9];
 
-    Board(){
+    public Board(){
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
                 this.board[i][j] = null;
@@ -29,6 +45,8 @@ public class Board {
         }
         this.piecesInGame = new ArrayList<Piece>();
         this.piecesOutGame = new ArrayList<Piece>();
+
+        // Pawns
         for (int i = 1; i <= 8; i++){
             this.board[i][2] = new Pawn(new Vector(i,2), Color.WHITE, i);
             this.board[i][7] = new Pawn(new Vector(i,7), Color.BLACK, 100+i);
