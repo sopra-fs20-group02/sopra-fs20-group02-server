@@ -20,15 +20,15 @@ public class Game implements Serializable {
     private Long gameId;
 
     @OneToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private User playerWhite;
 
     @OneToOne
-    @Column()
+    @JoinColumn()
     private User playerBlack;
 
     @OneToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Board board;
 
     @Column()
@@ -47,7 +47,7 @@ public class Game implements Serializable {
     private GameStatus gameStatus;
 
     @OneToOne
-    @Column()
+    @JoinColumn()
     private User winner;
 
     public Game(User playerWhite){

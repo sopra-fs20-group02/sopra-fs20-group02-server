@@ -23,17 +23,17 @@ public class Board implements Serializable {
     private Long boardId;
 
     @OneToMany
-    @Column
+    @JoinColumn()
     private List<Piece> piecesInGame;
 
     @OneToMany
-    @Column
+    @JoinColumn()
     private List<Piece> piecesOutGame;
 
     // All indices are from 1 - 8 (including 8)
     // We ignore the piece at 0, to avoid confusion
     // Empty fields is indicated with a null
-    @OneToMany
+    @OneToOne
     @Column
     private Piece[][] board = new Piece[9][9];
 
