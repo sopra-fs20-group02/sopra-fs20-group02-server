@@ -26,10 +26,10 @@ public class Game implements Serializable {
     @OneToOne
     @JoinColumn()
     private User playerBlack;
-/*
+
     @OneToOne
     @JoinColumn()
-    private Board board;*/
+    private Board board;
 
     @Column()
     private Instant startTime;
@@ -37,11 +37,11 @@ public class Game implements Serializable {
     @Column()
     private Instant endTime;
 
-    @Column()
+    /*@Column()
     private Duration playerWhiteElapsedTime;
 
     @Column()
-    private Duration playerBlackElapsedTime;
+    private Duration playerBlackElapsedTime;*/
 
     @Column()
     private GameStatus gameStatus;
@@ -50,11 +50,6 @@ public class Game implements Serializable {
     @JoinColumn()
     private User winner;
 
-    public Game(User playerWhite){
-        this.playerWhite = playerWhite;
-        //board = new Board();
-    }
-
     public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
@@ -62,6 +57,55 @@ public class Game implements Serializable {
     public Long getGameId() {
         return gameId;
     }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setPlayerWhite(User playerWhite) {
+        this.playerWhite = playerWhite;
+    }
+
+    public User getPlayerWhite() {
+        return playerWhite;
+    }
+
+    public User getPlayerBlack() {
+        return playerBlack;
+    }
+
+    public void setPlayerBlack(User playerBlack) {
+        this.playerBlack = playerBlack;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setEndTime(Instant endTime) {
+        this.endTime = endTime;
+    }
+
+    public Instant getEndTime() {
+        return endTime;
+    }
+
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
     /*
     ArrayList<Vector> getPossibleMoves(Piece piece){
         return piece.getPossibleMoves();

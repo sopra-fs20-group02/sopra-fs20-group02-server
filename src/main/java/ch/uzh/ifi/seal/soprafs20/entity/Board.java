@@ -24,23 +24,57 @@ public class Board implements Serializable {
     private Long boardId;
 
     @OneToMany
-    private List<Piece> piecesInGame;
+    private List<Piece> piecesInGame = new ArrayList<>();
 
     @OneToMany
-    private List<Piece> piecesOutGame;
+    private List<Piece> piecesOutGame = new ArrayList<>();
+
+    @OneToMany
+    private List<BoardRow> board = new ArrayList<BoardRow>();
+
+    public Long getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(Long boardId) {
+        this.boardId = boardId;
+    }
+
+    public List<Piece> getPiecesInGame() {
+        return piecesInGame;
+    }
+
+    public void setPiecesInGame(List<Piece> piecesInGame) {
+        this.piecesInGame = piecesInGame;
+    }
+
+    public void setPiecesOutGame(List<Piece> piecesOutGame) {
+        this.piecesOutGame = piecesOutGame;
+    }
+
+    public List<Piece> getPiecesOutGame() {
+        return piecesOutGame;
+    }
+
+    public void setBoard(List<BoardRow> board) {
+        this.board = board;
+    }
+
+    public List<BoardRow> getBoard() {
+        return board;
+    }
 
     // All indices are from 1 - 8 (including 8)
     // We ignore the piece at 0, to avoid confusion
     // Empty fields is indicated with a null
-    @OneToMany
-    private List<BoardRow> board;
 
-    public Board() {
+
+    /*public Board() {
         board = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
             this.board.add(new BoardRow());
         }
-        /*
+
         // Pawns
         for (int i = 1; i <= 8; i++){
             this.board.get(i).addPiece(2, new Pawn(new Vector(i,2), Color.WHITE, i));
@@ -85,8 +119,8 @@ public class Board implements Serializable {
     public Piece getPieceOnTile(Vector vector) {
         //return this.board[vector.getX()][vector.getY()];
         return null;
-    }*/
-
-
     }
+
+
+    }*/
 }

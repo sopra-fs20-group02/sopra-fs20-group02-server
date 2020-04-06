@@ -11,18 +11,33 @@ public class BoardRow implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
-
+    private Long boardRowId;
+/*
     @OneToMany
-    @JoinColumn()
-    private List<Piece> row;
+    private List<Piece> row;*/
 
-    BoardRow() {
+    public Long getId() {
+        return boardRowId;
+    }
+
+    public void setId(Long boardRowId) {
+        this.boardRowId = boardRowId;
+    }
+/*
+    public List<Piece> getRow() {
+        return row;
+    }
+
+    public void setRow(List<Piece> row) {
+        this.row = row;
+    }*/
+
+    /*BoardRow() {
         row = new ArrayList<>();
     }
 
     public void addPiece(int index, Piece piece) {
         row.add(index, piece);
-    }
+    }*/
 
 }
