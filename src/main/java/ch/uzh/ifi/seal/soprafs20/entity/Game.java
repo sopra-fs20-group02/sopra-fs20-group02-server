@@ -26,10 +26,10 @@ public class Game implements Serializable {
     @OneToOne
     @JoinColumn()
     private User playerBlack;
-
+/*
     @OneToOne
     @JoinColumn()
-    private Board board;
+    private Board board;*/
 
     @Column()
     private Instant startTime;
@@ -52,7 +52,7 @@ public class Game implements Serializable {
 
     public Game(User playerWhite){
         this.playerWhite = playerWhite;
-        board = new Board();
+        //board = new Board();
     }
 
     public void setGameId(Long gameId) {

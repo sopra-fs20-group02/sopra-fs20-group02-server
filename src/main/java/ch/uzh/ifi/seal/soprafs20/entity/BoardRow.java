@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class BoardRow implements Serializable {
     private List<Piece> row;
 
     BoardRow() {
-
+        row = new ArrayList<>();
     }
 
     public void addPiece(int index, Piece piece) {

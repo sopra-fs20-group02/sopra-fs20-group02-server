@@ -20,4 +20,8 @@ public class Piece {
     @GeneratedValue
     public Long pieceId;
 
+    public Piece() {
+
+    }
+
 }
