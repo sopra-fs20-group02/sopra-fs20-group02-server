@@ -1,7 +1,12 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
+import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,17 +20,21 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+    private final UserService userService;
 
-    GameController(GameService gameService) {
+    GameController(GameService gameService, UserService userService) {
         this.gameService = gameService;
+        this.userService = userService;
     }
 
     // Handles the request to create a new game
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Game createNewGame(@RequestBody String token) {
-        return gameService.createNewGame(token);
+    public GameGetDTO createNewGame(@RequestBody UserPostDTO userPostDTO) {
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        User playerWhite = userService.findUserByToken(userInput.getToken());
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.createNewGame(playerWhite));
         // TODO: add tests
     }
 

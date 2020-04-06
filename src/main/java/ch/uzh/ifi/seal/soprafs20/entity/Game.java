@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs20.constant.Vector;
+//import ch.uzh.ifi.seal.soprafs20.constant.Vector;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ public class Game implements Serializable {
     private Long gameId;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn()
     private User playerWhite;
 
     @OneToOne
@@ -28,7 +28,7 @@ public class Game implements Serializable {
     private User playerBlack;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn()
     private Board board;
 
     @Column()
@@ -55,6 +55,14 @@ public class Game implements Serializable {
         board = new Board();
     }
 
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
+
+    public Long getGameId() {
+        return gameId;
+    }
+    /*
     ArrayList<Vector> getPossibleMoves(Piece piece){
         return piece.getPossibleMoves();
     }
@@ -78,4 +86,5 @@ public class Game implements Serializable {
     public Duration elapsed(){
         return Duration.between(startTime, Instant.now());
     }
+    */
 }

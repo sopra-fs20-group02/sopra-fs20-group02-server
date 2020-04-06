@@ -35,9 +35,8 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public Game createNewGame(String token) {
-        User playerWhite = userRepository.findByToken(token);
-        Game game = new Game(playerWhite); // PlayerBlack is not known yet
+    public Game createNewGame(User user) {
+        Game game = new Game(user); // PlayerBlack is not known yet
 
         // Save game entity into the database
         gameRepository.save(game);

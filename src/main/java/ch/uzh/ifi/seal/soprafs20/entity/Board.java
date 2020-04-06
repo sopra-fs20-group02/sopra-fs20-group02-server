@@ -1,8 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
-import ch.uzh.ifi.seal.soprafs20.constant.Vector;
-import ch.uzh.ifi.seal.soprafs20.entity.pieces.*;
+//import ch.uzh.ifi.seal.soprafs20.constant.Vector;
+//import ch.uzh.ifi.seal.soprafs20.entity.pieces.*;
+import ch.uzh.ifi.seal.soprafs20.entity.BoardRow;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,43 +24,37 @@ public class Board implements Serializable {
     private Long boardId;
 
     @OneToMany
-    @JoinColumn()
     private List<Piece> piecesInGame;
 
     @OneToMany
-    @JoinColumn()
     private List<Piece> piecesOutGame;
 
     // All indices are from 1 - 8 (including 8)
     // We ignore the piece at 0, to avoid confusion
     // Empty fields is indicated with a null
-    @OneToOne
-    @Column
-    private Piece[][] board = new Piece[9][9];
+    @OneToMany
+    private List<BoardRow> board;
 
-    public Board(){
-        for (int i = 1; i <= 8; i++){
-            for (int j = 1; j <= 8; j++){
-                this.board[i][j] = null;
-            }
+    public Board() {
+        board = new ArrayList<>();
+        for (int i = 1; i <= 8; i++) {
+            this.board.add(new BoardRow());
         }
-        this.piecesInGame = new ArrayList<Piece>();
-        this.piecesOutGame = new ArrayList<Piece>();
-
+        /*
         // Pawns
         for (int i = 1; i <= 8; i++){
-            this.board[i][2] = new Pawn(new Vector(i,2), Color.WHITE, i);
-            this.board[i][7] = new Pawn(new Vector(i,7), Color.BLACK, 100+i);
+            this.board.get(i).addPiece(2, new Pawn(new Vector(i,2), Color.WHITE, i));
+            this.board.get(i).addPiece(7, new Pawn(new Vector(i,7), Color.BLACK, 100+i));
         }
         // Rooks
-        this.board[1][1] = new Rook(new Vector(1,1), Color.WHITE, 9);
-        this.board[8][1] = new Rook(new Vector(8,1), Color.WHITE, 10);
-        this.board[1][8] = new Rook(new Vector(1,8), Color.BLACK, 109);
-        this.board[8][8] = new Rook(new Vector(8,8), Color.BLACK, 110);
+        this.board.get(1).addPiece(1, new Rook(new Vector(1,1), Color.WHITE, 9));
+        this.board.get(8).addPiece(1, new Rook(new Vector(8,1), Color.WHITE, 10));
+        this.board.get(1).addPiece(8, new Rook(new Vector(1,8), Color.BLACK, 109));
+        this.board.get(8).addPiece(8, new Rook(new Vector(8,8), Color.BLACK, 110));
 
         // Bishops
-        this.board[2][1] = new Bishop(new Vector(2,1), Color.WHITE, 11);
-        this.board[7][1] = new Bishop(new Vector(7,1), Color.WHITE, 12);
+        this.board.get(2).addPiece(1, new Bishop(new Vector(2,1), Color.WHITE, 11));
+        this.board.get(7).addPiece(1, new Bishop(new Vector(7,1), Color.WHITE, 12));
         this.board[2][8] = new Bishop(new Vector(2,8), Color.BLACK, 111);
         this.board[7][8] = new Bishop(new Vector(7,8), Color.BLACK, 112);
 
@@ -86,9 +81,12 @@ public class Board implements Serializable {
         }
     }
 
+
     public Piece getPieceOnTile(Vector vector) {
-        return this.board[vector.getX()][vector.getY()];
+        //return this.board[vector.getX()][vector.getY()];
+        return null;
+    }*/
+
+
     }
-
-
 }

@@ -1,4 +1,5 @@
-package ch.uzh.ifi.seal.soprafs20.entity.pieces;
+/*package ch.uzh.ifi.seal.soprafs20.entity.pieces;
+
 
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.Vector;
@@ -11,4 +12,4 @@ public class Bishop extends Piece {
         this.movementVectors.addAll(this.diagonals);
         this.movementSteps = 8;
     }
-}
+}*/

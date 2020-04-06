@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.constant;
+/*package ch.uzh.ifi.seal.soprafs20.constant;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.lang.reflect.Array;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 /**
  * Simple integer vector class
  */
+/*
 public class Vector {
     private Integer x;
     private Integer y;
@@ -90,3 +91,5 @@ public class Vector {
         return y;
     }
 }
+
+ */
