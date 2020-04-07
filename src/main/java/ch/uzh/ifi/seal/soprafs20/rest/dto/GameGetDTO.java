@@ -1,17 +1,19 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs20.entity.Board;
+import ch.uzh.ifi.seal.soprafs20.entity.BoardRow;
+import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 public class GameGetDTO {
     private Long gameId;
     private User playerWhite;
     private User playerBlack;
-    private Board board;
+    private List<Piece> pieces;
     private Instant startTime;
     private Instant endTime;
     /*private Duration playerWhiteElapsedTime;
@@ -34,12 +36,12 @@ public class GameGetDTO {
         this.playerWhite = playerWhite;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public void setPieces(List<Piece> pieces) {
+        this.pieces = pieces;
     }
 
-    public Board getBoard() {
-        return board;
+    public List<Piece> getPieces() {
+        return pieces;
     }
 
     public void setPlayerBlack(User playerBlack) {

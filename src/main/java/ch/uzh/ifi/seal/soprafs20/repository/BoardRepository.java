@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.repository;
+/*package ch.uzh.ifi.seal.soprafs20.repository;
 
 import ch.uzh.ifi.seal.soprafs20.entity.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +9,4 @@ import java.util.Optional;
 @Repository("boardRepository")
 public interface BoardRepository extends JpaRepository<Board, Long> {
     Board findByBoardId(Long boardId);
-}
+}*/

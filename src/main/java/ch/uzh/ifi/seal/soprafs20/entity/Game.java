@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "GAME")
@@ -27,9 +28,11 @@ public class Game implements Serializable {
     @JoinColumn()
     private User playerBlack;
 
-    @OneToOne
-    @JoinColumn()
-    private Board board;
+    /*@OneToMany
+    private List<BoardRow> board = new ArrayList<>(8);*/
+
+    @OneToMany
+    private List<Piece> pieces = new ArrayList<>();
 
     @Column()
     private Instant startTime;
@@ -58,13 +61,13 @@ public class Game implements Serializable {
         return gameId;
     }
 
-    public void setBoard(Board board) {
+    /*public void setBoard(List<BoardRow> board) {
         this.board = board;
     }
 
-    public Board getBoard() {
+    public List<BoardRow> getBoard() {
         return board;
-    }
+    }*/
 
     public void setPlayerWhite(User playerWhite) {
         this.playerWhite = playerWhite;
@@ -104,6 +107,14 @@ public class Game implements Serializable {
 
     public GameStatus getGameStatus() {
         return gameStatus;
+    }
+
+    public List<Piece> getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(List<Piece> pieces) {
+        this.pieces = pieces;
     }
 
     /*

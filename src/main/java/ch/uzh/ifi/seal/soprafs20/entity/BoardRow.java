@@ -14,7 +14,7 @@ public class BoardRow implements Serializable {
     private Long boardRowId;
 
     @OneToMany
-    private List<Piece> row = new ArrayList<>();
+    private List<Piece> row = new ArrayList<>(8);
 
     public Long getBoardRowId() {
         return boardRowId;

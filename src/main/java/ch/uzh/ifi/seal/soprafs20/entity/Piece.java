@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
 //import ch.uzh.ifi.seal.soprafs20.constant.Vector;
+import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.constant.Vector;
 import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContainerFactoryConfigurer;
 
@@ -14,12 +15,24 @@ A possible move is not yet checked for other pieces on the field
  */
 
 @Entity
-@Table(name = "PIECE")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Piece {
 
     @Id
     @GeneratedValue
-    public Long pieceId;
+    protected Long pieceId;
+
+    @Column
+    protected PieceType pieceType;
+
+    @Column
+    protected Color color;
+
+    @Column
+    protected int xCord;
+
+    @Column
+    protected int yCord;
 
     public Long getPieceId() {
         return pieceId;
@@ -28,10 +41,40 @@ public class Piece {
     public void setPieceId(Long pieceId) {
         this.pieceId = pieceId;
     }
-    /*
-    protected Color color;
-    protected Vector position;
-    protected Integer localId;
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public int getXCord() {
+        return xCord;
+    }
+
+    public void setXCord(int xCord) {
+        this.xCord = xCord;
+    }
+
+    public int getYCord() {
+        return yCord;
+    }
+
+    public void setYCord(int yCord) {
+        this.yCord = yCord;
+    }
+
+    public PieceType getPieceType() {
+        return pieceType;
+    }
+
+    public void setPieceType(PieceType pieceType) {
+        this.pieceType = pieceType;
+    }
+
+    /*protected Integer localId;
 
     protected Board board;
 

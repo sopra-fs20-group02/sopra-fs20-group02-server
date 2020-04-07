@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.entity;
+/*package ch.uzh.ifi.seal.soprafs20.entity;
 
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
 //import ch.uzh.ifi.seal.soprafs20.constant.Vector;
@@ -8,7 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.BoardRow;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;*/
 
 /*
 COORDINATE SPACE:
@@ -16,7 +16,7 @@ White always plays positive Y axis
 Black plays negative Y axis
 Tile at (1,1) is of BLACK color
  */
-@Entity
+/*@Entity
 @Table(name = "BOARD")
 public class Board implements Serializable {
     @Id
@@ -62,19 +62,19 @@ public class Board implements Serializable {
 
     public List<BoardRow> getBoard() {
         return board;
-    }
+    }*/
 
     // All indices are from 1 - 8 (including 8)
     // We ignore the piece at 0, to avoid confusion
     // Empty fields is indicated with a null
 
 
-    public Board() {
-        /*for (int i = 1; i <= 8; i++) {
+    /*public Board() {
+        for (int i = 1; i <= 8; i++) {
             this.board.add(new BoardRow());
-        }*/
+        }
     }
-      /*  // Pawns
+        // Pawns
         for (int i = 1; i <= 8; i++){
             this.board.get(i).addPiece(2, new Pawn(new Vector(i,2), Color.WHITE, i));
             this.board.get(i).addPiece(7, new Pawn(new Vector(i,7), Color.BLACK, 100+i));
@@ -122,4 +122,4 @@ public class Board implements Serializable {
 
 
     }*/
-}
+/*}*/

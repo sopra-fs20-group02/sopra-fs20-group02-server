@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
-import ch.uzh.ifi.seal.soprafs20.entity.Board;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
@@ -51,7 +50,7 @@ public interface DTOMapper {
     @Mapping(source = "gameId", target = "gameId")
     @Mapping(source = "playerWhite", target = "playerWhite")
     @Mapping(source = "playerBlack", target = "playerBlack")
-    @Mapping(source = "board", target = "board")
+    @Mapping(source = "pieces", target = "pieces")
     @Mapping(source = "startTime", target = "startTime")
     @Mapping(source = "endTime", target = "endTime")
     @Mapping(source = "gameStatus", target = "gameStatus")
