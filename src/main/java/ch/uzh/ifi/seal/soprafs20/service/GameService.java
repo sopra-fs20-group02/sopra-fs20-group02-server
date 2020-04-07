@@ -54,20 +54,19 @@ public class GameService {
         gameRepository.save(game);
         gameRepository.flush();
 
-
         return game;
     }
 
     private Board createNewBoard() {
         Board board = new Board();
-        /*BoardRow boardRow;
+        BoardRow boardRow;
         for(int i=1;i<=8;i++) {
             boardRow = new BoardRow();
-            board.getBoard().add(i,boardRow);
+            board.getBoard().add(boardRow);
             boardRowRepository.save(boardRow);
-            boardRowRepository.flush();
-        }*/
+        }
         boardRepository.save(board);
+        boardRowRepository.flush();
         boardRepository.flush();
 
         return board;

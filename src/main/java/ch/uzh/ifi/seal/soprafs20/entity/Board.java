@@ -20,7 +20,7 @@ Tile at (1,1) is of BLACK color
 @Table(name = "BOARD")
 public class Board implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
     @OneToMany
@@ -69,13 +69,12 @@ public class Board implements Serializable {
     // Empty fields is indicated with a null
 
 
-    /*public Board() {
-        board = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
+    public Board() {
+        /*for (int i = 1; i <= 8; i++) {
             this.board.add(new BoardRow());
-        }
-
-        // Pawns
+        }*/
+    }
+      /*  // Pawns
         for (int i = 1; i <= 8; i++){
             this.board.get(i).addPiece(2, new Pawn(new Vector(i,2), Color.WHITE, i));
             this.board.get(i).addPiece(7, new Pawn(new Vector(i,7), Color.BLACK, 100+i));
