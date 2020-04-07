@@ -6,8 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.BoardRow;
 import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
-import ch.uzh.ifi.seal.soprafs20.entity.pieces.Pawn;
-import ch.uzh.ifi.seal.soprafs20.entity.pieces.Rook;
+import ch.uzh.ifi.seal.soprafs20.entity.pieces.*;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,19 +93,30 @@ public class GameService {
         }
 
         // Rook
-        pieces.add(createRook(Color.WHITE, 1, 1));
-        pieces.add(createRook(Color.WHITE, 8, 1));
-        pieces.add(createRook(Color.BLACK, 1, 8));
-        pieces.add(createRook(Color.BLACK, 8, 8));
-
+        pieces.add(createPiece(PieceType.ROOK, Color.WHITE, 1, 1));
+        pieces.add(createPiece(PieceType.ROOK, Color.WHITE, 8, 1));
+        pieces.add(createPiece(PieceType.ROOK, Color.BLACK, 1, 8));
+        pieces.add(createPiece(PieceType.ROOK, Color.BLACK, 8, 8));
 
         // Knight
+        pieces.add(createPiece(PieceType.KNIGHT, Color.WHITE, 2, 1));
+        pieces.add(createPiece(PieceType.KNIGHT, Color.WHITE, 7, 1));
+        pieces.add(createPiece(PieceType.KNIGHT, Color.BLACK, 2, 8));
+        pieces.add(createPiece(PieceType.KNIGHT, Color.BLACK, 7, 8));
 
         // Bishop
+        pieces.add(createPiece(PieceType.BISHOP, Color.WHITE, 3, 1));
+        pieces.add(createPiece(PieceType.BISHOP, Color.WHITE, 6, 1));
+        pieces.add(createPiece(PieceType.BISHOP, Color.BLACK, 3, 8));
+        pieces.add(createPiece(PieceType.BISHOP, Color.BLACK, 6, 8));
 
         // Queen
+        pieces.add(createPiece(PieceType.QUEEN, Color.WHITE, 4, 1));
+        pieces.add(createPiece(PieceType.QUEEN, Color.BLACK, 4, 8));
 
         // King
+        pieces.add(createPiece(PieceType.KING, Color.WHITE, 5, 1));
+        pieces.add(createPiece(PieceType.KING, Color.BLACK, 5, 8));
 
         pieceRepository.flush();
 
@@ -126,14 +136,59 @@ public class GameService {
         }*/
     }
 
-    private  Rook createRook(Color c, int x, int y) {
-        Rook rook = new Rook();
-        rook.setPieceType(PieceType.ROOK);
-        rook.setColor(c);
-        rook.setXCord(x);
-        rook.setYCord(y);
-        pieceRepository.save(rook);
-        return rook;
+    private Piece createPiece(PieceType t, Color c, int x, int y) {
+        if(t == PieceType.ROOK) {
+            Rook rook = new Rook();
+            rook.setPieceType(t);
+            rook.setColor(c);
+            rook.setXCord(x);
+            rook.setYCord(y);
+            pieceRepository.save(rook);
+            return rook;
+        }
+
+        else if(t == PieceType.BISHOP) {
+            Bishop bishop = new Bishop();
+            bishop.setPieceType(t);
+            bishop.setColor(c);
+            bishop.setXCord(x);
+            bishop.setYCord(y);
+            pieceRepository.save(bishop);
+            return bishop;
+        }
+
+        else if(t == PieceType.KNIGHT) {
+            Knight knight = new Knight();
+            knight.setPieceType(t);
+            knight.setColor(c);
+            knight.setXCord(x);
+            knight.setYCord(y);
+            pieceRepository.save(knight);
+            return knight;
+        }
+
+        else if(t == PieceType.QUEEN) {
+            Queen queen = new Queen();
+            queen.setPieceType(t);
+            queen.setColor(c);
+            queen.setXCord(x);
+            queen.setYCord(y);
+            pieceRepository.save(queen);
+            return queen;
+        }
+
+        else if(t == PieceType.KING) {
+            King king = new King();
+            king.setPieceType(t);
+            king.setColor(c);
+            king.setXCord(x);
+            king.setYCord(y);
+            pieceRepository.save(king);
+            return king;
+        }
+        else {
+            return null;
+        }
     }
 
 }
