@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs20.entity.BoardRow;
 import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 

@@ -33,10 +33,9 @@ public class GameController {
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GameGetDTO createNewGame(@RequestBody UserPostDTO userPostDTO) {
+    public Long createNewGame(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        User playerWhite = userService.findUserByToken(userInput.getToken());
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.createNewGame(playerWhite));
+        return gameService.createNewGame(userInput).getGameId();
         // TODO: add tests
     }
 

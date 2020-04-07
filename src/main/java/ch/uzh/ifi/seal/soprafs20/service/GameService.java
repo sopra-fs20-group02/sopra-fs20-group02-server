@@ -1,13 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
+import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
-import ch.uzh.ifi.seal.soprafs20.entity.BoardRow;
 import ch.uzh.ifi.seal.soprafs20.entity.Piece;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.pieces.*;
+import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserLoginDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +31,13 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
-    private final BoardRowRepository boardRowRepository;
     private final PieceRepository pieceRepository;
 
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository,
-                       BoardRowRepository boardRowRepository, PieceRepository pieceRepository) {
+    public GameService(GameRepository gameRepository, UserRepository userRepository, PieceRepository pieceRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
-        this.boardRowRepository = boardRowRepository;
         this.pieceRepository = pieceRepository;
     }
 
@@ -46,20 +45,27 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
-    public Game createNewGame(User user) {
-        Game game = new Game(); // PlayerBlack is not known yet
-        game.setPlayerWhite(user);
-        //createNewBoard(game.getBoard());
+    public Game createNewGame(User userInput) {
+        User playerWhite = userRepository.findByToken(userInput.getToken());
+        if(playerWhite != null) {
+            Game game = new Game(); // PlayerBlack is not known yet
+            game.setPlayerWhite(playerWhite);
+            game.setGameStatus(GameStatus.CREATED);
+            //createNewBoard(game.getBoard());
 
-        initPieces(game.getPieces());
+            initPieces(game.getPieces());
 
-        // Save game entity into the database
-        gameRepository.save(game);
-        gameRepository.flush();
+            // Save game entity into the database
+            gameRepository.save(game);
+            gameRepository.flush();
 
-        return game;
+            return game;
+        }
+        else {
+            throw new LoginException("No game was created because no such user exists.");
+        }
     }
-
+/*
     private void createNewBoard(List<BoardRow> board) {
         for(int i=1;i<=8;i++) {
             BoardRow boardRow = new BoardRow();
@@ -69,7 +75,7 @@ public class GameService {
         //initPieces(board);
         boardRowRepository.flush();
     }
-
+*/
     private void initPieces(List<Piece> pieces) {
         // Pawns
         for (int i = 1; i <= 8; i++){
