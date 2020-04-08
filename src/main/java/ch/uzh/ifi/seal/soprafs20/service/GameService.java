@@ -69,9 +69,9 @@ public class GameService {
 
     public GameDB makeMove(Long gameId, Long pieceId, int x, int y){
         GameDB game = gameRepository.findByGameId(gameId);
-        this.board.setGame(game);
+        this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
-        game.setPieces(this.board.getAllPieces());
+        game.setPieces(this.board.getPieces());
         return game;
     }
 

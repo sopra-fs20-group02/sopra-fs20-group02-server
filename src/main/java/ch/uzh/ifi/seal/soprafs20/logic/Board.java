@@ -33,7 +33,7 @@ public class Board {
         }
     }
 
-    public List<PieceDB> getAllPieces(){
+    public List<PieceDB> getPieces(){
         List<PieceDB> allPieces = new ArrayList<PieceDB>();
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
@@ -75,7 +75,7 @@ public class Board {
         getById(pieceId).move(moveTo);
     }
 
-    public void setGame(GameDB game){
+    public void setPieces(GameDB game){
         this.emptyBoard();
         List<PieceDB> pieces = game.getPieces();
 
