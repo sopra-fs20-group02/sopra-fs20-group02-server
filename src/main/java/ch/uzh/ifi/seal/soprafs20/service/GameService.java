@@ -72,6 +72,7 @@ public class GameService {
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
         game.setPieces(this.board.getPieces());
+        this.savePieces(this.board.getPieces());
         return game;
     }
 
@@ -109,6 +110,10 @@ public class GameService {
         pieces.add(createPiece(PieceType.KING, Color.WHITE, 5, 1));
         pieces.add(createPiece(PieceType.KING, Color.BLACK, 5, 8));
 
+        this.savePieces(pieces);
+    }
+
+    private void savePieces(List<PieceDB> pieces){
         for (PieceDB pieceDB : pieces){
             this.pieceRepository.save(pieceDB);
         }
