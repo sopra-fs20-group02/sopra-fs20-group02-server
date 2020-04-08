@@ -1,80 +1,21 @@
-package ch.uzh.ifi.seal.soprafs20.entity;
-import ch.uzh.ifi.seal.soprafs20.constant.Color;
-//import ch.uzh.ifi.seal.soprafs20.constant.Vector;
-import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
-import ch.uzh.ifi.seal.soprafs20.constant.Vector;
-import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContainerFactoryConfigurer;
+package ch.uzh.ifi.seal.soprafs20.logic;
 
-import javax.persistence.*;
+import ch.uzh.ifi.seal.soprafs20.constant.Color;
+import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
+import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/*
-Abstract class of pieces
-A possible move is not yet checked for other pieces on the field
- */
-
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Piece {
-
-    @Id
-    @GeneratedValue
-    protected Long pieceId;
-
-    @Column
-    protected PieceType pieceType;
-
-    @Column
+@Getter
+@Setter
+public abstract class Piece {
     protected Color color;
-
-    @Column
-    protected int xCord;
-
-    @Column
-    protected int yCord;
-
-    public Long getPieceId() {
-        return pieceId;
-    }
-
-    public void setPieceId(Long pieceId) {
-        this.pieceId = pieceId;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public int getXCord() {
-        return xCord;
-    }
-
-    public void setXCord(int xCord) {
-        this.xCord = xCord;
-    }
-
-    public int getYCord() {
-        return yCord;
-    }
-
-    public void setYCord(int yCord) {
-        this.yCord = yCord;
-    }
-
-    public PieceType getPieceType() {
-        return pieceType;
-    }
-
-    public void setPieceType(PieceType pieceType) {
-        this.pieceType = pieceType;
-    }
-
-    /*protected Integer localId;
+    protected Vector position;
+    protected Long pieceId;
+    protected PieceType pieceType;
 
     protected Board board;
 
@@ -90,13 +31,20 @@ public class Piece {
     protected ArrayList<Vector> verticals;
     protected ArrayList<Vector> straights;
 
-    public Piece(Vector initial, Color color, Integer localId){
-        this.position = initial;
-        this.color = color;
-        this.localId = localId;
-        this.captured = false;
-        this.hasMoved = false;
+    public Piece(PieceDB piece, Board board){
+        this.position = new Vector(piece.getXCord(), piece.getYCord());
+        this.color = piece.getColor();
+        this.pieceId = piece.getPieceId();
 
+        this.captured = piece.isCaptured();
+        this.hasMoved = piece.isHasMoved();
+
+        this.board = board;
+
+        this.initializeDefaultVectors();
+    }
+
+    public void initializeDefaultVectors(){
         this.diagonalsFront = new ArrayList<Vector>();
         this.diagonalsBack = new ArrayList<Vector>();
         this.diagonals = new ArrayList<Vector>();
@@ -118,6 +66,7 @@ public class Piece {
     // precondition: is legal move
     public void move(Vector moveTo){
         this.hasMoved = true;
+        // TODO: check if piece gets captured
         this.position.set(new Vector(moveTo));
     }
 
@@ -150,20 +99,15 @@ public class Piece {
         return possibleMoves;
     };
 
-    public ArrayList<Vector> getPossibleCaptures(){
-        return this.getPossibleMoves();
+    public PieceDB convertToDB(){
+        PieceDB pieceDB = new PieceDB();
+        pieceDB.setPieceId(this.pieceId);
+        pieceDB.setPieceType(this.pieceType);
+        pieceDB.setColor(this.color);
+        pieceDB.setXCord(this.position.getX());
+        pieceDB.setYCord(this.position.getY());
+        pieceDB.setCaptured(this.captured);
+        pieceDB.setHasMoved(this.hasMoved);
+        return pieceDB;
     }
-
-    public Vector getPosition() {
-        return position;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public Boolean getState(){
-        return captured;
-    }
-    */
 }

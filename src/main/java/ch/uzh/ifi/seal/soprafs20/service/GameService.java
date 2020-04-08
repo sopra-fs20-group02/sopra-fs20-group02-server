@@ -3,21 +3,19 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
-import ch.uzh.ifi.seal.soprafs20.entity.Piece;
+import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.entity.Game;
-import ch.uzh.ifi.seal.soprafs20.entity.pieces.*;
+import ch.uzh.ifi.seal.soprafs20.entity.GameDB;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
+import ch.uzh.ifi.seal.soprafs20.logic.Board;
+import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserLoginDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.plaf.basic.BasicOptionPaneUI;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,69 +31,56 @@ public class GameService {
     private final UserRepository userRepository;
     private final PieceRepository pieceRepository;
 
+    private Board board;
+
 
     @Autowired
     public GameService(GameRepository gameRepository, UserRepository userRepository, PieceRepository pieceRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.pieceRepository = pieceRepository;
+        this.board = new Board();
     }
 
-    public List<Game> getGames() {
+    public List<GameDB> getGames() {
         return this.gameRepository.findAll();
     }
 
-    public Game createNewGame(User userInput) {
+    public GameDB createNewGame(User userInput) {
         User playerWhite = userRepository.findByToken(userInput.getToken());
         if(playerWhite != null) {
-            Game game = new Game(); // PlayerBlack is not known yet
-            game.setPlayerWhite(playerWhite);
-            game.setGameStatus(GameStatus.CREATED);
+            GameDB gameDB = new GameDB(); // PlayerBlack is not known yet
+            gameDB.setPlayerWhite(playerWhite);
+            gameDB.setGameStatus(GameStatus.CREATED);
             //createNewBoard(game.getBoard());
 
-            initPieces(game.getPieces());
+            initPieces(gameDB.getPieces());
 
             // Save game entity into the database
-            gameRepository.save(game);
+            gameRepository.save(gameDB);
             gameRepository.flush();
 
-            return game;
+            return gameDB;
         }
         else {
             throw new LoginException("No game was created because no such user exists.");
         }
     }
-/*
-    private void createNewBoard(List<BoardRow> board) {
-        for(int i=1;i<=8;i++) {
-            BoardRow boardRow = new BoardRow();
-            board.add(boardRow);
-            boardRowRepository.save(boardRow);
-        }
-        //initPieces(board);
-        boardRowRepository.flush();
+
+    public GameDB makeMove(Long gameId, Long pieceId, int x, int y){
+        GameDB game = gameRepository.findByGameId(gameId);
+        this.board.setGame(game);
+        this.board.makeMove(pieceId, new Vector(x,y));
+        game.setPieces(this.board.getAllPieces());
+        return game;
     }
-*/
-    private void initPieces(List<Piece> pieces) {
+
+    private void initPieces(List<PieceDB> pieces) {
         // Pawns
         for (int i = 1; i <= 8; i++){
             // White Pawns
-            Pawn pawnW = new Pawn();
-            pawnW.setColor(Color.WHITE);
-            pawnW.setPieceType(PieceType.PAWN);
-            pawnW.setXCord(i);
-            pawnW.setYCord(2);
-            pieces.add(pawnW);
-            pieceRepository.save(pawnW);
-
-            // Black Pawns
-            Pawn pawnB = new Pawn();
-            pawnB.setColor(Color.WHITE);
-            pawnB.setPieceType(PieceType.PAWN);
-            pawnB.setXCord(i);
-            pawnB.setYCord(7);
-            pieces.add(pawnB);
-            pieceRepository.save(pawnB);
+            pieces.add(createPiece(PieceType.PAWN, Color.WHITE, i, 2));
+            pieces.add(createPiece(PieceType.PAWN, Color.BLACK, i, 7));
         }
 
         // Rook
@@ -124,77 +109,18 @@ public class GameService {
         pieces.add(createPiece(PieceType.KING, Color.WHITE, 5, 1));
         pieces.add(createPiece(PieceType.KING, Color.BLACK, 5, 8));
 
+        for (PieceDB pieceDB : pieces){
+            this.pieceRepository.save(pieceDB);
+        }
         pieceRepository.flush();
-
-        /*for (int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++) {
-                board.get(i).getRow().add(null);
-            }
-            Pawn pawn1 = new Pawn();
-            pieceRepository.save(pawn1);
-            board.get(i).getRow().add(pawn1);
-            board.get(i).getRow().add(null);
-            board.get(i).getRow().add(null);
-            Pawn pawn2 = new Pawn();
-            pieceRepository.save(pawn2);
-            board.get(i).getRow().add(pawn2);
-
-        }*/
     }
 
-    private Piece createPiece(PieceType t, Color c, int x, int y) {
-        if(t == PieceType.ROOK) {
-            Rook rook = new Rook();
-            rook.setPieceType(t);
-            rook.setColor(c);
-            rook.setXCord(x);
-            rook.setYCord(y);
-            pieceRepository.save(rook);
-            return rook;
-        }
-
-        else if(t == PieceType.BISHOP) {
-            Bishop bishop = new Bishop();
-            bishop.setPieceType(t);
-            bishop.setColor(c);
-            bishop.setXCord(x);
-            bishop.setYCord(y);
-            pieceRepository.save(bishop);
-            return bishop;
-        }
-
-        else if(t == PieceType.KNIGHT) {
-            Knight knight = new Knight();
-            knight.setPieceType(t);
-            knight.setColor(c);
-            knight.setXCord(x);
-            knight.setYCord(y);
-            pieceRepository.save(knight);
-            return knight;
-        }
-
-        else if(t == PieceType.QUEEN) {
-            Queen queen = new Queen();
-            queen.setPieceType(t);
-            queen.setColor(c);
-            queen.setXCord(x);
-            queen.setYCord(y);
-            pieceRepository.save(queen);
-            return queen;
-        }
-
-        else if(t == PieceType.KING) {
-            King king = new King();
-            king.setPieceType(t);
-            king.setColor(c);
-            king.setXCord(x);
-            king.setYCord(y);
-            pieceRepository.save(king);
-            return king;
-        }
-        else {
-            return null;
-        }
+    private PieceDB createPiece(PieceType pieceType, Color color, int x, int y) {
+        PieceDB piece = new PieceDB();
+        piece.setPieceType(pieceType);
+        piece.setColor(color);
+        piece.setXCord(x);
+        piece.setYCord(y);
+        return piece;
     }
-
 }

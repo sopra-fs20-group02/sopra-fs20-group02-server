@@ -1,7 +1,5 @@
-package ch.uzh.ifi.seal.soprafs20.constant;
+package ch.uzh.ifi.seal.soprafs20.logic;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

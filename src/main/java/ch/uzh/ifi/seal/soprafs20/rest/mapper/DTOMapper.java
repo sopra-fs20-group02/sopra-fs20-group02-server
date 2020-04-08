@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
-import ch.uzh.ifi.seal.soprafs20.entity.Game;
+import ch.uzh.ifi.seal.soprafs20.entity.GameDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import org.mapstruct.*;
@@ -54,5 +54,5 @@ public interface DTOMapper {
     @Mapping(source = "startTime", target = "startTime")
     @Mapping(source = "endTime", target = "endTime")
     @Mapping(source = "gameStatus", target = "gameStatus")
-    GameGetDTO convertEntityToGameGetDTO(Game game);
+    GameGetDTO convertEntityToGameGetDTO(GameDB gameDB);
 }
