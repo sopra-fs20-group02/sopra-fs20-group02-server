@@ -33,7 +33,6 @@ public class GameService {
 
     private Board board;
 
-
     @Autowired
     public GameService(GameRepository gameRepository, UserRepository userRepository, PieceRepository pieceRepository) {
         this.gameRepository = gameRepository;

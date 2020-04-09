@@ -17,7 +17,6 @@ A possible move is not yet checked for other pieces on the field
 // Auto generate getters and setters
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PieceDB {
 
     public PieceDB(){
