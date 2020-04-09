@@ -116,7 +116,7 @@ public class InterfaceTest {
      * Get list of games
      * @throws Exception
      */
-    @Test
+    /*@Test
     @Order(3)
     public void listOfGames_givenValidId_shouldReturnGames() throws Exception {
         JSONObject json = new JSONObject();
@@ -135,13 +135,13 @@ public class InterfaceTest {
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
         assertThat(response.getBody()).contains("playersOnline");
         assertThat(response.getBody()).contains("gamesBeingPlayed");
-    }
+    }*/
 
     /**
      * Make move in chess game
      * @throws Exception
      */
-    @Test
+    /*@Test
     @Order(4)
     public void makeMove_givenValidId_shouldReturnStatus() throws Exception {
         JSONObject json = new JSONObject();
@@ -160,13 +160,13 @@ public class InterfaceTest {
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
         assertThat(response.getBody()).contains("game");
         assertThat(response.getBody()).contains("gameStatus");
-    }
+    }*/
 
     /**
      * Make move in chess game
      * @throws Exception
      */
-    @Test
+    /*@Test
     @Order(5)
     public void getHistory_givenValidId_shouldReturnOk() throws Exception {
         JSONObject json = new JSONObject();
@@ -184,7 +184,7 @@ public class InterfaceTest {
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
         assertThat(response.getBody()).contains("userStats");
-    }
+    }*/
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed
