@@ -9,7 +9,6 @@ import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TODO: make sure this class works, as it has differenct functionalities during different steps of the game
 public class Pawn extends Piece {
     ArrayList<Vector> captureVectors;
     public Pawn(PieceDB pieceDB, Board board){
@@ -33,6 +32,15 @@ public class Pawn extends Piece {
         this.pieceType = PieceType.PAWN;
     }
 
+    // precondition: is legal move
+    @Override
+    public void move(Vector moveTo){
+        this.hasMoved = true;
+        this.movementSteps = 1;
+        this.position.set(new Vector(moveTo));
+    }
+
+    // Pawn is the only piece with different freedoms in movement for captures and movements
     @Override
     public ArrayList<Vector> getPossibleMoves(){
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();

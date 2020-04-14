@@ -2,9 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.logic;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -25,7 +23,6 @@ public class Board {
 
     private PieceRepository pieceRepository;
 
-    @Autowired
     public Board(PieceRepository pieceRepository) {
         this.pieceRepository = pieceRepository;
     }

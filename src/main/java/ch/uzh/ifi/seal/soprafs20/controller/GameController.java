@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
@@ -28,13 +29,25 @@ public class GameController {
         this.userService = userService;
     }
 
-    // Handles the request to create a new game
+    // Handles the request to create a new game, or join a waiting game
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Long createNewGame(@RequestBody UserPostDTO userPostDTO) {
+    public GameGetDTO joinOrCreateGame(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        return gameService.createNewGame(userInput).getGameId();
+        List<Game> games = gameService.getGames();
+
+        for (Game game : games){
+            if (game.getGameStatus() == GameStatus.WAITING){
+                // Found game that can be joined
+                gameService.joinGame(userInput, game);
+                return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+            }
+        }
+
+        // precondition: no game can be joined
+        Game newGame = gameService.createNewGame(userInput);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(newGame);
         // TODO: add tests
     }
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Game Service
@@ -38,7 +39,7 @@ public class GameService {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.pieceRepository = pieceRepository;
-        this.board = new Board();
+        this.board = new Board(pieceRepository);
     }
 
     public List<Game> getGames() {
@@ -46,11 +47,18 @@ public class GameService {
     }
 
     public Game createNewGame(User userInput) {
-        User playerWhite = userRepository.findByToken(userInput.getToken());
-        if(playerWhite != null) {
-            Game game = new Game(); // PlayerBlack is not known yet
-            game.setPlayerWhite(playerWhite);
-            game.setGameStatus(GameStatus.CREATED);
+        User player = userRepository.findByToken(userInput.getToken());
+        if(player != null) {
+            // randomly assign player to a game
+            Game game = new Game();
+            Random rand = new Random();
+            if (rand.nextBoolean()){
+                game.setPlayerWhite(player);
+            }
+            else {
+                game.setPlayerBlack(player);
+            }
+            game.setGameStatus(GameStatus.WAITING);
             //createNewBoard(game.getBoard());
 
             initPieces(game.getPieces());
@@ -64,6 +72,16 @@ public class GameService {
         else {
             throw new LoginException("No game was created because no such user exists.");
         }
+    }
+
+    public void joinGame(User userInput, Game game){
+        if (game.getPlayerBlack() == null){
+            game.setPlayerBlack(userInput);
+        }
+        else{
+            game.setPlayerWhite(userInput);
+        }
+        game.setGameStatus(GameStatus.FULL);
     }
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){

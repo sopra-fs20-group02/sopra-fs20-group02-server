@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: make sure castling works
-// TODO: king always needs to check for all possible opponents moves, king cannot commit suicide
 
 public class King extends Piece {
     public King(PieceDB pieceDB, Board board){
@@ -20,6 +19,7 @@ public class King extends Piece {
         this.pieceType = PieceType.KING;
     }
 
+    // A King cannot commit suicide, thus it needs to be checked weather a move can be made differently
     @Override
     public ArrayList<Vector> getPossibleMoves(){
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
