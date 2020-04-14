@@ -66,12 +66,7 @@ public abstract class Piece {
     // precondition: is legal move
     public void move(Vector moveTo){
         this.hasMoved = true;
-        // TODO: check if piece gets captured
         this.position.set(new Vector(moveTo));
-    }
-
-    public void setCaptured(){
-        this.captured = true;
     }
 
     public ArrayList<Vector> getPossibleMoves(){

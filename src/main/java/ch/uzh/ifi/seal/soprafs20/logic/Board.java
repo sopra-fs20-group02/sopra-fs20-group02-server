@@ -98,7 +98,16 @@ public class Board {
     }
 
     public void makeMove(Long pieceId, Vector moveTo){
-        getById(pieceId).move(moveTo);
+        Piece piece = getById(pieceId);
+        this.board[piece.position.getX()][piece.position.getY()] = null;
+        this.board[moveTo.getX()][moveTo.getY()] = piece;
+        piece.move(moveTo);
+
+        Piece captured = this.getPieceOnTile(moveTo);
+        if (captured != null){
+            captured.setCaptured(true);
+            this.piecesOutGame.add(captured);
+        }
     }
 
     public void setPieces(Game game){
