@@ -79,7 +79,7 @@ public abstract class Piece {
         // TODO: needs different logic for pawn
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
         for (Vector vector : movementVectors){
-            for (int i = 1; i < 8; i++) {
+            for (int i = 1; i <= this.movementSteps; i++) {
                 Vector current = new Vector(vector).mulS(i);
                 if (!current.checkBounds()){
                     break;

@@ -1,9 +1,12 @@
 package ch.uzh.ifi.seal.soprafs20.logic;
-import ch.uzh.ifi.seal.soprafs20.entity.GameDB;
+import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,13 @@ public class Board {
     private Piece[][] board = new Piece[9][9];
     private ArrayList<Piece> piecesOutGame;
 
+    private PieceRepository pieceRepository;
+
+    @Autowired
+    public Board(PieceRepository pieceRepository) {
+        this.pieceRepository = pieceRepository;
+    }
+
     public Piece getPieceOnTile(Vector vector) {
         return this.board[vector.getX()][vector.getY()];
     }
@@ -33,19 +43,35 @@ public class Board {
         }
     }
 
-    public List<PieceDB> getPieces(){
-        List<PieceDB> allPieces = new ArrayList<PieceDB>();
+    public List<Piece> getPieces(){
+        List<Piece> pieces = new ArrayList<Piece>();
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
                 if (this.board[i][j] != null){
-                    allPieces.add(this.board[i][j].convertToDB());
+                    pieces.add(this.board[i][j]);
                 }
             }
         }
         for (Piece piece : piecesOutGame){
-            allPieces.add(piece.convertToDB());
+            pieces.add(piece);
         }
-        return allPieces;
+        return pieces;
+    }
+
+    public List<PieceDB> saveToRepository(){
+        List<Piece> pieces = this.getPieces();
+        ArrayList<PieceDB> databasePieces = new ArrayList<PieceDB>();
+        for (Piece piece : pieces){
+            PieceDB pieceDB = pieceRepository.findByPieceId(piece.getPieceId());
+            pieceDB.setPieceType(piece.getPieceType());
+            pieceDB.setColor(piece.getColor());
+            pieceDB.setXCord(piece.getPosition().getX());
+            pieceDB.setYCord(piece.getPosition().getY());
+            pieceDB.setCaptured(piece.getCaptured());
+            pieceDB.setHasMoved(piece.getHasMoved());
+            databasePieces.add(pieceDB);
+        }
+        return databasePieces;
     }
 
     public Piece getById(Long id){
@@ -67,15 +93,15 @@ public class Board {
         throw new Error();
     }
 
-    public ArrayList<Vector> getPossibleMoves(PieceDB pieceDB){
-        return getById(pieceDB.getPieceId()).getPossibleMoves();
+    public ArrayList<Vector> getPossibleMoves(Long pieceId){
+        return getById(pieceId).getPossibleMoves();
     }
 
     public void makeMove(Long pieceId, Vector moveTo){
         getById(pieceId).move(moveTo);
     }
 
-    public void setPieces(GameDB game){
+    public void setPieces(Game game){
         this.emptyBoard();
         List<PieceDB> pieces = game.getPieces();
 

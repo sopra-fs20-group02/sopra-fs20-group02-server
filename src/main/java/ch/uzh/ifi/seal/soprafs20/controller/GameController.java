@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.entity.GameDB;
+import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -43,11 +43,11 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<GameGetDTO> getGames() {
-        List<GameDB> gameDBS = gameService.getGames();
+        List<Game> games = gameService.getGames();
         List<GameGetDTO> gameGetDTOs = new ArrayList<>();
 
-        for (GameDB gameDB : gameDBS) {
-            gameGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameDB));
+        for (Game game : games) {
+            gameGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
         }
 
         return gameGetDTOs;

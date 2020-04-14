@@ -33,11 +33,37 @@ public class Pawn extends Piece {
         this.pieceType = PieceType.PAWN;
     }
 
-    // precondition: is legal move
     @Override
-    public void move(Vector moveTo){
-        this.position.set(moveTo);
-        this.movementSteps = 1;
-    }
+    public ArrayList<Vector> getPossibleMoves(){
+        ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
+        for (Vector vector : movementVectors){
+            for (int i = 1; i <= this.movementSteps; i++) {
+                Vector current = new Vector(vector).mulS(i);
+                if (!current.checkBounds()){
+                    break;
+                }
+                Piece piece = this.board.getPieceOnTile(current);
+                if (piece != null){
+                    break;
+                }
+                else{
+                    possibleMoves.add(current);
+                }
+            }
+        }
+
+        for (Vector vector : captureVectors){
+            Vector current = new Vector(vector).mulS(1);
+            if (!current.checkBounds()){
+                continue;
+            }
+            Piece piece = this.board.getPieceOnTile(current);
+            if (piece != null && piece.getColor() != this.color){
+                possibleMoves.add(current);
+            }
+        }
+
+        return possibleMoves;
+    };
 }
 

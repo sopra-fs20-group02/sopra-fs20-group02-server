@@ -3,9 +3,9 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
+import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.entity.GameDB;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
@@ -41,38 +41,45 @@ public class GameService {
         this.board = new Board();
     }
 
-    public List<GameDB> getGames() {
+    public List<Game> getGames() {
         return this.gameRepository.findAll();
     }
 
-    public GameDB createNewGame(User userInput) {
+    public Game createNewGame(User userInput) {
         User playerWhite = userRepository.findByToken(userInput.getToken());
         if(playerWhite != null) {
-            GameDB gameDB = new GameDB(); // PlayerBlack is not known yet
-            gameDB.setPlayerWhite(playerWhite);
-            gameDB.setGameStatus(GameStatus.CREATED);
+            Game game = new Game(); // PlayerBlack is not known yet
+            game.setPlayerWhite(playerWhite);
+            game.setGameStatus(GameStatus.CREATED);
             //createNewBoard(game.getBoard());
 
-            initPieces(gameDB.getPieces());
+            initPieces(game.getPieces());
 
             // Save game entity into the database
-            gameRepository.save(gameDB);
+            gameRepository.save(game);
             gameRepository.flush();
 
-            return gameDB;
+            return game;
         }
         else {
             throw new LoginException("No game was created because no such user exists.");
         }
     }
 
-    public GameDB makeMove(Long gameId, Long pieceId, int x, int y){
-        GameDB game = gameRepository.findByGameId(gameId);
+    public Game makeMove(Long gameId, Long pieceId, int x, int y){
+        Game game = gameRepository.findByGameId(gameId);
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
-        game.setPieces(this.board.getPieces());
-        this.savePieces(this.board.getPieces());
+        // Updates all pieces in repository and saves it to the database game instance
+        game.setPieces(this.board.saveToRepository());
         return game;
+    }
+
+    public List<Vector> getPossibleMoves(Long gameId, Long pieceId){
+        Game game = gameRepository.findByGameId(gameId);
+        this.board.setPieces(game);
+        return this.board.getPossibleMoves(pieceId);
+        // nothing in the database needs to be updated
     }
 
     private void initPieces(List<PieceDB> pieces) {

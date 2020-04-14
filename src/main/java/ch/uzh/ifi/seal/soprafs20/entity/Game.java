@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "GAME")
-public class GameDB implements Serializable {
+public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
