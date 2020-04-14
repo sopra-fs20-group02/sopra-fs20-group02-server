@@ -89,7 +89,7 @@ public class GameService {
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
         // Updates all pieces in repository and saves it to the database game instance
-        game.setPieces(this.board.saveToRepository());
+        game.setPieces(this.board.saveAndGetPieces());
         return game;
     }
 

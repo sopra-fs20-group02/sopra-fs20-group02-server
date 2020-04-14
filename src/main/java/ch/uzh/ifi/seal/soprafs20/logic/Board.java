@@ -55,7 +55,11 @@ public class Board {
         return pieces;
     }
 
-    public List<PieceDB> saveToRepository(){
+    /**
+     * Auto saves pieces to repository
+     * @return
+     */
+    public List<PieceDB> saveAndGetPieces(){
         List<Piece> pieces = this.getPieces();
         ArrayList<PieceDB> databasePieces = new ArrayList<PieceDB>();
         for (Piece piece : pieces){

@@ -67,5 +67,14 @@ public class GameController {
         // TODO: add tests
     }
 
+    // TODO
+    @PostMapping(value = "/games/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void makeMove(@PathVariable("id") Long id, @RequestBody MoveDTO) {
+
+    }
+
+    // TODO: etc...
 
 }
