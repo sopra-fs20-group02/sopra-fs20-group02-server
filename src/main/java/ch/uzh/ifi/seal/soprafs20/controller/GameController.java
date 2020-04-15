@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameMoveDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
@@ -71,7 +72,10 @@ public class GameController {
     @PostMapping(value = "/games/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void makeMove(@PathVariable("id") Long id, @RequestBody MoveDTO) {
+    public Game makeMove(@PathVariable("id") Long id, @RequestBody GameMoveDTO gameMoveDTO) {
+        Game game = gameService.makeMove(gameMoveDTO.getUserId(), gameMoveDTO.getPieceId(),
+                gameMoveDTO.getXDest(), gameMoveDTO.getYDest());
+        return game;
 
     }
 
