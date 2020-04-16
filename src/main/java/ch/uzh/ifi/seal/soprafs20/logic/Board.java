@@ -1,4 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.logic;
+import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
@@ -95,7 +96,44 @@ public class Board {
     }
 
     public ArrayList<Vector> getPossibleMoves(Long pieceId){
-        return getById(pieceId).getPossibleMoves();
+        Piece piece = getById(pieceId);
+        ArrayList<Vector> possibleMoves = piece.getPossibleMoves();
+        if (piece.getPieceType() == PieceType.KING && !piece.getHasMoved()) {
+            ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
+            if (!possibleCastling.isEmpty()) {
+                for (Vector v: possibleCastling) {
+                    possibleMoves.add(v);
+                }
+            }
+        }
+        return possibleMoves;
+    }
+    
+    public ArrayList<Vector> checkForCastle(Long pieceId) {
+        Piece piece = getById(pieceId);
+        ArrayList<Vector> possibleCastling = new ArrayList<>();
+
+        if (piece.getPosition().equals(new Vector(5,1))) {
+
+            if (board[4][1] == null && board[3][1] == null && board[2][1] == null && !board[1][1].getHasMoved()) {
+                possibleCastling.add(new Vector(1,1));
+            }
+            if (board[6][1] == null && board[7][1] == null && !board[8][1].getHasMoved()) {
+                possibleCastling.add(new Vector(8,1));
+            }
+        }
+
+        else if (piece.getPosition().equals(new Vector(5,8))) {
+
+            if (board[4][8] == null && board[3][8] == null && board[2][8] == null && !board[1][8].getHasMoved()) {
+                possibleCastling.add(new Vector(1,8));
+            }
+            if (board[6][8] == null && board[7][8] == null && !board[8][8].getHasMoved()) {
+                possibleCastling.add(new Vector(8,8));
+            }
+        }
+
+        return possibleCastling;
     }
 
     public void makeMove(Long pieceId, Vector moveTo){
