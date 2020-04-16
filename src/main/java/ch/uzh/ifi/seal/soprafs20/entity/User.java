@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Internal User Representation
@@ -47,4 +48,6 @@ public class User implements Serializable {
     @Column()
     private String birthDate;
 
+    @OneToMany
+    private List<Game> gameHistory;
 }

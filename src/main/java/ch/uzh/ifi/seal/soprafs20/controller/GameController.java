@@ -69,6 +69,15 @@ public class GameController {
     }
 
     // TODO
+    @PutMapping(value = "/games/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void leaveGame(@PathVariable("id") Long id, @RequestBody UserPostDTO userPostDTO) {
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+        gameService.leaveGame(id, userInput);
+    }
+
+    // TODO
     @PostMapping(value = "/games/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

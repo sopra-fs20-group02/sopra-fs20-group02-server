@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
@@ -46,6 +47,16 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
+    public Game findByGameId(Long gameId) {
+        Game game = gameRepository.findByGameId(gameId);
+        if(game != null) {
+            return game;
+        }
+        else {
+            throw new UserException("Game with id "+gameId+" was not found.");
+        }
+    }
+
     public Game createNewGame(User userInput) {
         User player = userRepository.findByToken(userInput.getToken());
         if(player != null) {
@@ -75,13 +86,36 @@ public class GameService {
     }
 
     public void joinGame(User userInput, Game game){
+        User player = userRepository.findByToken(userInput.getToken());
         if (game.getPlayerBlack() == null){
-            game.setPlayerBlack(userInput);
+            game.setPlayerBlack(player);
         }
         else{
-            game.setPlayerWhite(userInput);
+            game.setPlayerWhite(player);
         }
         game.setGameStatus(GameStatus.FULL);
+        gameRepository.save(game);
+        gameRepository.flush();
+    }
+
+    public void leaveGame(Long gameId, User userInput){
+        User player = userRepository.findByToken(userInput.getToken());
+        Game game = findByGameId(gameId);
+        if(player != null) {
+            if(player == game.getPlayerBlack()) {
+                game.setWinner(game.getPlayerWhite());
+            }
+            else {
+                game.setWinner(game.getPlayerBlack());
+            }
+            game.getPlayerBlack().getGameHistory().add(game);
+            game.getPlayerWhite().getGameHistory().add(game);
+        }
+        userRepository.save(game.getPlayerBlack());
+        userRepository.save(game.getPlayerWhite());
+        userRepository.flush();
+        gameRepository.save(game);
+        gameRepository.flush();
     }
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){

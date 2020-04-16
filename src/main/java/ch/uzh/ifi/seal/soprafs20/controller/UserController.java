@@ -59,15 +59,12 @@ public class UserController {
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String createUser(@RequestBody UserPostDTO userPostDTO) {
+    public void createUser(@RequestBody UserPostDTO userPostDTO) {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
         // create user
         User user = userService.createUser(userInput);
-
-        // convert internal representation of user back to API
-        return "http://localhost:8080/users/"+user.getId();
     }
 
     // Handles the put request to login the user
