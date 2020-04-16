@@ -49,7 +49,7 @@ public class DTOMapperTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
         user.setBirthDate("00/00/0000");
-        user.setId(1L);
+        user.setUserId(1L);
         user.setCreationDate("11/11/1111");
         user.setPassword("testpassword");
 
@@ -57,7 +57,7 @@ public class DTOMapperTest {
         UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
 
         // check content
-        assertEquals(user.getId(), userGetDTO.getId());
+        assertEquals(user.getUserId(), userGetDTO.getUserId());
         assertEquals(user.getName(), userGetDTO.getName());
         assertEquals(user.getUsername(), userGetDTO.getUsername());
         assertEquals(user.getStatus(), userGetDTO.getStatus());
@@ -88,14 +88,14 @@ public class DTOMapperTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
         user.setBirthDate("00/00/0000");
-        user.setId(1L);
+        user.setUserId(1L);
         user.setCreationDate("11/11/1111");
 
         // MAP -> Create UserProfileDTO
         UserProfileDTO userProfileDTO = DTOMapper.INSTANCE.convertEntityToUserProfileDTO(user);
 
         // check content
-        assertEquals(user.getId(), userProfileDTO.getId());
+        assertEquals(user.getUserId(), userProfileDTO.getUserId());
         assertEquals(user.getUsername(), userProfileDTO.getUsername());
         assertEquals(user.getStatus(), userProfileDTO.getStatus());
         assertEquals(user.getToken(), userProfileDTO.getToken());
@@ -107,9 +107,9 @@ public class DTOMapperTest {
     public void testGetGame_fromGame_toGameGetDTO_success() {
         // Create Users
         User user1 = new User();
-        user1.setId(1L);
+        user1.setUserId(1L);
         User user2 = new User();
-        user2.setId(2L);
+        user2.setUserId(2L);
 
         // create Game
         Game game = new Game();

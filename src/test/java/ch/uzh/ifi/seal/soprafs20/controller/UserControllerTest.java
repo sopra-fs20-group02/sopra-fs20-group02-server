@@ -73,7 +73,7 @@ public class UserControllerTest {
     public void createUser_validInput_userCreated() throws Exception {
         // given
         User user = new User();
-        user.setId(1L);
+        user.setUserId(1L);
         user.setName("Test User");
         user.setUsername("testUsername");
         user.setToken("1");
@@ -94,14 +94,14 @@ public class UserControllerTest {
         // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$", is("http://localhost:8080/users/"+user.getId().toString())));
+                .andExpect(jsonPath("$", is("http://localhost:8080/users/"+user.getUserId().toString())));
     }
 
     @Test
     public void createUser_UsernameAlreadyExists_throwException() throws Exception {
         // given
         User user = new User();
-        user.setId(1L);
+        user.setUserId(1L);
         user.setName("Test User");
         user.setUsername("testUsername");
         user.setToken("1");
@@ -190,7 +190,7 @@ public class UserControllerTest {
     public void givenUser_whenGetUser_returnUser() throws Exception {
         // given
         User user = new User();
-        user.setId(1L);
+        user.setUserId(1L);
         user.setUsername("testUsername");
         user.setToken("1");
         user.setStatus(UserStatus.ONLINE);
@@ -198,16 +198,16 @@ public class UserControllerTest {
         user.setBirthDate("11/11/11111");
 
         // this mocks the UserService -> we define above what the userService should return when getUsers() is called
-        given(userService.findUserById(user.getId())).willReturn(user);
+        given(userService.findUserByUserId(user.getUserId())).willReturn(user);
 
         // when
-        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getId()).contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId()).contentType(MediaType.APPLICATION_JSON);
 
         // then
         mockMvc.perform(getRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$.username", is(user.getUsername())))
                 .andExpect(jsonPath("$.status", is(user.getStatus().toString())))
-                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.id", is(user.getUserId().intValue())))
                 .andExpect(jsonPath("$.creationDate", is(user.getCreationDate())))
                 .andExpect(jsonPath("$.birthDate", is(user.getBirthDate())));
     }
@@ -216,12 +216,12 @@ public class UserControllerTest {
     public void givenUser_whenGetUser_throwException() throws Exception {
         // given
         User user = new User();
-        user.setId(1L);
+        user.setUserId(1L);
 
-        given(userService.findUserById(user.getId())).willThrow(new UserException("User with id: "+user.getId()+" was not found."));
+        given(userService.findUserByUserId(user.getUserId())).willThrow(new UserException("User with id: "+user.getUserId()+" was not found."));
 
         // when
-        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getId()).contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId()).contentType(MediaType.APPLICATION_JSON);
 
         // then
         mockMvc.perform(getRequest).andExpect(status().isNotFound())
@@ -232,7 +232,7 @@ public class UserControllerTest {
     public void updateUser_whenPut_updateSuccessful() throws Exception {
         // given
         User user = new User();
-        user.setId(1L);
+        user.setUserId(1L);
 
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("testUsername");
@@ -242,7 +242,7 @@ public class UserControllerTest {
 
 
         // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder putRequest = put("/users/"+user.getId())
+        MockHttpServletRequestBuilder putRequest = put("/users/"+user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(userPostDTO));
 
@@ -254,17 +254,17 @@ public class UserControllerTest {
     public void updateUser_whenPut_throwException() throws Exception {
         // given
         User user = new User();
-        user.setId(2L);
+        user.setUserId(2L);
 
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("testUsername");
         userPostDTO.setBirthDate("11/11/1111");
 
-        given(userService.updateUser(Mockito.any(), Mockito.any())).willThrow(new UserException("User with id: "+user.getId()+" was not found."));
+        given(userService.updateUser(Mockito.any(), Mockito.any())).willThrow(new UserException("User with id: "+user.getUserId()+" was not found."));
 
 
         // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder putRequest = put("/users/"+user.getId())
+        MockHttpServletRequestBuilder putRequest = put("/users/"+user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(userPostDTO));
 

@@ -30,7 +30,7 @@ public class UserRepositoryIntegrationTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
 
-        user.setId(1L);
+        user.setUserId(1L);
         user.setPassword("password");
         user.setCreationDate("00/00/0000");
 
@@ -43,7 +43,7 @@ public class UserRepositoryIntegrationTest {
         User found = userRepository.findByName(user.getName());
 
         // then
-        assertNotNull(found.getId());
+        assertNotNull(found.getUserId());
         assertEquals(found.getName(), user.getName());
         assertEquals(found.getUsername(), user.getUsername());
         assertEquals(found.getToken(), user.getToken());
@@ -59,7 +59,7 @@ public class UserRepositoryIntegrationTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
 
-        user.setId(1L);
+        user.setUserId(1L);
         user.setPassword("password");
         user.setCreationDate("00/00/0000");
 
@@ -72,7 +72,7 @@ public class UserRepositoryIntegrationTest {
         User found = userRepository.findByUsername(user.getUsername());
 
         // then
-        assertNotNull(found.getId());
+        assertNotNull(found.getUserId());
         assertEquals(found.getName(), user.getName());
         assertEquals(found.getUsername(), user.getUsername());
         assertEquals(found.getToken(), user.getToken());
@@ -88,7 +88,7 @@ public class UserRepositoryIntegrationTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
 
-        user.setId(1L);
+        user.setUserId(1L);
         user.setPassword("password");
         user.setCreationDate("00/00/0000");
 
@@ -101,7 +101,7 @@ public class UserRepositoryIntegrationTest {
         User found = userRepository.findByToken(user.getToken());
 
         // then
-        assertNotNull(found.getId());
+        assertNotNull(found.getUserId());
         assertEquals(found.getName(), user.getName());
         assertEquals(found.getUsername(), user.getUsername());
         assertEquals(found.getToken(), user.getToken());
