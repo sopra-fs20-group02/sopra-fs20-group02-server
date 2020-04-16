@@ -136,6 +136,7 @@ public class Board {
         return possibleCastling;
     }
 
+    // TODO: prevent king form suicide
     public void makeMove(Long pieceId, Vector moveTo){
         Piece piece = getById(pieceId);
         this.board[piece.position.getX()][piece.position.getY()] = null;
@@ -172,7 +173,7 @@ public class Board {
         }
     }
 
-    // Effective castling
+    // Effective castling, king and rook get on their new position
     public void castling(Piece king, Piece rook, Vector kingDest, Vector rookDest) {
         this.board[kingDest.getX()][kingDest.getY()] = king;
         this.board[rookDest.getX()][rookDest.getY()] = rook;

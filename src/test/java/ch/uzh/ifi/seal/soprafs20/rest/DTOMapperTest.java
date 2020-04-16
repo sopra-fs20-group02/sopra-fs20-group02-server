@@ -1,13 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.rest;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.entity.Game;
+import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserLoginDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserProfileDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +25,7 @@ public class DTOMapperTest {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setName("name");
         userPostDTO.setUsername("username");
-        userPostDTO.setPassword("testpassword");
+        userPostDTO.setPassword("tespassword");
         userPostDTO.setBirthDate("00/00/00");
         userPostDTO.setToken("1");
 
@@ -77,7 +80,7 @@ public class DTOMapperTest {
         assertEquals(user.getToken(), userLoginDTO.getToken());
     }
 
-    @Test
+        @Test
     public void testGetUser_fromUser_toUserProfileDTO_success() {
         // create User
         User user = new User();
@@ -98,6 +101,35 @@ public class DTOMapperTest {
         assertEquals(user.getToken(), userProfileDTO.getToken());
         assertEquals(user.getBirthDate(), userProfileDTO.getBirthDate());
         assertEquals(user.getCreationDate(), userProfileDTO.getCreationDate());
+    }
+
+    @Test
+    public void testGetGame_fromGame_toGameGetDTO_success() {
+        // Create Users
+        User user1 = new User();
+        user1.setId(1L);
+        User user2 = new User();
+        user2.setId(2L);
+
+        // create Game
+        Game game = new Game();
+        game.setGameId(1L);
+        game.setPlayerWhite(user1);
+        game.setPlayerBlack(user2);
+        List<PieceDB> pieces = new ArrayList<>();
+        pieces.add(new PieceDB());
+        game.setPieces(pieces);
+        game.setGameStatus(GameStatus.FULL);
+
+        // MAP -> Create GameGetDTO
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+
+        // check content
+        assertEquals(game.getGameId(), gameGetDTO.getGameId());
+        assertEquals(game.getPlayerWhite(), gameGetDTO.getPlayerWhite());
+        assertEquals(game.getPlayerBlack(), gameGetDTO.getPlayerBlack());
+        assertEquals(game.getPieces(), gameGetDTO.getPieces());
+        assertEquals(game.getGameStatus(), gameGetDTO.getGameStatus());
     }
 
 }
