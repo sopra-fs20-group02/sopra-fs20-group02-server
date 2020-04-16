@@ -6,7 +6,9 @@ import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
@@ -32,14 +34,16 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserRepository userRepository;
     private final PieceRepository pieceRepository;
+    private final UserStatsRepository userStatsRepository;
 
     private Board board;
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository, PieceRepository pieceRepository) {
+    public GameService(GameRepository gameRepository, UserRepository userRepository, PieceRepository pieceRepository, UserStatsRepository userStatsRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.pieceRepository = pieceRepository;
+        this.userStatsRepository = userStatsRepository;
         this.board = new Board(pieceRepository);
     }
 
@@ -47,7 +51,7 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
-    public Game findByGameId(Long gameId) {
+    public Game findGameByGameId(Long gameId) {
         Game game = gameRepository.findByGameId(gameId);
         if(game != null) {
             return game;
@@ -57,41 +61,50 @@ public class GameService {
         }
     }
 
-    public Game createNewGame(User userInput) {
-        User player = userRepository.findByToken(userInput.getToken());
-        if(player != null) {
-            // randomly assign player to a game
-            Game game = new Game();
-            Random rand = new Random();
-            if (rand.nextBoolean()){
-                game.setPlayerWhite(player);
-            }
-            else {
-                game.setPlayerBlack(player);
-            }
-            game.setGameStatus(GameStatus.WAITING);
-            //createNewBoard(game.getBoard());
-
-            initPieces(game.getPieces());
-
-            // Save game entity into the database
-            gameRepository.save(game);
-            gameRepository.flush();
-
-            return game;
+    public User findUserByUserId(Long userId) {
+        User user = userRepository.findByUserId(userId);
+        if(user != null) {
+            return user;
         }
         else {
-            throw new LoginException("No game was created because no such user exists.");
+            throw new UserException("User with id "+userId+" was not found.");
         }
     }
 
-    public void joinGame(User userInput, Game game){
-        User player = userRepository.findByToken(userInput.getToken());
-        if (game.getPlayerBlack() == null){
+    public Game createNewGame(User userInput) {
+        User player = findUserByUserId(userInput.getUserId());
+
+        // randomly assign player to a game
+        Game game = new Game();
+        Random rand = new Random();
+        if (rand.nextBoolean()){
+            game.setPlayerWhite(player);
+        }
+        else {
             game.setPlayerBlack(player);
         }
-        else{
+        game.setGameStatus(GameStatus.WAITING);
+        //createNewBoard(game.getBoard());
+
+        initPieces(game.getPieces());
+
+        // Save game entity into the database
+        gameRepository.save(game);
+        gameRepository.flush();
+
+        return game;
+    }
+
+    public void joinGame(User userInput, Game game){
+        User player = findUserByUserId(userInput.getUserId());
+        if (game.getPlayerBlack() == null && game.getPlayerWhite() != player){
+            game.setPlayerBlack(player);
+        }
+        else if(game.getPlayerWhite() == null && game.getPlayerBlack() != player){
             game.setPlayerWhite(player);
+        }
+        else {
+            throw new SopraServiceException("User is already a member of the game."); //Todo add specific expeption
         }
         game.setGameStatus(GameStatus.FULL);
         gameRepository.save(game);
@@ -99,21 +112,17 @@ public class GameService {
     }
 
     public void leaveGame(Long gameId, User userInput){
-        User player = userRepository.findByToken(userInput.getToken());
-        Game game = findByGameId(gameId);
-        if(player != null) {
-            if(player == game.getPlayerBlack()) {
-                game.setWinner(game.getPlayerWhite());
-            }
-            else {
-                game.setWinner(game.getPlayerBlack());
-            }
-            game.getPlayerBlack().getGameHistory().add(game);
-            game.getPlayerWhite().getGameHistory().add(game);
+        User player = findUserByUserId(userInput.getUserId());
+        Game game = findGameByGameId(gameId);
+        if(player == game.getPlayerBlack()) {
+            game.setWinner(game.getPlayerWhite());
         }
-        userRepository.save(game.getPlayerBlack());
-        userRepository.save(game.getPlayerWhite());
-        userRepository.flush();
+        else {
+            game.setWinner(game.getPlayerBlack());
+        }
+
+        endGame(game);
+
         gameRepository.save(game);
         gameRepository.flush();
     }
@@ -185,5 +194,40 @@ public class GameService {
         piece.setXCord(x);
         piece.setYCord(y);
         return piece;
+    }
+
+    private void updateUserStats(User user, Boolean winner, int time){
+        UserStats userStats = user.getUserStats();
+        if(winner) {
+            userStats.setNumberOfWinnings(userStats.getNumberOfWinnings()+1);
+        }
+        else {
+            userStats.setNumberOfLosses(userStats.getNumberOfLosses()+1);
+        }
+        userStats.setTotalTimePlayed(userStats.getTotalTimePlayed()+time);
+        userStatsRepository.save(userStats);
+        userStatsRepository.flush();
+    }
+
+    //Todo: update gameStats
+    private void endGame(Game game) {
+        User winner = game.getWinner();
+
+        // update userStats
+        if(winner == game.getPlayerBlack()) {
+            //updateUserStats(game.getPlayerBlack(),true,);
+            //updateUserStats(game.getPlayerWhite(),false,);
+        }
+        else {
+            //updateUserStats(game.getPlayerBlack(),false,);
+            //updateUserStats(game.getPlayerWhite(),true,);
+        }
+
+        // update game history
+        game.getPlayerBlack().getGameHistory().add(game);
+        game.getPlayerWhite().getGameHistory().add(game);
+        userRepository.save(game.getPlayerBlack());
+        userRepository.save(game.getPlayerWhite());
+        userRepository.flush();
     }
 }

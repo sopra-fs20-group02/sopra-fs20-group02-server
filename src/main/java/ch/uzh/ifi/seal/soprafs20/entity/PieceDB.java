@@ -25,7 +25,7 @@ public class PieceDB {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long pieceId;
 
     @Column

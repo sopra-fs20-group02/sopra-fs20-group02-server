@@ -68,7 +68,13 @@ public class GameController {
         // TODO: add tests
     }
 
-    // TODO
+    @GetMapping(value = "/games/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO getGame(@PathVariable("id") Long gameId) {
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.findGameByGameId(gameId));
+    }
+
     @PutMapping(value = "/games/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
