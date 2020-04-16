@@ -1,10 +1,11 @@
 package ch.uzh.ifi.seal.soprafs20.logic;
+
+import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
 import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,12 +102,39 @@ public class Board {
         if (piece.getPieceType() == PieceType.KING && !piece.getHasMoved()) {
             ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
             if (!possibleCastling.isEmpty()) {
-                for (Vector v: possibleCastling) {
-                    possibleMoves.add(v);
+                for (Vector vector: possibleCastling) {
+                    possibleMoves.add(vector);
+                }
+            }
+        }
+        // king suicide
+        if (piece.getPieceType() == PieceType.KING) {
+            ArrayList<Vector> opponentMoves = getOpponentPossibleMoves(piece.getColor());
+            for(Vector v: possibleMoves) {
+                if (opponentMoves.contains(v)) {
+                    possibleMoves.remove(v);
                 }
             }
         }
         return possibleMoves;
+    }
+
+    // returns all possible moves of the opponent to prevent the king from suicide
+    public ArrayList<Vector> getOpponentPossibleMoves(Color myColor) {
+        ArrayList<Vector> opponentMoves = new ArrayList<>();
+
+        // find all pieces of the opponent and their moves to opponentMoves
+        for (Piece piece : this.getPieces()) {
+            if (piece.getColor() != myColor) {
+                ArrayList<Vector> moves = piece.getPossibleMoves();
+                for (Vector move: moves) {
+                    if (!opponentMoves.contains(move)) {
+                        opponentMoves.add(move);
+                    }
+                }
+            }
+        }
+        return opponentMoves;
     }
 
     public ArrayList<Vector> checkForCastle(Long pieceId) {
@@ -152,29 +180,29 @@ public class Board {
         }
 
         // Castling --> king captures own rook
-        else if (piece.getColor() == captured.getColor()) {
+        else if (piece.getColor() == captured.getColor() && piece.getPieceType() == PieceType.KING) {
             if (piece.getPosition().equals(new Vector(5,1))) {
                 if (moveTo.equals(new Vector(1,1))) {
-                    castling(piece, captured, new Vector(2,1), new Vector(3,1));
+                    castle(piece, captured, new Vector(2,1), new Vector(3,1));
                 }
                 else if (moveTo.equals(new Vector(8,1))) {
-                    castling(piece, captured, new Vector(7,1), new Vector(6,1));
+                    castle(piece, captured, new Vector(7,1), new Vector(6,1));
                 }
             }
 
             else if (piece.getPosition().equals(new Vector(5,8))) {
                 if (moveTo.equals(new Vector(1,8))) {
-                    castling(piece, captured, new Vector(2,8), new Vector(3,8));
+                    castle(piece, captured, new Vector(2,8), new Vector(3,8));
                 }
                 else if (moveTo.equals(new Vector(8,8))) {
-                    castling(piece, captured, new Vector(7,8), new Vector(6,8));
+                    castle(piece, captured, new Vector(7,8), new Vector(6,8));
                 }
             }
         }
     }
 
     // Effective castling, king and rook get on their new position
-    public void castling(Piece king, Piece rook, Vector kingDest, Vector rookDest) {
+    public void castle(Piece king, Piece rook, Vector kingDest, Vector rookDest) {
         this.board[kingDest.getX()][kingDest.getY()] = king;
         this.board[rookDest.getX()][rookDest.getY()] = rook;
         rook.move(rookDest);
