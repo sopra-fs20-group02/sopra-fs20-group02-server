@@ -108,7 +108,7 @@ public class Board {
         }
         return possibleMoves;
     }
-    
+
     public ArrayList<Vector> checkForCastle(Long pieceId) {
         Piece piece = getById(pieceId);
         ArrayList<Vector> possibleCastling = new ArrayList<>();
@@ -143,10 +143,41 @@ public class Board {
         piece.move(moveTo);
 
         Piece captured = this.getPieceOnTile(moveTo);
-        if (captured != null){
+
+        // Capture Piece
+        if (captured != null && captured.getColor() != piece.getColor()){
             captured.setCaptured(true);
             this.piecesOutGame.add(captured);
         }
+
+        // Castling --> king captures own rook
+        else if (piece.getColor() == captured.getColor()) {
+            if (piece.getPosition().equals(new Vector(5,1))) {
+                if (moveTo.equals(new Vector(1,1))) {
+                    castling(piece, captured, new Vector(2,1), new Vector(3,1));
+                }
+                else if (moveTo.equals(new Vector(8,1))) {
+                    castling(piece, captured, new Vector(7,1), new Vector(6,1));
+                }
+            }
+
+            else if (piece.getPosition().equals(new Vector(5,8))) {
+                if (moveTo.equals(new Vector(1,8))) {
+                    castling(piece, captured, new Vector(2,8), new Vector(3,8));
+                }
+                else if (moveTo.equals(new Vector(8,8))) {
+                    castling(piece, captured, new Vector(7,8), new Vector(6,8));
+                }
+            }
+        }
+    }
+
+    // Effective castling
+    public void castling(Piece king, Piece rook, Vector kingDest, Vector rookDest) {
+        this.board[kingDest.getX()][kingDest.getY()] = king;
+        this.board[rookDest.getX()][rookDest.getY()] = rook;
+        rook.move(rookDest);
+        king.move(kingDest);
     }
 
     public void setPieces(Game game){
