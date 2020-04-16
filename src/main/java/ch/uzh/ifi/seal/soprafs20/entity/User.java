@@ -24,10 +24,10 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 	
 	@Column(nullable = false, unique = true) 
@@ -47,6 +47,10 @@ public class User implements Serializable {
 
     @Column()
     private String birthDate;
+
+    @OneToOne
+    @JoinColumn()
+    private UserStats userStats;
 
     @OneToMany
     private List<Game> gameHistory;

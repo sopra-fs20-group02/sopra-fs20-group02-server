@@ -2,11 +2,13 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import ch.uzh.ifi.seal.soprafs20.exceptions.AlreadyLoggedInException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserStatsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,12 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final UserStatsRepository userStatsRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserStatsRepository userStatsRepository) {
         this.userRepository = userRepository;
+        this.userStatsRepository = userStatsRepository;
     }
 
     public List<User> getUsers() {
@@ -49,14 +53,14 @@ public class UserService {
     }
 
 
-    public User findUserById(Long id){
-        List<User> allUsers = getUsers();
-        for(User user: allUsers) {
-            if(user.getId().equals(id)){
-                return user;
-            }
+    public User findUserByUserId(Long id){
+        User user = userRepository.findByUserId(id);
+        if(user != null) {
+            return user;
         }
-        throw new UserException("User with id: "+id+" was not found.");
+        else {
+            throw new UserException("User with id: " + id + " was not found.");
+        }
     }
 
     // Returns the user which matches the given username and password
@@ -84,7 +88,7 @@ public class UserService {
 
     // Updates the username and birthdate of a specific user
     public User updateUser(Long id, User userInput){
-        User foundUser = findUserById(id);
+        User foundUser = findUserByUserId(id);
         if(userInput.getUsername() != null) {
             foundUser.setUsername(userInput.getUsername());
         }
@@ -106,6 +110,11 @@ public class UserService {
         Date date = new Date();
         newUser.setCreationDate(dateFormat.format(date));
 
+        UserStats userstats = new UserStats();
+        newUser.setUserStats(userstats);
+        userStatsRepository.save(userstats);
+        userStatsRepository.flush();
+
         checkIfUserExists(newUser);
 
         // saves the given entity but data is only persisted in the database once flush() is called
@@ -116,18 +125,13 @@ public class UserService {
         return newUser;
     }
 
-    // sets the status of the user which matches the given token to OFFLINE
-    public User logoutUser(String token){
-        User foundUser = findUserByToken(token);
-        if(foundUser != null) {
-            foundUser.setStatus(UserStatus.OFFLINE);
-            userRepository.save(foundUser);
-            userRepository.flush();
-        }
-        else {
-            throw new UserException("Invalid token! You will be redirected to the login page.");
-        }
-        return foundUser;
+    // sets the status of the user which matches the given id to OFFLINE
+    public User logoutUser(User userInput){
+        User user = findUserByUserId(userInput.getUserId());
+        user.setStatus(UserStatus.OFFLINE);
+        userRepository.save(user);
+        userRepository.flush();
+        return user;
     }
 
     /**
@@ -143,14 +147,14 @@ public class UserService {
         User userByName = userRepository.findByName(userToBeCreated.getName());
 
         String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-        if (userByUsername != null && userByName != null) {
+        /*if (userByUsername != null && userByName != null) {
             throw new SopraServiceException(String.format(baseErrorMessage, "username and the name", "are"));
-        }
-        else if (userByUsername != null) {
+        }*/
+        if (userByUsername != null) {
             throw new SopraServiceException(String.format(baseErrorMessage, "username", "is"));
         }
-        else if (userByName != null) {
+        /*else if (userByName != null) {
             throw new SopraServiceException(String.format(baseErrorMessage, "name", "is"));
-        }
+        }*/
     }
 }

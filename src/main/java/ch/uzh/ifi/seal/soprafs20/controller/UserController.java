@@ -51,8 +51,8 @@ public class UserController {
     @GetMapping(value = "/users/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserProfileDTO getSpecificUser(@PathVariable("id") Long id) {
-        return DTOMapper.INSTANCE.convertEntityToUserProfileDTO(userService.findUserById(id));
+    public UserGetDTO getSpecificUser(@PathVariable("id") Long id) {
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.findUserByUserId(id));
     }
 
     // Handles the post request to create a user
@@ -71,16 +71,16 @@ public class UserController {
     @PutMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserLoginDTO findUser(@RequestBody UserPostDTO userPostDTO) {
+    public UserGetDTO findUser(@RequestBody UserPostDTO userPostDTO) {
         // convert API user to internal representation
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
-        return DTOMapper.INSTANCE.convertEntityToUserLoginDTO(userService.loginUser(userInput));
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.loginUser(userInput));
     }
 
     // Handles the put request to update a specific user
     @PutMapping(value = "/users/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void updateSpecificUser(@PathVariable("id") Long id, @RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
@@ -89,11 +89,11 @@ public class UserController {
 
     // Handles the put request to logout the user
     @PutMapping(value = "/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void logoutUser(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        userService.logoutUser(userInput.getToken());
+        userService.logoutUser(userInput);
     }
 
 }
