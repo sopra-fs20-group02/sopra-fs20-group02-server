@@ -88,11 +88,12 @@ public class GameController {
     @PostMapping(value = "/games/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Game makeMove(@PathVariable("id") Long id, @RequestBody MovePostDTO movePostDTO) {
+    public void makeMove(@PathVariable("id") Long id, @RequestBody MovePostDTO movePostDTO) {
         Move move = DTOMapper.INSTANCE.convertMovePostDTOtoEntity(movePostDTO);
         Game game = gameService.makeMove(id, move.getPieceId(),
                 move.getX(), move.getY());
-        return game;
+        //return DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.findGameByGameId(id));
+        // TODO: shoudl return gamestatus
     }
 
     @GetMapping(value = "/games/{gameId}/{pieceId}")
