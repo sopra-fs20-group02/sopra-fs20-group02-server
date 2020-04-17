@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import lombok.Getter;
 import lombok.Setter;
 //import ch.uzh.ifi.seal.soprafs20.logic.Vector;
@@ -11,6 +12,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 @Entity
 // Auto generate getters and setters
@@ -35,6 +37,9 @@ public class Game implements Serializable {
 
     @OneToMany
     private List<PieceDB> pieces = new ArrayList<>();
+
+    @OneToMany
+    private List<PieceDB> pieceHistory = new ArrayList<>();
 
     @Column()
     private Instant startTime;

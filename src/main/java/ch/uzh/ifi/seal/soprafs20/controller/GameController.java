@@ -5,7 +5,6 @@ import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MoveGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -88,20 +87,28 @@ public class GameController {
     @PostMapping(value = "/games/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Game makeMove(@PathVariable("id") Long id, @RequestBody MovePostDTO gameMoveDTO) {
-        Game game = gameService.makeMove(gameMoveDTO.getUserId(), gameMoveDTO.getPieceId(),
-                gameMoveDTO.getXDest(), gameMoveDTO.getYDest());
+    public Game makeMove(@PathVariable("id") Long id, @RequestBody MovePostDTO movePostDTO) {
+        Game game = gameService.makeMove(movePostDTO.getUserId(), movePostDTO.getPieceId(),
+                movePostDTO.getXDest(), movePostDTO.getYDest());
         return game;
 
     }
 
-    // TODO
     @GetMapping(value = "/games/{gameId}/{pieceId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<Vector> getMoves(@PathVariable("gameId") Long gameId, @PathVariable("pieceId") Long pieceId) {
         List<Vector> moves = gameService.getPossibleMoves(gameId,pieceId);
         return moves;
+    }
+
+    // TODO
+    @GetMapping(value = "/games/history/")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void getHistory() {
+        //List<Vector> moves = gameService.getPossibleMoves(gameId,pieceId);
+        return;
     }
 
     // TODO: etc...

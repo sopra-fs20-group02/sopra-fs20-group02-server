@@ -144,15 +144,24 @@ public class GameService {
             throw new SopraServiceException("Other users turn");
         }
 
+        game.setIsWhiteTurn(!game.getIsWhiteTurn());
+
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
         // Updates all pieces in repository and saves it to the database game instance
         game.setPieces(this.board.saveAndGetPieces());
+        List<PieceDB> pieceHistory = game.getPieceHistory();
+        pieceHistory.addAll(game.getPieces());
+        game.setPieceHistory(pieceHistory);
         return game;
     }
 
     public List<Vector> getPossibleMoves(Long gameId, Long pieceId){
         Game game = gameRepository.findByGameId(gameId);
+        if (game.getGameStatus() != GameStatus.FULL){
+            // TODO: specific exception
+            throw new SopraServiceException("Game is either finished or hasn't started yet");
+        }
         this.board.setPieces(game);
         return this.board.getPossibleMoves(pieceId);
         // nothing in the database needs to be updated
