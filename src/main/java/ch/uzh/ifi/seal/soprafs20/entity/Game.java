@@ -51,6 +51,9 @@ public class Game implements Serializable {
     @Column()
     private GameStatus gameStatus;
 
+    @Column()
+    private Boolean isWhiteTurn;
+
     @OneToOne
     @JoinColumn()
     private User winner;

@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GameMoveDTO {
+public class MovePostDTO {
 
     private Long userId;
     private Long pieceId;

@@ -25,7 +25,7 @@ public class King extends Piece {
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {
-                Vector current = new Vector(vector).mulS(i);
+                Vector current = new Vector(vector).mulS(i).add(this.position);
                 if (!current.checkBounds()){
                     break;
                 }

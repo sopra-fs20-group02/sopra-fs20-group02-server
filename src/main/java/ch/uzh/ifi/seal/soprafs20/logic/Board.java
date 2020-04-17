@@ -80,7 +80,7 @@ public class Board {
     public Piece getById(Long id){
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
-                if (this.board[i][j].getPieceId() == id){
+                if (this.board[i][j] != null && this.board[i][j].getPieceId() == id){
                     return this.board[i][j];
                 }
             }

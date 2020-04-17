@@ -41,6 +41,8 @@ public abstract class Piece {
 
         this.board = board;
 
+        this.movementVectors = new ArrayList<Vector>();
+
         this.initializeDefaultVectors();
     }
 
@@ -74,7 +76,7 @@ public abstract class Piece {
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {
-                Vector current = new Vector(vector).mulS(i);
+                Vector current = new Vector(vector).mulS(i).add(this.position);
                 if (!current.checkBounds()){
                     break;
                 }

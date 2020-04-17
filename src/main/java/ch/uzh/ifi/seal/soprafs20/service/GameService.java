@@ -84,6 +84,8 @@ public class GameService {
             game.setPlayerBlack(player);
         }
         game.setGameStatus(GameStatus.WAITING);
+        // white starts
+        game.setIsWhiteTurn(true);
         //createNewBoard(game.getBoard());
 
         initPieces(game.getPieces());
@@ -129,6 +131,19 @@ public class GameService {
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){
         Game game = gameRepository.findByGameId(gameId);
+        if (game.getGameStatus() != GameStatus.FULL){
+            // TODO: specific exception
+            throw new SopraServiceException("Game is either finished or hasn't started yet");
+        }
+
+        if (
+            (pieceRepository.getOne(pieceId).getColor() == Color.WHITE && !game.getIsWhiteTurn()) ||
+            (pieceRepository.getOne(pieceId).getColor() == Color.BLACK && game.getIsWhiteTurn())
+        ){
+            // TODO: specific exception
+            throw new SopraServiceException("Other users turn");
+        }
+
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
         // Updates all pieces in repository and saves it to the database game instance
