@@ -32,17 +32,12 @@ public class Pawn extends Piece {
         this.pieceType = PieceType.PAWN;
     }
 
-    // precondition: is legal move
-    @Override
-    public void move(Vector moveTo){
-        this.hasMoved = true;
-        this.movementSteps = 1;
-        this.position.set(new Vector(moveTo));
-    }
-
     // Pawn is the only piece with different freedoms in movement for captures and movements
     @Override
     public ArrayList<Vector> getPossibleMoves(){
+        if (this.hasMoved){
+            this.movementSteps = 1;
+        }
         ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {
