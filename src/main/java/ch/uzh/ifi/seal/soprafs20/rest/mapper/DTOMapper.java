@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
+import ch.uzh.ifi.seal.soprafs20.entity.Move;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import org.mapstruct.*;
@@ -26,6 +27,12 @@ public interface DTOMapper {
     @Mapping(source = "birthDate", target = "birthDate")
     @Mapping(source = "token", target = "token")
     User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
+
+    @Mapping(source = "userId", target = "userId")
+    @Mapping(source = "pieceId", target = "pieceId")
+    @Mapping(source = "x", target = "x")
+    @Mapping(source = "y", target = "y")
+    Move convertMovePostDTOtoEntity(MovePostDTO movePostDTO);
 
     @Mapping(source = "userId", target = "userId")
     @Mapping(source = "name", target = "name")
@@ -58,4 +65,6 @@ public interface DTOMapper {
     @Mapping(source = "endTime", target = "endTime")
     @Mapping(source = "gameStatus", target = "gameStatus")
     GameGetDTO convertEntityToGameGetDTO(Game game);
+
+
 }

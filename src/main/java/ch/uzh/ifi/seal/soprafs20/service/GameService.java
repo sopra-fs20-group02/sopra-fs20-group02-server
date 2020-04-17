@@ -130,7 +130,8 @@ public class GameService {
     }
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){
-        Game game = gameRepository.findByGameId(gameId);
+        Game game = this.findGameByGameId(gameId);
+        System.out.println(game);
         if (game.getGameStatus() != GameStatus.FULL){
             // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");
@@ -153,11 +154,12 @@ public class GameService {
         List<PieceDB> pieceHistory = game.getPieceHistory();
         pieceHistory.addAll(game.getPieces());
         game.setPieceHistory(pieceHistory);
+        System.out.println("Hello");
         return game;
     }
 
     public List<Vector> getPossibleMoves(Long gameId, Long pieceId){
-        Game game = gameRepository.findByGameId(gameId);
+        Game game = this.findGameByGameId(gameId);
         if (game.getGameStatus() != GameStatus.FULL){
             // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");

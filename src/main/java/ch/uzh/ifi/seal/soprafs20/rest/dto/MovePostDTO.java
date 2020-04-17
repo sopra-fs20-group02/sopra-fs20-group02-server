@@ -9,9 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MovePostDTO {
-
     private Long userId;
     private Long pieceId;
-    private Integer xDest;
-    private Integer yDest;
+    private Integer x;
+    private Integer y;
 }
