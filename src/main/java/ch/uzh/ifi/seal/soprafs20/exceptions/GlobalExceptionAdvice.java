@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.exceptions;
 
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -67,5 +68,19 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity handelUserException (Exception ex) {
         log.error(String.format("UserException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // TODO: needs to be tested
+    @ExceptionHandler(PieceNotInGameException.class)
+    public ResponseEntity handlePieceNotInGameException (Exception ex) {
+        log.error(String.format("PieceNotInGameException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // TODO: needs to be tested
+    @ExceptionHandler(InvalidMoveException.class)
+    public ResponseEntity handleInvalidMoveException (Exception ex) {
+        log.error(String.format("InvalidMoveException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

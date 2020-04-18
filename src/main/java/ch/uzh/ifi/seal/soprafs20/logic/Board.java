@@ -4,6 +4,8 @@ import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
+import ch.uzh.ifi.seal.soprafs20.exceptions.InvalidMoveException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.PieceNotInGameException;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
 import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
 
@@ -92,8 +94,7 @@ public class Board {
             }
         }
 
-        // TODO: throw piece not in game exception
-        throw new Error();
+        throw new PieceNotInGameException("Piece with " +id+ " could not be found.");
     }
 
     public ArrayList<Vector> getPossibleMoves(Long pieceId){
@@ -102,9 +103,7 @@ public class Board {
         if (piece.getPieceType() == PieceType.KING && !piece.getHasMoved()) {
             ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
             if (!possibleCastling.isEmpty()) {
-                for (Vector vector: possibleCastling) {
-                    possibleMoves.add(vector);
-                }
+                possibleMoves.addAll(possibleCastling);
             }
         }
         // king suicide
@@ -164,9 +163,15 @@ public class Board {
         return possibleCastling;
     }
 
-    // TODO: prevent king form suicide
     public void makeMove(Long pieceId, Vector moveTo){
         Piece piece = getById(pieceId);
+
+        // check for valid move
+        ArrayList<Vector> possibleMoves = getPossibleMoves(pieceId);
+        if (!possibleMoves.contains(moveTo)) {
+            throw new InvalidMoveException("This piece can not move to the desired position");
+        }
+
         this.board[piece.position.getX()][piece.position.getY()] = null;
         this.board[moveTo.getX()][moveTo.getY()] = piece;
         piece.move(moveTo);
