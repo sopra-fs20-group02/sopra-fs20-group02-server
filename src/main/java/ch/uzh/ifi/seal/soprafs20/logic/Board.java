@@ -219,6 +219,7 @@ public class Board {
         List<PieceDB> pieces = game.getPieces();
 
         for (PieceDB piece : pieces){
+            // TODO: handle caputered pieces
             int x = piece.getXCord();
             int y = piece.getYCord();
             switch(piece.getPieceType()) {
