@@ -2,8 +2,10 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserStatsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,11 +19,13 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    private UserStatsRepository userStatsRepository;
 
     @InjectMocks
     private UserService userService;
 
     private User testUser;
+    private UserStats userStats;
 
     @BeforeEach
     public void setup() {
@@ -32,9 +36,15 @@ public class UserServiceTest {
         testUser.setUserId(1L);
         testUser.setName("testName");
         testUser.setUsername("testUsername");
+        testUser.setPassword("testPassword");
+
+        userStats = new UserStats();
+        testUser.setUserStats(userStats);
+
 
         // when -> any object is being save in the userRepository -> return the dummy testUser
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(testUser);
+        //Mockito.when(userStatsRepository.save(Mockito.any())).thenReturn(userStats);
     }
 
     @Test
@@ -44,6 +54,7 @@ public class UserServiceTest {
 
         // then
         Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(userStatsRepository, Mockito.times(1)).save(Mockito.any());
 
         assertEquals(testUser.getUserId(), createdUser.getUserId());
         assertEquals(testUser.getName(), createdUser.getName());
