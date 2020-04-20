@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Move {
     private Long userId;
-    private Long pieceId;
+    //private Long pieceId;
     private Integer x;
     private Integer y;
 }

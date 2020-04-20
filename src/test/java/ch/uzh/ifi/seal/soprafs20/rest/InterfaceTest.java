@@ -62,7 +62,6 @@ public class InterfaceTest {
                 this.restTemplate.postForEntity("http://localhost:" + port + "/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).contains("http://localhost:8080/users/1");
     }
 
     /**

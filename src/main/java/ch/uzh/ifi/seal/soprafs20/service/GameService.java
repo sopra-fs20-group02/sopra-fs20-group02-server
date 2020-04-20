@@ -144,17 +144,20 @@ public class GameService {
             // TODO: specific exception
             throw new SopraServiceException("Other users turn");
         }
-
+        System.out.println(pieceId+" "+x+" "+y);
         game.setIsWhiteTurn(!game.getIsWhiteTurn());
 
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
+
         // Updates all pieces in repository and saves it to the database game instance
         game.setPieces(this.board.saveAndGetPieces());
         List<PieceDB> pieceHistory = game.getPieceHistory();
         pieceHistory.addAll(game.getPieces());
         game.setPieceHistory(pieceHistory);
         System.out.println("Hello");
+        gameRepository.save(game);
+        gameRepository.flush();
         return game;
     }
 

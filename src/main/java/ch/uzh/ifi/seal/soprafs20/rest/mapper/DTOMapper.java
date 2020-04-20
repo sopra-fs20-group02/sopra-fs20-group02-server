@@ -23,13 +23,17 @@ public interface DTOMapper {
     @Mapping(source = "userId", target = "userId")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "username", target = "username")
+    @Mapping(source = "status", target = "status")
     @Mapping(source = "password", target = "password")
+    @Mapping(source = "creationDate", target = "creationDate")
     @Mapping(source = "birthDate", target = "birthDate")
     @Mapping(source = "token", target = "token")
+    @Mapping(source = "gameHistory", target = "gameHistory")
+    @Mapping(source = "userStats", target = "userStats")
     User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
 
     @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "pieceId", target = "pieceId")
+    //@Mapping(source = "pieceId", target = "pieceId")
     @Mapping(source = "x", target = "x")
     @Mapping(source = "y", target = "y")
     Move convertMovePostDTOtoEntity(MovePostDTO movePostDTO);
@@ -64,6 +68,8 @@ public interface DTOMapper {
     @Mapping(source = "startTime", target = "startTime")
     @Mapping(source = "endTime", target = "endTime")
     @Mapping(source = "gameStatus", target = "gameStatus")
+    @Mapping(source = "isWhiteTurn", target = "isWhiteTurn")
+    @Mapping(source = "winner", target = "winner")
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
 

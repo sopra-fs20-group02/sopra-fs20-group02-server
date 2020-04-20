@@ -21,4 +21,6 @@ public class GameGetDTO {
     /*private Duration playerWhiteElapsedTime;
     private Duration playerBlackElapsedTime;*/
     private GameStatus gameStatus;
+    private Boolean isWhiteTurn;
+    private User winner;
 }
