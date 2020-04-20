@@ -106,35 +106,10 @@ public class Board {
                 possibleMoves.addAll(possibleCastling);
             }
         }
-        // king suicide
-        if (piece.getPieceType() == PieceType.KING) {
-            ArrayList<Vector> opponentMoves = getOpponentPossibleMoves(piece.getColor());
-            for(Vector v: possibleMoves) {
-                if (opponentMoves.contains(v)) {
-                    possibleMoves.remove(v);
-                }
-            }
-        }
+
         return possibleMoves;
     }
 
-    // returns all possible moves of the opponent to prevent the king from suicide
-    public ArrayList<Vector> getOpponentPossibleMoves(Color myColor) {
-        ArrayList<Vector> opponentMoves = new ArrayList<>();
-
-        // find all pieces of the opponent and their moves to opponentMoves
-        for (Piece piece : this.getPieces()) {
-            if (piece.getColor() != myColor) {
-                ArrayList<Vector> moves = piece.getPossibleMoves();
-                for (Vector move: moves) {
-                    if (!opponentMoves.contains(move)) {
-                        opponentMoves.add(move);
-                    }
-                }
-            }
-        }
-        return opponentMoves;
-    }
 
     public ArrayList<Vector> checkForCastle(Long pieceId) {
         Piece piece = getById(pieceId);
@@ -168,8 +143,10 @@ public class Board {
 
         // check for valid move
         ArrayList<Vector> possibleMoves = getPossibleMoves(pieceId);
-        if (!possibleMoves.contains(moveTo)) {
-            throw new InvalidMoveException("This piece can not move to the desired position");
+        for (Vector move : possibleMoves) {
+            if (move.equals(moveTo)) {
+                throw new InvalidMoveException("This piece can not move to the desired position");
+            }
         }
 
         this.board[piece.position.getX()][piece.position.getY()] = null;

@@ -8,7 +8,6 @@ import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: make sure castling works
 
 public class King extends Piece {
     public King(PieceDB pieceDB, Board board){
