@@ -88,10 +88,10 @@ public class GameController {
     @PutMapping(value = "/games/{gameId}/{pieceId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void makeMove(@PathVariable("gameId") Long gameId, @PathVariable("pieceId") Long pieceId, @RequestBody MovePostDTO movePostDTO) {
+    public GameGetDTO makeMove(@PathVariable("gameId") Long gameId, @PathVariable("pieceId") Long pieceId, @RequestBody MovePostDTO movePostDTO) {
         Move move = DTOMapper.INSTANCE.convertMovePostDTOtoEntity(movePostDTO);
         Game game = gameService.makeMove(gameId, pieceId, move.getX(), move.getY());
-        //return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
     @GetMapping(value = "/games/{gameId}/{pieceId}")

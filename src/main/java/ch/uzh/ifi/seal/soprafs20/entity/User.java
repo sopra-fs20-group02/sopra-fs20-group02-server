@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,5 +54,5 @@ public class User implements Serializable {
     private UserStats userStats;
 
     @OneToMany
-    private List<Game> gameHistory;
+    private List<Game> gameHistory = new ArrayList<>();
 }

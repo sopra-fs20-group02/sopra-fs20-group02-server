@@ -11,6 +11,7 @@ import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
+import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -122,8 +124,8 @@ public class GameService {
         else {
             game.setWinner(game.getPlayerBlack());
         }
-
-        endGame(game);
+        game.setGameStatus(GameStatus.WON);
+        //this.endGame(game);
 
         gameRepository.save(game);
         gameRepository.flush();
@@ -131,28 +133,35 @@ public class GameService {
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){
         Game game = this.findGameByGameId(gameId);
-        System.out.println(game);
         if (game.getGameStatus() != GameStatus.FULL){
             // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");
         }
 
         if (
-            (pieceRepository.getOne(pieceId).getColor() == Color.WHITE && !game.getIsWhiteTurn()) ||
-            (pieceRepository.getOne(pieceId).getColor() == Color.BLACK && game.getIsWhiteTurn())
+            (pieceRepository.findByPieceId(pieceId).getColor() == Color.WHITE && !game.getIsWhiteTurn()) ||
+            (pieceRepository.findByPieceId(pieceId).getColor() == Color.BLACK && game.getIsWhiteTurn())
         ){
             // TODO: specific exception
             throw new SopraServiceException("Other users turn");
         }
-        System.out.println(pieceId+" "+x+" "+y);
         game.setIsWhiteTurn(!game.getIsWhiteTurn());
 
         this.board.setPieces(game);
         this.board.makeMove(pieceId, new Vector(x,y));
 
         // Updates all pieces in repository and saves it to the database game instance
-        game.setPieces(this.board.saveAndGetPieces());
+        List<Piece> pieces = this.board.getPieces();
+        for (Piece piece : pieces) {
+            PieceDB pieceDB = pieceRepository.findByPieceId(piece.getPieceId());
+            pieceDB.setXCord(piece.getPosition().getX());
+            pieceDB.setYCord(piece.getPosition().getY());
+            pieceDB.setCaptured(piece.getCaptured());
+            pieceDB.setHasMoved(piece.getHasMoved());
+            pieceRepository.save(pieceDB);
+        }
         gameRepository.save(game);
+        pieceRepository.flush();
         gameRepository.flush();
         return game;
     }

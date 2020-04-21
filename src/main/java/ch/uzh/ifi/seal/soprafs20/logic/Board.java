@@ -63,21 +63,6 @@ public class Board {
      * Auto saves pieces to repository
      * @return
      */
-    public List<PieceDB> saveAndGetPieces(){
-        List<Piece> pieces = this.getPieces();
-        ArrayList<PieceDB> databasePieces = new ArrayList<PieceDB>();
-        for (Piece piece : pieces){
-            PieceDB pieceDB = pieceRepository.findByPieceId(piece.getPieceId());
-            pieceDB.setPieceType(piece.getPieceType());
-            pieceDB.setColor(piece.getColor());
-            pieceDB.setXCord(piece.getPosition().getX());
-            pieceDB.setYCord(piece.getPosition().getY());
-            pieceDB.setCaptured(piece.getCaptured());
-            pieceDB.setHasMoved(piece.getHasMoved());
-            databasePieces.add(pieceDB);
-        }
-        return databasePieces;
-    }
 
     public Piece getById(Long id){
         for (int i = 1; i <= 8; i++){

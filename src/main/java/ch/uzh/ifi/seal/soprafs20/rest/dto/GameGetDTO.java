@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class GameGetDTO {
     private List<PieceDB> pieces;
     private Instant startTime;
     private Instant endTime;
-    /*private Duration playerWhiteElapsedTime;
-    private Duration playerBlackElapsedTime;*/
+    private Duration whiteDuration;
+    private Duration blackDuration;
     private GameStatus gameStatus;
     private Boolean isWhiteTurn;
     private User winner;
