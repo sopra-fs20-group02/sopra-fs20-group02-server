@@ -199,27 +199,36 @@ public class Board {
             // TODO: handle caputered pieces
             int x = piece.getXCord();
             int y = piece.getYCord();
+
+            Piece logicPiece = null;
             switch(piece.getPieceType()) {
                 case BISHOP:
-                    this.board[x][y] = new Bishop(piece, this);
+                    logicPiece = new Bishop(piece, this);
                     break;
                 case KING:
-                    this.board[x][y] = new King(piece, this);
+                    logicPiece = new King(piece, this);
                     break;
                 case KNIGHT:
-                    this.board[x][y] = new Knight(piece, this);
+                    logicPiece = new Knight(piece, this);
                     break;
                 case PAWN:
-                    this.board[x][y] = new Pawn(piece, this);
+                    logicPiece = new Pawn(piece, this);
                     break;
                 case QUEEN:
-                    this.board[x][y] = new Queen(piece, this);
+                    logicPiece = new Queen(piece, this);
                     break;
                 case ROOK:
-                    this.board[x][y] = new Rook(piece, this);
+                    logicPiece = new Rook(piece, this);
                     break;
-                default :
+                default:
                     break;
+            }
+            
+            if (piece.isCaptured()){
+                this.piecesOutGame.add(logicPiece);
+            }
+            else {
+                this.board[x][y] = logicPiece;
             }
         }
     }
