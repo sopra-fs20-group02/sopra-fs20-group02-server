@@ -38,9 +38,6 @@ public class Game implements Serializable {
     @OneToMany
     private List<PieceDB> pieces = new ArrayList<>();
 
-    @OneToMany
-    private List<PieceDB> pieceHistory = new ArrayList<>();
-
     @Column()
     private Instant startTime;
 

@@ -152,10 +152,6 @@ public class GameService {
 
         // Updates all pieces in repository and saves it to the database game instance
         game.setPieces(this.board.saveAndGetPieces());
-        List<PieceDB> pieceHistory = game.getPieceHistory();
-        pieceHistory.addAll(game.getPieces());
-        game.setPieceHistory(pieceHistory);
-        System.out.println("Hello");
         gameRepository.save(game);
         gameRepository.flush();
         return game;

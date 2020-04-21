@@ -223,7 +223,7 @@ public class Board {
                 default:
                     break;
             }
-            
+
             if (piece.isCaptured()){
                 this.piecesOutGame.add(logicPiece);
             }
