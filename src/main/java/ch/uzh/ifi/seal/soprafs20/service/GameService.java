@@ -91,10 +91,10 @@ public class GameService {
         initPieces(game.getPieces());
 
         // Save game entity into the database
-        gameRepository.save(game);
+        Game newGame = gameRepository.save(game);
         gameRepository.flush();
 
-        return game;
+        return newGame;
     }
 
     public void joinGame(User userInput, Game game){

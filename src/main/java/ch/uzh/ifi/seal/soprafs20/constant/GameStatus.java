@@ -1,5 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.constant;
 
 public enum GameStatus {
-    WAITING, FULL, FINISHED
+    WAITING, FULL, Won, Draw
 }

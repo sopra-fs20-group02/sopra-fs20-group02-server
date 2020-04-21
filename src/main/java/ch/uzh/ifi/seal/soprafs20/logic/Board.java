@@ -21,7 +21,7 @@ Tile at (1,1) is of BLACK color
 public class Board {
     // All indices are from 1 - 8 (including 8)
     // We ignore the piece at 0, to avoid confusion
-    // Empty fields is indicated with a null
+    // Empty field is indicated with a null
     private Piece[][] board = new Piece[9][9];
     private ArrayList<Piece> piecesOutGame;
 
@@ -191,6 +191,14 @@ public class Board {
         king.move(kingDest);
     }
 
+    public void updateGameStatus(Game game){
+        // TODO: check for different win/draw conditions
+
+        // TODO: checkmate
+
+        // TODO: stalemate
+    }
+
     public void setPieces(Game game){
         this.emptyBoard();
         List<PieceDB> pieces = game.getPieces();
@@ -232,5 +240,4 @@ public class Board {
             }
         }
     }
-
 }
