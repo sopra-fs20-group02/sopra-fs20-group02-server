@@ -11,6 +11,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -46,6 +47,8 @@ public class GameServiceIntegrationTest {
 
     private User playerB;
 
+    private Game game;
+
     @BeforeEach
     public void setup() {
         gameRepository.deleteAll();
@@ -78,13 +81,21 @@ public class GameServiceIntegrationTest {
         assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.ONLINE);
     }
 
+    @Test
+    @Order(1)
+    public void createGame_validInput_success() {
+        this.game = gameService.createNewGame(playerA);
+        assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.WAITING);
+    }
 
     @Test
-    public void createGame_registeredUser_success() {
-        Game game = gameService.createNewGame(playerA);
-        System.out.println(game.getGameId());
-        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
+    @Order(2)
+    public void joinGame_validInput_success() {
+        this.game = gameService.createNewGame(playerA);
+        gameService.joinGame(playerB, this.game);
+        assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.FULL);
     }
+
 /*
     @Test
     public void createUser_duplicateUsername_throwsException() {
