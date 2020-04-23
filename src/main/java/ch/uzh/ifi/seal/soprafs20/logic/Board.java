@@ -176,11 +176,16 @@ public class Board {
         king.move(kingDest);
     }
 
-    public void updateGameStatus(Game game){
+    public void updateGameStatus(){
         // TODO: check for different win/draw conditions
 
         // TODO: checkmate
 
+        for (Piece piece : this.getPieces()){
+            if (piece.getPieceType() == PieceType.KING){
+
+            }
+        }
         // TODO: stalemate
     }
 
@@ -189,7 +194,6 @@ public class Board {
         List<PieceDB> pieces = game.getPieces();
 
         for (PieceDB piece : pieces){
-            // TODO: handle caputered pieces
             int x = piece.getXCord();
             int y = piece.getYCord();
 

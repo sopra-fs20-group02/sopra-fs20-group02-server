@@ -51,7 +51,6 @@ public class GameController {
         // precondition: no game can be joined
         Game newGame = gameService.createNewGame(userInput);
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(newGame);
-        // TODO: add tests
     }
 
     // Handles the request to get all games
@@ -111,6 +110,5 @@ public class GameController {
         return;
     }
 
-    // TODO: etc...
 
 }

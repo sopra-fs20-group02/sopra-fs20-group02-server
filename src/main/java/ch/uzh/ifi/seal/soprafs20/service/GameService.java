@@ -97,7 +97,6 @@ public class GameService {
         initPieces(game.getPieces());
 
         // Save game entity into the database
-        // TODO: is it necessary to .save again?
         Game newGame = gameRepository.save(game);
         gameRepository.flush();
 
@@ -107,6 +106,8 @@ public class GameService {
 
         return newGame;
     }
+
+    // TODO: add option to cancel game searching mode
 
     public void joinGame(User userInput, Game game){
         checkIfUserIsAllowedToJoinOrCreateGame(userInput);
@@ -188,7 +189,7 @@ public class GameService {
         userRepository.save(player);
         userRepository.flush();
 
-        otherPlayer.setStatus(UserStatus.PLAYING);
+        otherPlayer.setStatus(UserStatus.ONLINE);
         userRepository.save(otherPlayer);
         userRepository.flush();
 

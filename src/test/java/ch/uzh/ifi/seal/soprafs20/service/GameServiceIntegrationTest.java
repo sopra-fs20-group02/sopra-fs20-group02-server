@@ -140,28 +140,23 @@ public class GameServiceIntegrationTest {
         );
     }
 
-/*
     @Test
-    public void createUser_duplicateUsername_throwsException() {
-        assertNull(userRepository.findByUsername("testUsername"));
+    public void leaveGame_validInput_success() {
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
 
-        User testUser = new User();
-        testUser.setName("testName");
-        testUser.setUsername("testUsername");
-        testUser.setPassword("password1");
-        User createdUser = userService.createUser(testUser);
+        Game game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
 
-        // attempt to create second user with same username
-        User testUser2 = new User();
+        gameService.joinGame(playerB, game);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.PLAYING);
+        assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.PLAYING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.FULL);
 
-        // change the name but forget about the username
-        testUser2.setName("testName2");
-        testUser2.setUsername("testUsername");
-        testUser2.setPassword("password2");
+        gameService.leaveGame(game.getGameId(), playerB);
 
-        // check that an error is thrown
-        String exceptionMessage = "The username provided is not unique. Therefore, the user could not be created!";
-        SopraServiceException exception = assertThrows(SopraServiceException.class, () -> userService.createUser(testUser2), exceptionMessage);
-        assertEquals(exceptionMessage, exception.getMessage());
-    }*/
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
+        assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.ONLINE);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WON);
+    }
 }
