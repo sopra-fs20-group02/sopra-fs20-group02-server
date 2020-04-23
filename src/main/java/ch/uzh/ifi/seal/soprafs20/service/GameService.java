@@ -9,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.LeaveGameException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
@@ -74,6 +75,9 @@ public class GameService {
     }
 
     public Game createNewGame(User userInput) {
+
+        checkIfUserIsAllowedToJoinOrCreateGame(userInput);
+
         User player = findUserByUserId(userInput.getUserId());
 
         // randomly assign player to a game
@@ -105,7 +109,10 @@ public class GameService {
     }
 
     public void joinGame(User userInput, Game game){
+        checkIfUserIsAllowedToJoinOrCreateGame(userInput);
+
         User player = findUserByUserId(userInput.getUserId());
+        // Get assigned color
         User otherPlayer;
         if (game.getPlayerBlack() != null){
             otherPlayer = game.getPlayerBlack();
@@ -117,10 +124,11 @@ public class GameService {
             throw new JoinGameException("Corrupt game.");
         }
 
-        if (game.getPlayerBlack() == null && game.getPlayerWhite() != player){
+        // get empty slot and assign player to color
+        if (game.getPlayerBlack() == null && !game.getPlayerWhite().equals(player)){
             game.setPlayerBlack(player);
         }
-        else if(game.getPlayerWhite() == null && game.getPlayerBlack() != player){
+        else if(game.getPlayerWhite() == null && !game.getPlayerBlack().equals(player)){
             game.setPlayerWhite(player);
         }
         else if(game.getPlayerWhite() != null && game.getPlayerBlack() != null){
@@ -129,10 +137,13 @@ public class GameService {
         else {
             throw new JoinGameException("User is already a member of the game.");
         }
+
+        // adjust game status
         game.setGameStatus(GameStatus.FULL);
         gameRepository.save(game);
         gameRepository.flush();
 
+        // adjust user status for both players
         player.setStatus(UserStatus.PLAYING);
         userRepository.save(player);
         userRepository.flush();
@@ -143,8 +154,23 @@ public class GameService {
     }
 
     public void leaveGame(Long gameId, User userInput){
+
         User player = findUserByUserId(userInput.getUserId());
         Game game = findGameByGameId(gameId);
+
+        // Get other player
+        User otherPlayer;
+        if (!game.getPlayerBlack().equals(player)){
+            otherPlayer = game.getPlayerBlack();
+        }
+        else if (!game.getPlayerWhite().equals(player)){
+            otherPlayer = game.getPlayerWhite();
+        }
+        else{
+            throw new LeaveGameException("Corrupt game");
+        }
+
+        // Other player wins the game
         if(player == game.getPlayerBlack()) {
             game.setWinner(game.getPlayerWhite());
         }
@@ -157,9 +183,15 @@ public class GameService {
         gameRepository.save(game);
         gameRepository.flush();
 
+        // adjust users statuses
         player.setStatus(UserStatus.ONLINE);
         userRepository.save(player);
         userRepository.flush();
+
+        otherPlayer.setStatus(UserStatus.PLAYING);
+        userRepository.save(otherPlayer);
+        userRepository.flush();
+
     }
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){
@@ -208,8 +240,13 @@ public class GameService {
         // nothing in the database needs to be updated
     }
 
-    private void checkIfUserIsAlreadyPlaying(long userId){
-
+    private void checkIfUserIsAllowedToJoinOrCreateGame(User userInput){
+        User player = findUserByUserId(userInput.getUserId());
+        if (
+                player.getStatus() != UserStatus.ONLINE
+        ){
+            throw new JoinGameException("User is either already playing or offline");
+        }
     }
 
     private void initPieces(List<PieceDB> pieces) {

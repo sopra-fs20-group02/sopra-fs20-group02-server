@@ -47,8 +47,6 @@ public class GameServiceIntegrationTest {
 
     private User playerC;
 
-    private Game game;
-
     @BeforeEach
     public void setup() {
         gameRepository.deleteAll();
@@ -95,42 +93,49 @@ public class GameServiceIntegrationTest {
 
     @Test
     public void createGame_validInput_success() {
-        this.game = gameService.createNewGame(playerA);
+        Game game = gameService.createNewGame(playerA);
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
-        assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.WAITING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
     }
 
     @Test
     public void joinGame_validInput_success() {
-        this.game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
+
+        Game game = gameService.createNewGame(playerA);
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
-        gameService.joinGame(playerB, this.game);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
+
+        gameService.joinGame(playerB, game);
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.PLAYING);
         assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.PLAYING);
-        assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.FULL);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.FULL);
     }
 
     @Test
     public void joinGame_thirdInvalidPlayer_exception() {
-        this.game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
+
+        Game game = gameService.createNewGame(playerA);
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
-        gameService.joinGame(playerB, this.game);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
+
+        gameService.joinGame(playerB, game);
         assertThrows(
                 JoinGameException.class,
                 () -> {
-                    gameService.joinGame(playerC, this.game);
+                    gameService.joinGame(playerC, game);
                 }
         );
     }
 
     @Test
     public void joinGame_samePlayerTwoGames_exception() {
-        gameService.createNewGame(playerA);
-        gameService.createNewGame(playerA);
+        Game game = gameService.createNewGame(playerA);
         assertThrows(
                 JoinGameException.class,
                 () -> {
-                    gameService.joinGame(playerC, this.game);
+                    gameService.createNewGame(playerA);
                 }
         );
     }
