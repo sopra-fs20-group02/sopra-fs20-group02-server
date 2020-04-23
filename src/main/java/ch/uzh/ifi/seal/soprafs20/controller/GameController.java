@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.Move;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.JoinPutDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -38,7 +39,7 @@ public class GameController {
     @ResponseBody
     public GameGetDTO joinOrCreateGame(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        List<Game> games = gameService.getGames();
+        /*List<Game> games = gameService.getGames();
 
         for (Game game : games){
             if (game.getGameStatus() == GameStatus.WAITING){
@@ -46,11 +47,35 @@ public class GameController {
                 gameService.joinGame(userInput, game);
                 return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
             }
-        }
+        }*/
 
         // precondition: no game can be joined
         Game newGame = gameService.createNewGame(userInput);
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(newGame);
+    }
+
+    @PutMapping("/games")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO joinGame(@RequestBody JoinPutDTO joinPutDTO) {
+        User user = userService.findUserByUserId(joinPutDTO.getUserId());
+        Game game = null;
+        if(joinPutDTO.getGameId()!=null) {
+            game = gameService.findGameByGameId(joinPutDTO.getGameId());
+            //User userInput = DTOMapper.INSTANCE.convertJoinPutDTOToEntity(joinPutDTO);
+        }
+        else {
+            List<Game> games = gameService.getGames();
+            for (Game g : games){
+                if (g.getGameStatus() == GameStatus.WAITING){
+                    // Found game that can be joined
+                    game = g;
+                }
+            }
+        }
+
+        gameService.joinGame(user, game);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
     // Handles the request to get all games

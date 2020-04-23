@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
@@ -179,7 +180,7 @@ public class GameService {
             game.setWinner(game.getPlayerBlack());
         }
         game.setGameStatus(GameStatus.WON);
-        //this.endGame(game);
+        this.endGame(game); //Todo: endGame()
 
         gameRepository.save(game);
         gameRepository.flush();
@@ -245,7 +246,7 @@ public class GameService {
         User player = findUserByUserId(userInput.getUserId());
         if (
                 player.getStatus() != UserStatus.ONLINE ||
-                        player.getStatus() != UserStatus.SEARCHING
+                        player.getStatus() == UserStatus.SEARCHING
         ){
             throw new JoinGameException("User is either already playing or offline");
         }
@@ -322,18 +323,15 @@ public class GameService {
         User winner = game.getWinner();
 
         // update userStats
-        if(winner == game.getPlayerBlack()) {
-            //updateUserStats(game.getPlayerBlack(),true,);
-            //updateUserStats(game.getPlayerWhite(),false,);
-        }
-        else {
-            //updateUserStats(game.getPlayerBlack(),false,);
-            //updateUserStats(game.getPlayerWhite(),true,);
-        }
+        /*updateUserStats(game.getPlayerBlack(),winner==game.getPlayerBlack(), 0);
+        updateUserStats(game.getPlayerWhite(),winner==game.getPlayerWhite(),0);*/
+
+        game.getPlayerWhite().setStatus(UserStatus.ONLINE);
+        game.getPlayerBlack().setStatus(UserStatus.ONLINE);
 
         // update game history
-        game.getPlayerBlack().getGameHistory().add(game);
-        game.getPlayerWhite().getGameHistory().add(game);
+        /*game.getPlayerBlack().getGameHistory().add(game);
+        game.getPlayerWhite().getGameHistory().add(game);*/
         userRepository.save(game.getPlayerBlack());
         userRepository.save(game.getPlayerWhite());
         userRepository.flush();
