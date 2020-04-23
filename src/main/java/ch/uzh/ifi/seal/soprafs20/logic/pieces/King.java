@@ -52,6 +52,7 @@ public class King extends Piece {
                 if (piece.getColor() == this.getColor()){
                     continue;
                 }
+                // TODO: there is a special case for PAWN
                 for (Vector otherMove : piece.getPossibleMoves()){
                     if (otherMove.equals(myMove)){
                         valid = false;

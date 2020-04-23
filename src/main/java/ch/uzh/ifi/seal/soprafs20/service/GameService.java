@@ -211,7 +211,7 @@ public class GameService {
         }
         game.setIsWhiteTurn(!game.getIsWhiteTurn());
 
-        this.board.setPieces(game);
+        this.board.setGame(game);
         this.board.makeMove(pieceId, new Vector(x,y));
 
         // Updates all pieces in repository and saves it to the database game instance
@@ -236,7 +236,7 @@ public class GameService {
             // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");
         }
-        this.board.setPieces(game);
+        this.board.setGame(game);
         return this.board.getPossibleMoves(pieceId);
         // nothing in the database needs to be updated
     }

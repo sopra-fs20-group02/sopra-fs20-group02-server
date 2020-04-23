@@ -27,6 +27,8 @@ public class Board {
 
     private PieceRepository pieceRepository;
 
+    private Boolean isWhiteTurn;
+
     public Board(PieceRepository pieceRepository) {
         this.pieceRepository = pieceRepository;
     }
@@ -189,8 +191,9 @@ public class Board {
         // TODO: stalemate
     }
 
-    public void setPieces(Game game){
+    public void setGame(Game game){
         this.emptyBoard();
+        this.isWhiteTurn = game.getIsWhiteTurn();
         List<PieceDB> pieces = game.getPieces();
 
         for (PieceDB piece : pieces){
