@@ -318,13 +318,13 @@ public class GameService {
         userStatsRepository.flush();
     }
 
-    //Todo: update gameStats
+    //Todo: update gameStats - time
     private void endGame(Game game) {
         User winner = game.getWinner();
 
         // update userStats
-        /*updateUserStats(game.getPlayerBlack(),winner==game.getPlayerBlack(), 0);
-        updateUserStats(game.getPlayerWhite(),winner==game.getPlayerWhite(),0);*/
+        updateUserStats(game.getPlayerBlack(),winner==game.getPlayerBlack(), 0);
+        updateUserStats(game.getPlayerWhite(),winner==game.getPlayerWhite(),0);
 
         game.getPlayerWhite().setStatus(UserStatus.ONLINE);
         game.getPlayerBlack().setStatus(UserStatus.ONLINE);

@@ -111,6 +111,9 @@ public class UserService {
         newUser.setCreationDate(dateFormat.format(date));
 
         UserStats userstats = new UserStats();
+        userstats.setTotalTimePlayed(0);
+        userstats.setNumberOfLosses(0);
+        userstats.setNumberOfWinnings(0);
         newUser.setUserStats(userstats);
         userStatsRepository.save(userstats);
         userStatsRepository.flush();
