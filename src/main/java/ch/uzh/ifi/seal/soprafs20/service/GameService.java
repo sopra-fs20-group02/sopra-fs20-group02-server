@@ -244,7 +244,8 @@ public class GameService {
     private void checkIfUserIsAllowedToJoinOrCreateGame(User userInput){
         User player = findUserByUserId(userInput.getUserId());
         if (
-                player.getStatus() != UserStatus.ONLINE
+                player.getStatus() != UserStatus.ONLINE ||
+                        player.getStatus() != UserStatus.SEARCHING
         ){
             throw new JoinGameException("User is either already playing or offline");
         }
