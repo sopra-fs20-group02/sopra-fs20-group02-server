@@ -4,14 +4,12 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
-import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +45,8 @@ public class GameServiceIntegrationTest {
 
     private User playerB;
 
+    private User playerC;
+
     private Game game;
 
     @BeforeEach
@@ -57,6 +57,7 @@ public class GameServiceIntegrationTest {
         // register and login two users
         assertNull(userRepository.findByUsername("playerA"));
         assertNull(userRepository.findByUsername("playerB"));
+        assertNull(userRepository.findByUsername("playerC"));
 
         UserPostDTO dtoA = new UserPostDTO();
         dtoA.setUsername("pA");
@@ -79,21 +80,59 @@ public class GameServiceIntegrationTest {
         playerB = userService.createUser(userB);
         userService.loginUser(playerB);
         assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.ONLINE);
+
+        UserPostDTO dtoC = new UserPostDTO();
+        dtoC.setUsername("pC");
+        dtoC.setName("playerC");
+        dtoC.setPassword("123456");
+
+        User userC = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(dtoC);
+
+        playerC = userService.createUser(userC);
+        userService.loginUser(playerC);
+        assertEquals(userService.findUserByUsername("pC").getStatus(), UserStatus.ONLINE);
     }
 
     @Test
-    @Order(1)
     public void createGame_validInput_success() {
         this.game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
         assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.WAITING);
     }
 
     @Test
-    @Order(2)
     public void joinGame_validInput_success() {
         this.game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
         gameService.joinGame(playerB, this.game);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.PLAYING);
+        assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.PLAYING);
         assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.FULL);
+    }
+
+    @Test
+    public void joinGame_thirdInvalidPlayer_exception() {
+        this.game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
+        gameService.joinGame(playerB, this.game);
+        assertThrows(
+                JoinGameException.class,
+                () -> {
+                    gameService.joinGame(playerC, this.game);
+                }
+        );
+    }
+
+    @Test
+    public void joinGame_samePlayerTwoGames_exception() {
+        gameService.createNewGame(playerA);
+        gameService.createNewGame(playerA);
+        assertThrows(
+                JoinGameException.class,
+                () -> {
+                    gameService.joinGame(playerC, this.game);
+                }
+        );
     }
 
 /*

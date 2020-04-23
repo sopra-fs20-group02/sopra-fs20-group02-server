@@ -3,11 +3,12 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
+import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
-import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -93,26 +93,53 @@ public class GameService {
         initPieces(game.getPieces());
 
         // Save game entity into the database
+        // TODO: is it necessary to .save again?
         Game newGame = gameRepository.save(game);
         gameRepository.flush();
+
+        player.setStatus(UserStatus.SEARCHING);
+        userRepository.save(player);
+        userRepository.flush();
 
         return newGame;
     }
 
     public void joinGame(User userInput, Game game){
         User player = findUserByUserId(userInput.getUserId());
+        User otherPlayer;
+        if (game.getPlayerBlack() != null){
+            otherPlayer = game.getPlayerBlack();
+        }
+        else if (game.getPlayerWhite() != null){
+            otherPlayer = game.getPlayerWhite();
+        }
+        else{
+            throw new JoinGameException("Corrupt game.");
+        }
+
         if (game.getPlayerBlack() == null && game.getPlayerWhite() != player){
             game.setPlayerBlack(player);
         }
         else if(game.getPlayerWhite() == null && game.getPlayerBlack() != player){
             game.setPlayerWhite(player);
         }
+        else if(game.getPlayerWhite() != null && game.getPlayerBlack() != null){
+            throw new JoinGameException("Game is already full.");
+        }
         else {
-            throw new SopraServiceException("User is already a member of the game."); //Todo add specific expeption
+            throw new JoinGameException("User is already a member of the game.");
         }
         game.setGameStatus(GameStatus.FULL);
         gameRepository.save(game);
         gameRepository.flush();
+
+        player.setStatus(UserStatus.PLAYING);
+        userRepository.save(player);
+        userRepository.flush();
+
+        otherPlayer.setStatus(UserStatus.PLAYING);
+        userRepository.save(otherPlayer);
+        userRepository.flush();
     }
 
     public void leaveGame(Long gameId, User userInput){
@@ -129,6 +156,10 @@ public class GameService {
 
         gameRepository.save(game);
         gameRepository.flush();
+
+        player.setStatus(UserStatus.ONLINE);
+        userRepository.save(player);
+        userRepository.flush();
     }
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){
@@ -175,6 +206,10 @@ public class GameService {
         this.board.setPieces(game);
         return this.board.getPossibleMoves(pieceId);
         // nothing in the database needs to be updated
+    }
+
+    private void checkIfUserIsAlreadyPlaying(long userId){
+
     }
 
     private void initPieces(List<PieceDB> pieces) {
