@@ -73,12 +73,9 @@ public class UserService {
         else if(userInput.getPassword().equals(foundUser.getPassword())){
             if(foundUser.getStatus().equals(UserStatus.OFFLINE)) {
                 foundUser.setStatus(UserStatus.ONLINE);
-                userRepository.save(foundUser);
-                userRepository.flush();
             }
-            else {
-                throw new AlreadyLoggedInException();
-            }
+            userRepository.save(foundUser);
+            userRepository.flush();
             return foundUser;
         }
         else {
