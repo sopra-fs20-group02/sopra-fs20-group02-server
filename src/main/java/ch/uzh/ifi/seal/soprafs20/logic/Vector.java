@@ -53,7 +53,7 @@ public class Vector {
     }
 
     public ArrayList<Vector> getAlongVector(Vector vector, Integer num) {
-        ArrayList<Vector> vectors = new ArrayList<Vector>();
+        ArrayList<Vector> vectors = new ArrayList<>();
         for (int i = 1 ; i < num; ++i){
             Vector current = new Vector(vector).mulS(i).add(this);
             if (checkBounds(current)){

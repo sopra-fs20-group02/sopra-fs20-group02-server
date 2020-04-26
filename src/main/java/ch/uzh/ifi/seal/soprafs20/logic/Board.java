@@ -25,13 +25,9 @@ public class Board {
     private Piece[][] board = new Piece[9][9];
     private ArrayList<Piece> piecesOutGame;
 
-    private PieceRepository pieceRepository;
-
     private Boolean isWhiteTurn;
 
-    public Board(PieceRepository pieceRepository) {
-        this.pieceRepository = pieceRepository;
-    }
+    public Board() {}
 
     public Piece getPieceOnTile(Vector vector) {
         return this.board[vector.getX()][vector.getY()];
@@ -61,10 +57,12 @@ public class Board {
         return pieces;
     }
 
-    /**
-     * Auto saves pieces to repository
-     * @return
-     */
+    public Color getIsTurnColor(){
+        if(isWhiteTurn) {
+            return Color.WHITE;
+        }
+        return Color.BLACK;
+    }
 
     public Piece getById(Long id){
         for (int i = 1; i <= 8; i++){
@@ -95,6 +93,21 @@ public class Board {
         }
 
         return possibleMoves;
+    }
+
+    public ArrayList<Vector> getOpponentPossibleNextMoves(Color color) {
+        ArrayList<Vector> opponentPossibleMoves = new ArrayList<>();
+        for (Piece piece: getPieces()) {
+            if (piece.getColor() != color) {
+                for (Vector vector: piece.getPossibleMoves()) {
+                    if (!opponentPossibleMoves.contains(vector)) {
+                        opponentPossibleMoves.add(vector);
+                    }
+                }
+            }
+        }
+
+        return opponentPossibleMoves;
     }
 
 
@@ -178,7 +191,12 @@ public class Board {
         king.move(kingDest);
     }
 
+
     public void updateGameStatus(){
+        Color myColor = Color.BLACK;
+        if (isWhiteTurn) {
+            myColor = Color.WHITE;
+        }
         // TODO: check for different win/draw conditions
 
         // TODO: checkmate
@@ -189,6 +207,40 @@ public class Board {
             }
         }
         // TODO: stalemate
+    }
+
+    private Piece getMyKing() {
+
+        Piece king = null;
+        for (Piece piece: getPieces()) {
+            if (piece.getColor() == getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
+                king = piece;
+            }
+        }
+        return king;
+    }
+
+    public boolean checkForCheck() {
+        Piece king = getMyKing();
+        if (king == null) {
+            return false;
+        }
+        ArrayList<Vector> opponentMoves = getOpponentPossibleNextMoves(getIsTurnColor());
+        for (Vector vector: opponentMoves) {
+            if (vector.getX().equals(king.getPosition().getX()) && vector.getY().equals(king.getPosition().getY())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO: implement a check for stalemate
+    public boolean checkForStalemate() {
+        Piece king = getMyKing();
+        if (king.getPossibleMoves() == null) {
+
+        }
+        return false;
     }
 
     public void setGame(Game game){

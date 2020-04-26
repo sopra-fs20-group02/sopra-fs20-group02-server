@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -48,7 +49,7 @@ public class GameService {
         this.userRepository = userRepository;
         this.pieceRepository = pieceRepository;
         this.userStatsRepository = userStatsRepository;
-        this.board = new Board(pieceRepository);
+        this.board = new Board();
     }
 
     public List<Game> getGames() {
@@ -210,7 +211,6 @@ public class GameService {
             // TODO: specific exception
             throw new SopraServiceException("Other users turn");
         }
-        game.setIsWhiteTurn(!game.getIsWhiteTurn());
 
         this.board.setGame(game);
         this.board.makeMove(pieceId, new Vector(x,y));
@@ -225,10 +225,39 @@ public class GameService {
             pieceDB.setHasMoved(piece.getHasMoved());
             pieceRepository.save(pieceDB);
         }
+        updateGameStatus(game);
+
+        game.setIsWhiteTurn(!game.getIsWhiteTurn());
+
         gameRepository.save(game);
         pieceRepository.flush();
         gameRepository.flush();
         return game;
+    }
+
+    public void updateGameStatus(Game game){
+        Color myColor = board.getIsTurnColor();
+        List<Piece> pieces = board.getPieces();
+        for (Piece piece: pieces) {
+            if (piece.getPieceType() == PieceType.KING && piece.getCaptured()) {
+                if (piece.getColor() == Color.WHITE) {
+                    game.setWinner(game.getPlayerBlack());
+                }
+                else {
+                    game.setWinner(game.getPlayerWhite());
+                }
+                endGame(game);
+            }
+        }
+        if (board.checkForCheck()) {
+            if (myColor.equals(Color.WHITE)) {
+                game.setGameStatus(GameStatus.BLACK_IN_CHECK);
+            }
+            else {
+                game.setGameStatus(GameStatus.WHITE_IN_CHECK);
+            }
+        }
+
     }
 
     public List<Vector> getPossibleMoves(Long gameId, Long pieceId){

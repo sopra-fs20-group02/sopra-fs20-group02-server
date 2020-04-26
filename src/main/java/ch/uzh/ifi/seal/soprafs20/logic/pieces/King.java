@@ -21,7 +21,7 @@ public class King extends Piece {
     // A King cannot commit suicide, thus it needs to be checked weather a move can be made differently
     @Override
     public ArrayList<Vector> getPossibleMoves(){
-        ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
+        ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {
                 Vector current = new Vector(vector).mulS(i).add(this.position);
@@ -41,7 +41,7 @@ public class King extends Piece {
             }
         }
 
-        ArrayList<Vector> possibleMovesNoSuicide = new ArrayList<Vector>();
+        ArrayList<Vector> possibleMovesNoSuicide = new ArrayList<>();
         List<Piece> pieces = this.board.getPieces();
 
         // May be slow !
@@ -52,10 +52,26 @@ public class King extends Piece {
                 if (piece.getColor() == this.getColor()){
                     continue;
                 }
-                // TODO: there is a special case for PAWN
-                for (Vector otherMove : piece.getPossibleMoves()){
-                    if (otherMove.equals(myMove)){
-                        valid = false;
+
+                // special case for PAWN
+                if (piece.getPieceType() == PieceType.PAWN) {
+                    for (Vector otherMove : piece.getPossibleMoves()){
+
+                        if (otherMove.equals(new Vector(0,1).add(piece.getPosition()))
+                                || otherMove.equals(new Vector(0,-1).add(piece.getPosition())) ) {
+                            continue;
+                        }
+
+                        else if (otherMove.equals(myMove)) {
+                            valid = false;
+                        }
+                    }
+                }
+                else {
+                    for (Vector otherMove : piece.getPossibleMoves()){
+                        if (otherMove.equals(myMove)){
+                            valid = false;
+                        }
                     }
                 }
             }
