@@ -52,7 +52,7 @@ public class Pawn extends Piece {
         }
 
         for (Vector vector : captureVectors){
-            Vector current = new Vector(vector).mulS(1);
+            Vector current = new Vector(vector).mulS(1).add(this.position);
             if (!current.checkBounds()){
                 continue;
             }
