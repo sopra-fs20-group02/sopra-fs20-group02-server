@@ -49,28 +49,26 @@ public class King extends Piece {
             Boolean valid = true;
             for (Piece piece : pieces){
                 // only check for opponent moves
-                if (piece.getColor() == this.getColor()){
-                    continue;
-                }
+                if (piece.getColor() != this.getColor()){
+                    // special case for PAWN
+                    if (piece.getPieceType() == PieceType.PAWN) {
+                        for (Vector otherMove : piece.getPossibleMoves()){
 
-                // special case for PAWN
-                if (piece.getPieceType() == PieceType.PAWN) {
-                    for (Vector otherMove : piece.getPossibleMoves()){
+                            if (otherMove.equals(new Vector(0,1).add(piece.getPosition()))
+                                    || otherMove.equals(new Vector(0,-1).add(piece.getPosition())) ) {
+                                continue;
+                            }
 
-                        if (otherMove.equals(new Vector(0,1).add(piece.getPosition()))
-                                || otherMove.equals(new Vector(0,-1).add(piece.getPosition())) ) {
-                            continue;
-                        }
-
-                        else if (otherMove.equals(myMove)) {
-                            valid = false;
+                            else if (otherMove.equals(myMove)) {
+                                valid = false;
+                            }
                         }
                     }
-                }
-                else {
-                    for (Vector otherMove : piece.getPossibleMoves()){
-                        if (otherMove.equals(myMove)){
-                            valid = false;
+                    else {
+                        for (Vector otherMove : piece.getPossibleMoves()){
+                            if (otherMove.equals(myMove)){
+                                valid = false;
+                            }
                         }
                     }
                 }

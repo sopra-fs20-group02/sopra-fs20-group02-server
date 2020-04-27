@@ -19,6 +19,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +45,10 @@ public class GameService {
     private Board board;
 
     @Autowired
-    public GameService(GameRepository gameRepository, UserRepository userRepository, PieceRepository pieceRepository, UserStatsRepository userStatsRepository) {
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       @Qualifier("userRepository") UserRepository userRepository,
+                       PieceRepository pieceRepository,
+                       @Qualifier("userStatsRepository") UserStatsRepository userStatsRepository) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
         this.pieceRepository = pieceRepository;
@@ -180,7 +184,7 @@ public class GameService {
         else {
             game.setWinner(game.getPlayerBlack());
         }
-        game.setGameStatus(GameStatus.WON);
+        game.setGameStatus(GameStatus.FINISHED);
         this.endGame(game); //Todo: endGame()
 
         gameRepository.save(game);
@@ -225,7 +229,7 @@ public class GameService {
             pieceDB.setHasMoved(piece.getHasMoved());
             pieceRepository.save(pieceDB);
         }
-        updateGameStatus(game);
+        checkForCheckOrCheckmate(game);
 
         game.setIsWhiteTurn(!game.getIsWhiteTurn());
 
@@ -235,7 +239,7 @@ public class GameService {
         return game;
     }
 
-    public void updateGameStatus(Game game){
+    public void checkForCheckOrCheckmate(Game game){
         Color myColor = board.getIsTurnColor();
         List<Piece> pieces = board.getPieces();
         for (Piece piece: pieces) {
@@ -249,12 +253,22 @@ public class GameService {
                 endGame(game);
             }
         }
-        if (board.checkForCheck()) {
+        if (this.board.checkForCheck()) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.BLACK_IN_CHECK);
             }
             else {
                 game.setGameStatus(GameStatus.WHITE_IN_CHECK);
+            }
+        }
+        else if (this.board.checkForCheckmate()) {
+            if (myColor.equals(Color.WHITE)) {
+                game.setGameStatus(GameStatus.FINISHED);
+                game.setWinner(game.getPlayerWhite());
+            }
+            else {
+                game.setGameStatus(GameStatus.FINISHED);
+                game.setWinner(game.getPlayerBlack());
             }
         }
 

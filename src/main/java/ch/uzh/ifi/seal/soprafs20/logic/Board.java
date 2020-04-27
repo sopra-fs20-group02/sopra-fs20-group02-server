@@ -95,19 +95,19 @@ public class Board {
         return possibleMoves;
     }
 
-    public ArrayList<Vector> getOpponentPossibleNextMoves(Color color) {
-        ArrayList<Vector> opponentPossibleMoves = new ArrayList<>();
+    public ArrayList<Vector> getAllPossibleNextMoves(Color playerColor) {
+        ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Piece piece: getPieces()) {
-            if (piece.getColor() != color) {
+            if (piece.getColor() == playerColor) {
                 for (Vector vector: piece.getPossibleMoves()) {
-                    if (!opponentPossibleMoves.contains(vector)) {
-                        opponentPossibleMoves.add(vector);
+                    if (!possibleMoves.contains(vector)) {
+                        possibleMoves.add(vector);
                     }
                 }
             }
         }
 
-        return opponentPossibleMoves;
+        return possibleMoves;
     }
 
 
@@ -159,6 +159,7 @@ public class Board {
             // Capture Piece
             if (captured.getColor() != piece.getColor()){
                 captured.setCaptured(true);
+                board[captured.getPosition().getX()][captured.getPosition().getY()] = null ;
                 captured.setPosition(new Vector(0, 0));
                 this.piecesOutGame.add(captured);
             }
@@ -224,11 +225,11 @@ public class Board {
         // TODO: stalemate
     }
 
-    private Piece getMyKing() {
+    private Piece getOpponentsKing() {
 
         Piece king = null;
         for (Piece piece: getPieces()) {
-            if (piece.getColor() == getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
+            if (piece.getColor() != getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
                 king = piece;
             }
         }
@@ -236,12 +237,12 @@ public class Board {
     }
 
     public boolean checkForCheck() {
-        Piece king = getMyKing();
+        Piece king = getOpponentsKing();
         if (king == null) {
             return false;
         }
-        ArrayList<Vector> opponentMoves = getOpponentPossibleNextMoves(getIsTurnColor());
-        for (Vector vector: opponentMoves) {
+        ArrayList<Vector> nextMoves = getAllPossibleNextMoves(getIsTurnColor());
+        for (Vector vector: nextMoves) {
             if (vector.getX().equals(king.getPosition().getX()) && vector.getY().equals(king.getPosition().getY())) {
                 return true;
             }
@@ -249,9 +250,15 @@ public class Board {
         return false;
     }
 
+    public boolean checkForCheckmate() {
+        Piece king = getOpponentsKing();
+        return checkForCheck() && king.getPossibleMoves() == null;
+
+    }
+
     // TODO: implement a check for stalemate
     public boolean checkForStalemate() {
-        Piece king = getMyKing();
+        Piece king = getOpponentsKing();
         if (king.getPossibleMoves() == null) {
 
         }
