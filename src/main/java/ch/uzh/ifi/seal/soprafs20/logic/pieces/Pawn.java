@@ -6,8 +6,8 @@ import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
 import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Pawn extends Piece {
     ArrayList<Vector> captureVectors;

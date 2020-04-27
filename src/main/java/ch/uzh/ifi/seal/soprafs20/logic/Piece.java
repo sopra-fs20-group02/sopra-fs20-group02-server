@@ -55,8 +55,8 @@ public abstract class Piece {
         this.straights = new ArrayList<Vector>();
 
         // initialize default vector lists
-        this.diagonalsFront.addAll(Arrays.asList(new Vector(1,1), new Vector(1,-1)));
-        this.diagonalsBack.addAll(Arrays.asList(new Vector(-1,1), new Vector(-1,-1)));
+        this.diagonalsFront.addAll(Arrays.asList(new Vector(-1,1), new Vector(1,1)));
+        this.diagonalsBack.addAll(Arrays.asList(new Vector(-1,-1), new Vector(1,-1)));
         this.diagonals.addAll(this.diagonalsFront);
         this.diagonals.addAll(this.diagonalsBack);
         this.verticals.addAll(Arrays.asList(new Vector(0,1), new Vector(0,-1)));
