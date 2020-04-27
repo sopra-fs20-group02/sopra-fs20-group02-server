@@ -97,7 +97,7 @@ public class GameServiceLogicIntegrationTest {
         assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.FULL);
     }
 
-    @Test
+    /*@Test
     public void getPossibleMoves_validInput_success() {
         List<PieceDB> pieces = this.game.getPieces();
 
@@ -108,6 +108,6 @@ public class GameServiceLogicIntegrationTest {
 
     @Test void playRandomChessGame(){
         // TODO
-    }
+    }*/
 
 }
