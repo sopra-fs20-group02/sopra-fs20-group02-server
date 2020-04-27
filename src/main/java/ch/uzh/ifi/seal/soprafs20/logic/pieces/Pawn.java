@@ -17,16 +17,12 @@ public class Pawn extends Piece {
 
         if (color == Color.WHITE){
             this.movementVectors.add(new Vector(0,1));
-            this.captureVectors.addAll(
-                    this.diagonalsFront
-            );
+            this.captureVectors.addAll(this.diagonalsFront);
         }
 
         if (color == Color.BLACK){
             this.movementVectors.add(new Vector(0,-1));
-            this.captureVectors.addAll(
-                    this.diagonalsBack
-            );
+            this.captureVectors.addAll(this.diagonalsBack);
         }
         this.movementSteps = 2;
         this.pieceType = PieceType.PAWN;
@@ -38,7 +34,7 @@ public class Pawn extends Piece {
         if (this.hasMoved){
             this.movementSteps = 1;
         }
-        ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
+        ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {
                 Vector current = new Vector(vector).mulS(i).add(this.position);
