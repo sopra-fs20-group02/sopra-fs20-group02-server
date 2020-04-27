@@ -375,7 +375,7 @@ public class GameService {
         playerBlack.setStatus(UserStatus.ONLINE);
 
         // update game history
-        playerBlack.getGameHistory().add(game);
+        //playerBlack.getGameHistory().add(game);
         userRepository.save(playerBlack);
         //playerWhite.getGameHistory().add(game);
         userRepository.save(playerWhite);
