@@ -54,5 +54,5 @@ public class User implements Serializable {
     private UserStats userStats;
 
     @OneToMany
-    private List<Game> gameHistory = new ArrayList<>();
+    private List<Game> gameHistory;
 }

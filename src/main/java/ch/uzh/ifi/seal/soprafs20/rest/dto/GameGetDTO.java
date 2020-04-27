@@ -14,8 +14,8 @@ import java.util.List;
 @Setter
 public class GameGetDTO {
     private Long gameId;
-    private User playerWhite;
-    private User playerBlack;
+    private Long playerWhite;
+    private Long playerBlack;
     private List<PieceDB> pieces;
     private Instant startTime;
     private Instant endTime;
@@ -23,5 +23,5 @@ public class GameGetDTO {
     private Duration blackDuration;
     private GameStatus gameStatus;
     private Boolean isWhiteTurn;
-    private User winner;
+    private Long winner;
 }

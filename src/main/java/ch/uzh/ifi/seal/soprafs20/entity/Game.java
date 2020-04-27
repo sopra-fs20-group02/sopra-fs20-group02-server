@@ -27,13 +27,11 @@ public class Game implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
 
-    @OneToOne
-    @JoinColumn()
-    private User playerWhite;
+    @Column()
+    private Long playerWhite;
 
-    @OneToOne
-    @JoinColumn()
-    private User playerBlack;
+    @Column()
+    private Long playerBlack;
 
     @OneToMany
     private List<PieceDB> pieces = new ArrayList<>();
@@ -56,8 +54,7 @@ public class Game implements Serializable {
     @Column()
     private Boolean isWhiteTurn;
 
-    @OneToOne
-    @JoinColumn()
-    private User winner;
+    @Column()
+    private Long winner;
 
 }
