@@ -144,10 +144,8 @@ public class Board {
 
         // check for valid move
         ArrayList<Vector> possibleMoves = getPossibleMoves(pieceId);
-        for (Vector move : possibleMoves) {
-            if (move.equals(moveTo)) {
-                throw new InvalidMoveException("This piece can not move to the desired position");
-            }
+        if (!possibleMoves.contains(moveTo)) {
+            throw new InvalidMoveException("This piece can not move to the desired position");
         }
 
 
@@ -208,7 +206,7 @@ public class Board {
     }
 
 
-    public void updateGameStatus(){
+    /*public void updateGameStatus(){
         Color myColor = Color.BLACK;
         if (isWhiteTurn) {
             myColor = Color.WHITE;
@@ -223,7 +221,7 @@ public class Board {
             }
         }
         // TODO: stalemate
-    }
+    }*/
 
     private Piece getOpponentsKing() {
 

@@ -1,12 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Simple integer vector class
  */
 
-public class Vector {
+public class Vector implements Serializable {
     private Integer x;
     private Integer y;
 
@@ -87,5 +88,18 @@ public class Vector {
 
     public Integer getY() {
         return y;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Vector)) {
+            return false;
+        }
+        if (this.getX() == ((Vector) other).getX() && this.getY() == ((Vector) other).getY()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
