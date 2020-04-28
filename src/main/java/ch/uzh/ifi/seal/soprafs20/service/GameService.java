@@ -371,7 +371,7 @@ public class GameService {
         User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
         User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
-        game.setGameStatus(GameStatus.WON);
+        game.setGameStatus(GameStatus.FINISHED);
         game.setEndTime(Instant.now());
         Long time = game.getEndTime().getEpochSecond()-game.getStartTime().getEpochSecond();
 
