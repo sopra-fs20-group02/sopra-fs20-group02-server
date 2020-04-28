@@ -90,4 +90,10 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         log.error(String.format("InvalidMoveException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(JoinGameException.class)
+    public ResponseEntity handelLeaveGameException (Exception ex) {
+        log.error(String.format("LeaveGameException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }
