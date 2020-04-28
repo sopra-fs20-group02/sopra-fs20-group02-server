@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -144,6 +145,8 @@ public class GameService {
         else {
             throw new JoinGameException("User is already a member of the game.");
         }
+
+        game.setStartTime(Instant.now());
 
         // adjust game status
         game.setGameStatus(GameStatus.FULL);
@@ -367,9 +370,12 @@ public class GameService {
         User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
         User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
+        game.setEndTime(Instant.now());
+        Long time = game.getEndTime().getEpochSecond()-game.getStartTime().getEpochSecond();
+
         // update userStats
-        updateUserStats(playerBlack,winner == game.getPlayerBlack(), 0);
-        updateUserStats(playerWhite,winner == game.getPlayerWhite(),0);
+        updateUserStats(playerBlack,winner == game.getPlayerBlack(), time.intValue());
+        updateUserStats(playerWhite,winner == game.getPlayerWhite(),time.intValue());
 
         playerWhite.setStatus(UserStatus.ONLINE);
         playerBlack.setStatus(UserStatus.ONLINE);
@@ -380,5 +386,16 @@ public class GameService {
         //playerWhite.getGameHistory().add(game);
         userRepository.save(playerWhite);
         userRepository.flush();
+    }
+
+    public List<Game> getGameHistory(Long userId) {
+        User user = findUserByUserId(userId);
+        List<Game> gameHistory = new ArrayList<>();
+        for(Game game: gameRepository.findAll()) {
+            if(game.getPlayerBlack() == user || game.getPlayerWhite() == user) {
+                gameHistory.add(game);
+            }
+        }
+        return gameHistory;
     }
 }

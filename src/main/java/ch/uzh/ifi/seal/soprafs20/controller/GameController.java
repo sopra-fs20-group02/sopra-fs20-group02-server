@@ -12,6 +12,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
+import org.apache.logging.log4j.util.PropertiesUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,14 +127,11 @@ public class GameController {
         return moves;
     }
 
-    // TODO
-    @GetMapping(value = "/games/history/")
+    @GetMapping(value = "/users/{userId}/gameHistory")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void getHistory() {
-        //List<Vector> moves = gameService.getPossibleMoves(gameId,pieceId);
-        return;
+    public List<Game> getGameHistory(@PathVariable("userId") Long userId) {
+        return gameService.getGameHistory(userId);
     }
-
 
 }
