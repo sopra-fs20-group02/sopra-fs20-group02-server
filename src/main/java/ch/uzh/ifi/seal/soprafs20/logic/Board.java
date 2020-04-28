@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.exceptions.InvalidMoveException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PieceNotInGameException;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
-import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class Board {
     }
 
     public void emptyBoard(){
-        this.piecesOutGame = new ArrayList<Piece>();
+        this.piecesOutGame = new ArrayList<>();
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
                 this.board[i][j] = null;
@@ -43,7 +42,7 @@ public class Board {
     }
 
     public List<Piece> getPieces(){
-        List<Piece> pieces = new ArrayList<Piece>();
+        List<Piece> pieces = new ArrayList<>();
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
                 if (this.board[i][j] != null){
@@ -67,14 +66,14 @@ public class Board {
     public Piece getById(Long id){
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
-                if (this.board[i][j] != null && this.board[i][j].getPieceId() == id){
+                if (this.board[i][j] != null && this.board[i][j].getPieceId().equals(id)){
                     return this.board[i][j];
                 }
             }
         }
 
         for (Piece piece : piecesOutGame){
-            if (piece.getPieceId() == id){
+            if (piece.getPieceId().equals(id)){
                 return piece;
             }
         }
@@ -224,14 +223,12 @@ public class Board {
     }*/
 
     private Piece getOpponentsKing() {
-
-        Piece king = null;
         for (Piece piece: getPieces()) {
             if (piece.getColor() != getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
-                king = piece;
+                return piece;
             }
         }
-        return king;
+        return null;
     }
 
     public boolean checkForCheck() {
@@ -250,6 +247,9 @@ public class Board {
 
     public boolean checkForCheckmate() {
         Piece king = getOpponentsKing();
+        if (king == null) {
+            return true;
+        }
         return checkForCheck() && king.getPossibleMoves() == null;
 
     }
