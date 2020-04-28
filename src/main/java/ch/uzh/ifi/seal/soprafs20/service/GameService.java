@@ -295,11 +295,8 @@ public class GameService {
 
     private void checkIfUserIsAllowedToJoinOrCreateGame(User userInput){
         User player = findUserByUserId(userInput.getUserId());
-        if (
-                player.getStatus() != UserStatus.ONLINE ||
-                        player.getStatus() == UserStatus.SEARCHING
-        ){
-            throw new JoinGameException("User is either already playing or offline");
+        if (player.getStatus() != UserStatus.ONLINE) {
+            throw new JoinGameException("User is either already in a game or offline");
         }
     }
 
@@ -358,11 +355,13 @@ public class GameService {
 
     private void updateUserStats(User user, Boolean winner, int time){
         UserStats userStats = user.getUserStats();
-        if(winner) {
-            userStats.setNumberOfWinnings(userStats.getNumberOfWinnings()+1);
-        }
-        else {
-            userStats.setNumberOfLosses(userStats.getNumberOfLosses()+1);
+        if(winner != null) {
+            if (winner) {
+                userStats.setNumberOfWinnings(userStats.getNumberOfWinnings() + 1);
+            }
+            else {
+                userStats.setNumberOfLosses(userStats.getNumberOfLosses() + 1);
+            }
         }
         userStats.setTotalTimePlayed(userStats.getTotalTimePlayed()+time);
         userStatsRepository.save(userStats);
@@ -433,5 +432,28 @@ public class GameService {
         }
         gameRepository.delete(game);
         gameRepository.flush();
+    }
+
+    public void draw(Long gameId) {
+        Game game = findGameByGameId(gameId);
+        User playerWhite = game.getPlayerWhite();
+        User playerBlack = game.getPlayerBlack();
+        game.setEndTime(Instant.now());
+        Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
+
+        game.setGameStatus(GameStatus.DRAW);
+
+        updateUserStats(playerWhite,null,time.intValue());
+        updateUserStats(playerBlack,null,time.intValue());
+
+        playerWhite.setStatus(UserStatus.ONLINE);
+        playerBlack.setStatus(UserStatus.ONLINE);
+        userRepository.save(playerBlack);
+        userRepository.save(playerWhite);
+        userRepository.flush();
+
+        gameRepository.save(game);
+        gameRepository.flush();
+
     }
 }
