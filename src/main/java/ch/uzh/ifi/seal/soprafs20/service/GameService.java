@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,42 +163,47 @@ public class GameService {
     }
 
     public void leaveGame(Long gameId, User userInput){
-
         User player = findUserByUserId(userInput.getUserId());
         Game game = findGameByGameId(gameId);
 
-        // Get other player
-        User otherPlayer;
-        if (!game.getPlayerBlack().equals(player)){
-            otherPlayer = findUserByUserId(game.getPlayerBlack().getUserId());
-        }
-        else if (!game.getPlayerWhite().equals(player)){
-            otherPlayer = findUserByUserId(game.getPlayerWhite().getUserId());
-        }
-        else{
-            throw new LeaveGameException("Corrupt game");
-        }
+        if(game.getGameStatus() != GameStatus.FINISHED ) {
 
-        // Other player wins the game
-        if(player == game.getPlayerBlack()) {
-            game.setWinner(game.getPlayerWhite().getUserId());
+            // Get other player
+            User otherPlayer;
+            if (!game.getPlayerBlack().equals(player)) {
+                otherPlayer = findUserByUserId(game.getPlayerBlack().getUserId());
+            }
+            else if (!game.getPlayerWhite().equals(player)) {
+                otherPlayer = findUserByUserId(game.getPlayerWhite().getUserId());
+            }
+            else {
+                throw new LeaveGameException("Corrupt game");
+            }
+
+            // Other player wins the game
+            if (player == game.getPlayerBlack()) {
+                game.setWinner(game.getPlayerWhite().getUserId());
+            }
+            else {
+                game.setWinner(game.getPlayerBlack().getUserId());
+            }
+            this.endGame(game); //Todo: endGame()
+
+            gameRepository.save(game);
+            gameRepository.flush();
+
+            // adjust users statuses
+            player.setStatus(UserStatus.ONLINE);
+            userRepository.save(player);
+            userRepository.flush();
+
+            otherPlayer.setStatus(UserStatus.ONLINE);
+            userRepository.save(otherPlayer);
+            userRepository.flush();
         }
         else {
-            game.setWinner(game.getPlayerBlack().getUserId());
+            throw new LeaveGameException("Game is already finished.");
         }
-        this.endGame(game); //Todo: endGame()
-
-        gameRepository.save(game);
-        gameRepository.flush();
-
-        // adjust users statuses
-        player.setStatus(UserStatus.ONLINE);
-        userRepository.save(player);
-        userRepository.flush();
-
-        otherPlayer.setStatus(UserStatus.ONLINE);
-        userRepository.save(otherPlayer);
-        userRepository.flush();
 
     }
 
@@ -404,5 +408,30 @@ public class GameService {
             }
         }
         return gameHistory;
+    }
+
+    // Delete game and update userStatus
+    public void deleteGame(Long gameId) {
+        Game game = findGameByGameId(gameId);
+        User playerBlack = game.getPlayerBlack();
+        User playerWhite = game.getPlayerWhite();
+        if(playerWhite != null) {
+            playerWhite.setStatus(UserStatus.ONLINE);
+            userRepository.save(playerWhite);
+            userRepository.flush();
+        }
+        if(playerBlack != null) {
+            playerBlack.setStatus(UserStatus.ONLINE);
+            userRepository.save(playerBlack);
+            userRepository.flush();
+        }
+        List<PieceDB> pieces = game.getPieces();
+        game.getPieces().clear();
+        for(PieceDB piece: pieces){
+            pieceRepository.delete(piece);
+            pieceRepository.flush();
+        }
+        gameRepository.delete(game);
+        gameRepository.flush();
     }
 }

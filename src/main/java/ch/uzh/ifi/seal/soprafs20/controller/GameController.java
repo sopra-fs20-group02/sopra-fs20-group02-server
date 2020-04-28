@@ -13,7 +13,6 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
-import org.apache.logging.log4j.util.PropertiesUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,6 +111,13 @@ public class GameController {
     public void leaveGame(@PathVariable("id") Long id, @RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
         gameService.leaveGame(id, userInput);
+    }
+
+    @DeleteMapping(value = "/games/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void deleteGame(@PathVariable("id") Long id) {
+        gameService.deleteGame(id);
     }
 
     @PutMapping(value = "/games/{gameId}/{pieceId}")
