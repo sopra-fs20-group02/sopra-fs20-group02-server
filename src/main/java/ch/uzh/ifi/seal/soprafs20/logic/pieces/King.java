@@ -44,15 +44,13 @@ public class King extends Piece {
         ArrayList<Vector> possibleMovesNoSuicide = new ArrayList<>();
         List<Piece> pieces = this.board.getPieces();
 
-        // remove
-
         // May be slow !
         // TODO: king suicide
         for (Vector myMove : possibleMoves){
-            Boolean valid = true;
-            /*for (Piece piece : pieces){
+            boolean valid = true;
+            for (Piece piece : pieces){
                 // only check for opponent moves
-                if (piece.getColor() != this.getColor()){
+                if (piece.getColor() != this.getColor() && piece.getPieceType() != PieceType.KING){
                     // special case for PAWN
                     if (piece.getPieceType() == PieceType.PAWN) {
                         for (Vector otherMove : piece.getPossibleMoves()){
@@ -68,11 +66,21 @@ public class King extends Piece {
                         for (Vector otherMove : piece.getPossibleMoves()){
                             if (otherMove.equals(myMove)){
                                 valid = false;
+                                break;
                             }
                         }
                     }
                 }
-            }*/
+                // special case for opponents KING --> otherwise loop occurs
+                else if (piece.getColor() != this.getColor() && piece.getPieceType() == PieceType.KING) {
+                    for ( Vector otherMove: piece.getMovementVectors()) {
+                        if (otherMove.add(piece.getPosition()).equals(myMove)) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+            }
             if (valid){
                 possibleMovesNoSuicide.add(myMove);
             }
