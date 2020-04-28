@@ -114,8 +114,8 @@ public class DTOMapperTest {
         // create Game
         Game game = new Game();
         game.setGameId(1L);
-        game.setPlayerWhite(user1.getUserId());
-        game.setPlayerBlack(user2.getUserId());
+        game.setPlayerWhite(user1);
+        game.setPlayerBlack(user2);
         List<PieceDB> pieces = new ArrayList<>();
         pieces.add(new PieceDB());
         game.setPieces(pieces);
