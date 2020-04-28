@@ -187,7 +187,6 @@ public class GameService {
         else {
             game.setWinner(game.getPlayerBlack().getUserId());
         }
-        game.setGameStatus(GameStatus.FINISHED);
         this.endGame(game); //Todo: endGame()
 
         gameRepository.save(game);
@@ -372,6 +371,7 @@ public class GameService {
         User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
         User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
+        game.setGameStatus(GameStatus.WON);
         game.setEndTime(Instant.now());
         Long time = game.getEndTime().getEpochSecond()-game.getStartTime().getEpochSecond();
 
