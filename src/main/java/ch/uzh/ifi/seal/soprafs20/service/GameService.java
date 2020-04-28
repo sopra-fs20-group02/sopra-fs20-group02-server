@@ -166,7 +166,7 @@ public class GameService {
         User player = findUserByUserId(userInput.getUserId());
         Game game = findGameByGameId(gameId);
 
-        if(game.getGameStatus() != GameStatus.FINISHED ) {
+        if(game.getGameStatus() != GameStatus.WON ) {
 
             // Get other player
             User otherPlayer;
@@ -271,11 +271,11 @@ public class GameService {
         }
         else if (this.board.checkForCheckmate()) {
             if (myColor.equals(Color.WHITE)) {
-                game.setGameStatus(GameStatus.FINISHED);
+                game.setGameStatus(GameStatus.WON);
                 game.setWinner(game.getPlayerWhite().getUserId());
             }
             else {
-                game.setGameStatus(GameStatus.FINISHED);
+                game.setGameStatus(GameStatus.WON);
                 game.setWinner(game.getPlayerBlack().getUserId());
             }
         }*/
@@ -370,12 +370,12 @@ public class GameService {
 
     //Todo: update gameStats - time
     private void endGame(Game game) {
-        if(game.getGameStatus()!=GameStatus.FINISHED) {
+        if(game.getGameStatus()!=GameStatus.WON) {
             User winner = findUserByUserId(game.getWinner());
             User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
             User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
-            game.setGameStatus(GameStatus.FINISHED);
+            game.setGameStatus(GameStatus.WON);
             game.setEndTime(Instant.now());
             Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
 

@@ -157,6 +157,6 @@ public class GameServiceIntegrationTest {
 
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
         assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.ONLINE);
-        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.FINISHED);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WON);
     }
 }
