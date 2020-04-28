@@ -367,27 +367,32 @@ public class GameService {
 
     //Todo: update gameStats - time
     private void endGame(Game game) {
-        User winner = findUserByUserId(game.getWinner());
-        User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
-        User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
+        if(game.getGameStatus()!=GameStatus.FINISHED) {
+            User winner = findUserByUserId(game.getWinner());
+            User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
+            User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
-        game.setGameStatus(GameStatus.FINISHED);
-        game.setEndTime(Instant.now());
-        Long time = game.getEndTime().getEpochSecond()-game.getStartTime().getEpochSecond();
+            game.setGameStatus(GameStatus.FINISHED);
+            game.setEndTime(Instant.now());
+            Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
 
-        // update userStats
-        updateUserStats(playerBlack,winner == game.getPlayerBlack(), time.intValue());
-        updateUserStats(playerWhite,winner == game.getPlayerWhite(),time.intValue());
+            // update userStats
+            updateUserStats(playerBlack, winner == game.getPlayerBlack(), time.intValue());
+            updateUserStats(playerWhite, winner == game.getPlayerWhite(), time.intValue());
 
-        playerWhite.setStatus(UserStatus.ONLINE);
-        playerBlack.setStatus(UserStatus.ONLINE);
+            playerWhite.setStatus(UserStatus.ONLINE);
+            playerBlack.setStatus(UserStatus.ONLINE);
 
-        // update game history
-        //playerBlack.getGameHistory().add(game);
-        userRepository.save(playerBlack);
-        //playerWhite.getGameHistory().add(game);
-        userRepository.save(playerWhite);
-        userRepository.flush();
+            // update game history
+            //playerBlack.getGameHistory().add(game);
+            userRepository.save(playerBlack);
+            //playerWhite.getGameHistory().add(game);
+            userRepository.save(playerWhite);
+            userRepository.flush();
+        }
+        else {
+            throw new LeaveGameException("Game is already finished.");
+        }
     }
 
     public List<Game> getGameHistory(Long userId) {
