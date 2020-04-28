@@ -49,34 +49,37 @@ public class King extends Piece {
         for (Vector myMove : possibleMoves){
             boolean valid = true;
             for (Piece piece : pieces){
-                // only check for opponent moves
-                if (piece.getColor() != this.getColor() && piece.getPieceType() != PieceType.KING){
-                    // special case for PAWN
-                    if (piece.getPieceType() == PieceType.PAWN) {
-                        for (Vector otherMove : piece.getPossibleMoves()){
+                // only check for non-captured pieces
+                if(!piece.getCaptured()) {
+                    // only check for opponent moves
+                    if (piece.getColor() != this.getColor() && piece.getPieceType() != PieceType.KING){
+                        // special case for PAWN
+                        if (piece.getPieceType() == PieceType.PAWN) {
+                            for (Vector otherMove : piece.getPossibleMoves()){
 
-                            if (!otherMove.equals(new Vector(0,1).add(piece.getPosition()))
-                                    && !otherMove.equals(new Vector(0,-1).add(piece.getPosition()))
-                                    && otherMove.equals(myMove)) {
-                                valid = false;
+                                if (!otherMove.equals(new Vector(0,1).add(piece.getPosition()))
+                                        && !otherMove.equals(new Vector(0,-1).add(piece.getPosition()))
+                                        && otherMove.equals(myMove)) {
+                                    valid = false;
+                                }
+                            }
+                        }
+                        else {
+                            for (Vector otherMove : piece.getPossibleMoves()){
+                                if (otherMove.equals(myMove)){
+                                    valid = false;
+                                    break;
+                                }
                             }
                         }
                     }
-                    else {
-                        for (Vector otherMove : piece.getPossibleMoves()){
-                            if (otherMove.equals(myMove)){
+                    // special case for opponents KING --> otherwise loop occurs
+                    else if (piece.getColor() != this.getColor() && piece.getPieceType() == PieceType.KING) {
+                        for ( Vector otherMove: piece.getMovementVectors()) {
+                            if (otherMove.add(piece.getPosition()).equals(myMove)) {
                                 valid = false;
                                 break;
                             }
-                        }
-                    }
-                }
-                // special case for opponents KING --> otherwise loop occurs
-                else if (piece.getColor() != this.getColor() && piece.getPieceType() == PieceType.KING) {
-                    for ( Vector otherMove: piece.getMovementVectors()) {
-                        if (otherMove.add(piece.getPosition()).equals(myMove)) {
-                            valid = false;
-                            break;
                         }
                     }
                 }
