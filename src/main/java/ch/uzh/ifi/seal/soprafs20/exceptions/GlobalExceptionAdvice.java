@@ -91,7 +91,7 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(JoinGameException.class)
+    @ExceptionHandler(LeaveGameException.class)
     public ResponseEntity handelLeaveGameException (Exception ex) {
         log.error(String.format("LeaveGameException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
