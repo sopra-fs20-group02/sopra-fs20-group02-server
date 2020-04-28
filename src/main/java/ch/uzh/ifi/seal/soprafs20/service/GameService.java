@@ -242,6 +242,7 @@ public class GameService {
         return game;
     }
 
+    // winning condition
     public void checkForCheckOrCheckmate(Game game){
         Color myColor = board.getIsTurnColor();
         List<Piece> pieces = board.getPieces();
@@ -256,6 +257,7 @@ public class GameService {
                 endGame(game);
             }
         }
+        /*
         if (this.board.checkForCheck()) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.BLACK_IN_CHECK);
@@ -273,7 +275,7 @@ public class GameService {
                 game.setGameStatus(GameStatus.FINISHED);
                 game.setWinner(game.getPlayerBlack().getUserId());
             }
-        }
+        }*/
 
     }
 
