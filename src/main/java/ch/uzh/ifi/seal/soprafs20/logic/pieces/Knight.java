@@ -18,7 +18,7 @@ public class Knight extends Piece {
                 new Vector(2,-1),
                 new Vector(2,1),
                 new Vector(-2,-1),
-                new Vector(-2,-1)
+                new Vector(-2,1)
         ));
         this.movementSteps = 1;
         this.pieceType = PieceType.KNIGHT;

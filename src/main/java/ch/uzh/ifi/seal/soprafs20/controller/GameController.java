@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.Move;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.JoinPutDTO;
@@ -38,7 +39,7 @@ public class GameController {
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GameGetDTO joinOrCreateGame(@RequestBody UserPostDTO userPostDTO) {
+    public GameGetDTO createNewGame(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
         /*List<Game> games = gameService.getGames();
 
@@ -71,6 +72,9 @@ public class GameController {
                 if (g.getGameStatus() == GameStatus.WAITING){
                     // Found game that can be joined
                     game = g;
+                }
+                else {
+                    throw new JoinGameException("No free game could be found");
                 }
             }
         }
