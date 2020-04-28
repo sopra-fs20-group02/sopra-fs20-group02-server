@@ -27,11 +27,13 @@ public class Game implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
 
-    @Column()
-    private Long playerWhite;
+    @OneToOne
+    @JoinColumn()
+    private User playerWhite;
 
-    @Column()
-    private Long playerBlack;
+    @OneToOne
+    @JoinColumn()
+    private User playerBlack;
 
     @OneToMany
     private List<PieceDB> pieces = new ArrayList<>();

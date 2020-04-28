@@ -19,6 +19,6 @@ public class UserGetDTO {
     private String creationDate;
     private String birthDate;
     private String token;
-    private List<Game> gameHistory;
+    //private List<Game> gameHistory;
     private UserStats userStats;
 }

@@ -90,10 +90,10 @@ public class GameService {
         Game game = new Game();
         Random rand = new Random();
         if (rand.nextBoolean()){
-            game.setPlayerWhite(player.getUserId());
+            game.setPlayerWhite(player);
         }
         else {
-            game.setPlayerBlack(player.getUserId());
+            game.setPlayerBlack(player);
         }
         game.setGameStatus(GameStatus.WAITING);
         // white starts
@@ -122,10 +122,10 @@ public class GameService {
         // Get assigned color
         User otherPlayer;
         if (game.getPlayerBlack() != null){
-            otherPlayer = findUserByUserId(game.getPlayerBlack());
+            otherPlayer = findUserByUserId(game.getPlayerBlack().getUserId());
         }
         else if (game.getPlayerWhite() != null){
-            otherPlayer = findUserByUserId(game.getPlayerWhite());
+            otherPlayer = findUserByUserId(game.getPlayerWhite().getUserId());
         }
         else{
             throw new JoinGameException("Corrupt game.");
@@ -133,10 +133,10 @@ public class GameService {
 
         // get empty slot and assign player to color
         if (game.getPlayerBlack() == null && !game.getPlayerWhite().equals(player)){
-            game.setPlayerBlack(player.getUserId());
+            game.setPlayerBlack(player);
         }
         else if(game.getPlayerWhite() == null && !game.getPlayerBlack().equals(player)){
-            game.setPlayerWhite(player.getUserId());
+            game.setPlayerWhite(player);
         }
         else if(game.getPlayerWhite() != null && game.getPlayerBlack() != null){
             throw new JoinGameException("Game is already full.");
@@ -168,21 +168,21 @@ public class GameService {
         // Get other player
         User otherPlayer;
         if (!game.getPlayerBlack().equals(player)){
-            otherPlayer = findUserByUserId(game.getPlayerBlack());
+            otherPlayer = findUserByUserId(game.getPlayerBlack().getUserId());
         }
         else if (!game.getPlayerWhite().equals(player)){
-            otherPlayer = findUserByUserId(game.getPlayerWhite());
+            otherPlayer = findUserByUserId(game.getPlayerWhite().getUserId());
         }
         else{
             throw new LeaveGameException("Corrupt game");
         }
 
         // Other player wins the game
-        if(player.getUserId() == game.getPlayerBlack()) {
-            game.setWinner(game.getPlayerWhite());
+        if(player == game.getPlayerBlack()) {
+            game.setWinner(game.getPlayerWhite().getUserId());
         }
         else {
-            game.setWinner(game.getPlayerBlack());
+            game.setWinner(game.getPlayerBlack().getUserId());
         }
         game.setGameStatus(GameStatus.FINISHED);
         this.endGame(game); //Todo: endGame()
@@ -245,10 +245,10 @@ public class GameService {
         for (Piece piece: pieces) {
             if (piece.getPieceType() == PieceType.KING && piece.getCaptured()) {
                 if (piece.getColor() == Color.WHITE) {
-                    game.setWinner(game.getPlayerBlack());
+                    game.setWinner(game.getPlayerBlack().getUserId());
                 }
                 else {
-                    game.setWinner(game.getPlayerWhite());
+                    game.setWinner(game.getPlayerWhite().getUserId());
                 }
                 endGame(game);
             }
@@ -264,11 +264,11 @@ public class GameService {
         else if (this.board.checkForCheckmate()) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.FINISHED);
-                game.setWinner(game.getPlayerWhite());
+                game.setWinner(game.getPlayerWhite().getUserId());
             }
             else {
                 game.setGameStatus(GameStatus.FINISHED);
-                game.setWinner(game.getPlayerBlack());
+                game.setWinner(game.getPlayerBlack().getUserId());
             }
         }
 
@@ -364,12 +364,12 @@ public class GameService {
     //Todo: update gameStats - time
     private void endGame(Game game) {
         User winner = findUserByUserId(game.getWinner());
-        User playerBlack = findUserByUserId(game.getPlayerBlack());
-        User playerWhite = findUserByUserId(game.getPlayerWhite());
+        User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
+        User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
         // update userStats
-        updateUserStats(playerBlack,winner.getUserId()==game.getPlayerBlack(), 0);
-        updateUserStats(playerWhite,winner.getUserId()==game.getPlayerWhite(),0);
+        updateUserStats(playerBlack,winner == game.getPlayerBlack(), 0);
+        updateUserStats(playerWhite,winner == game.getPlayerWhite(),0);
 
         playerWhite.setStatus(UserStatus.ONLINE);
         playerBlack.setStatus(UserStatus.ONLINE);

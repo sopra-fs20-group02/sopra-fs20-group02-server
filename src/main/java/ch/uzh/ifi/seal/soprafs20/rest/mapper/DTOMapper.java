@@ -28,7 +28,7 @@ public interface DTOMapper {
     @Mapping(source = "creationDate", target = "creationDate")
     @Mapping(source = "birthDate", target = "birthDate")
     @Mapping(source = "token", target = "token")
-    @Mapping(source = "gameHistory", target = "gameHistory")
+    //@Mapping(source = "gameHistory", target = "gameHistory")
     @Mapping(source = "userStats", target = "userStats")
     User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
 
@@ -46,7 +46,7 @@ public interface DTOMapper {
     @Mapping(source = "creationDate", target = "creationDate")
     @Mapping(source = "birthDate", target = "birthDate")
     @Mapping(source = "token", target = "token")
-    @Mapping(source = "gameHistory", target = "gameHistory")
+    //@Mapping(source = "gameHistory", target = "gameHistory")
     @Mapping(source = "userStats", target = "userStats")
     UserGetDTO convertEntityToUserGetDTO(User user);
 

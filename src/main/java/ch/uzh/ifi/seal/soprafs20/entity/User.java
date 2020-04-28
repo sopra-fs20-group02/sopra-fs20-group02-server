@@ -52,7 +52,4 @@ public class User implements Serializable {
     @OneToOne
     @JoinColumn()
     private UserStats userStats;
-
-    @OneToMany
-    private List<Game> gameHistory;
 }
