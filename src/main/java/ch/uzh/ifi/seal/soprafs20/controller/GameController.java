@@ -147,8 +147,9 @@ public class GameController {
     @PostMapping(value = "/games/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Game offerOrAcceptDraw(@PathVariable("gameId") Long gameId, @RequestBody UserPostDTO userPostDTO) {
-        return gameService.draw(gameId, userPostDTO.getUserId());
+    public GameGetDTO offerOrAcceptDraw(@PathVariable("gameId") Long gameId, @RequestBody UserPostDTO userPostDTO) {
+        Game game = gameService.draw(gameId, userPostDTO.getUserId());
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
 }

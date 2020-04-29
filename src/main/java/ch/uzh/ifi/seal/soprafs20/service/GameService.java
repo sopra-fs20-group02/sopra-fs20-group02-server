@@ -187,7 +187,7 @@ public class GameService {
             else {
                 game.setWinner(game.getPlayerBlack().getUserId());
             }
-            this.endGame(game); //Todo: endGame()
+            this.endGame(game, GameStatus.WON);
 
             gameRepository.save(game);
             gameRepository.flush();
@@ -259,7 +259,7 @@ public class GameService {
                 else {
                     game.setWinner(game.getPlayerWhite().getUserId());
                 }
-                endGame(game);
+                endGame(game, GameStatus.WON);
             }
         }
 
@@ -376,33 +376,33 @@ public class GameService {
     }
 
     //Todo: update gameStats - time
-    private void endGame(Game game) {
-        if(game.getGameStatus()!=GameStatus.WON) {
-            User winner = findUserByUserId(game.getWinner());
-            User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
-            User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
+    private void endGame(Game game, GameStatus gameStatus) {
+        game.setGameStatus(gameStatus);
+        User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
+        User playerWhite = findUserByUserId(game.getPlayerWhite().getUserId());
 
-            game.setGameStatus(GameStatus.WON);
-            game.setEndTime(Instant.now());
-            Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
+        game.setEndTime(Instant.now());
+        Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
+
+        if(game.getGameStatus() == GameStatus.WON) {
+            User winner = findUserByUserId(game.getWinner());
 
             // update userStats
             updateUserStats(playerBlack, winner == game.getPlayerBlack(),false, time.intValue());
             updateUserStats(playerWhite, winner == game.getPlayerWhite(),false, time.intValue());
 
-            playerWhite.setStatus(UserStatus.ONLINE);
-            playerBlack.setStatus(UserStatus.ONLINE);
+        }
+        else if (game.getGameStatus() == GameStatus.DRAW) {
+            updateUserStats(playerWhite,null, true, time.intValue());
+            updateUserStats(playerBlack,null, true, time.intValue());
+        }
 
-            // update game history
-            //playerBlack.getGameHistory().add(game);
-            userRepository.save(playerBlack);
-            //playerWhite.getGameHistory().add(game);
-            userRepository.save(playerWhite);
-            userRepository.flush();
-        }
-        else {
-            throw new LeaveGameException("Game is already finished.");
-        }
+        playerWhite.setStatus(UserStatus.ONLINE);
+        playerBlack.setStatus(UserStatus.ONLINE);
+
+        userRepository.save(playerBlack);
+        userRepository.save(playerWhite);
+        userRepository.flush();
     }
 
     public List<Game> getGameHistory(Long userId) {
@@ -446,23 +446,27 @@ public class GameService {
         User playerWhite = game.getPlayerWhite();
         User playerBlack = game.getPlayerBlack();
 
+        // if white player offers draw
+        if (playerWhite.getUserId().equals(userId)) {
+            if (game.getBlackOffersDraw()) {
+                game.setWhiteOffersDraw(true);
+                endGame(game, GameStatus.DRAW);
+            }
+            else {
+                game.setWhiteOffersDraw(true);
+            }
+        }
 
-        game.setEndTime(Instant.now());
-        Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
-
-        game.setGameStatus(GameStatus.DRAW);
-
-        updateUserStats(playerWhite,null, true, time.intValue());
-        updateUserStats(playerBlack,null, true, time.intValue());
-
-        playerWhite.setStatus(UserStatus.ONLINE);
-        playerBlack.setStatus(UserStatus.ONLINE);
-        userRepository.save(playerBlack);
-        userRepository.save(playerWhite);
-        userRepository.flush();
-
-        gameRepository.save(game);
-        gameRepository.flush();
+        // if black player offers draw
+        else if (playerBlack.getUserId().equals(userId)) {
+            if (game.getWhiteOffersDraw()) {
+                game.setBlackOffersDraw(true);
+                endGame(game, GameStatus.DRAW);
+            }
+            else {
+                game.setBlackOffersDraw(true);
+            }
+        }
 
         return game;
     }

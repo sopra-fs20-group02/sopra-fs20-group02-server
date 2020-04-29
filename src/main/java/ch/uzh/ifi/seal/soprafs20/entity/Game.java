@@ -1,10 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import lombok.Getter;
 import lombok.Setter;
-//import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +10,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 @Entity
 // Auto generate getters and setters
