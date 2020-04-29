@@ -248,6 +248,8 @@ public class GameService {
     // winning condition
     public void checkForCheckOrCheckmate(Game game){
         Color myColor = board.getIsTurnColor();
+
+        // checkmate, king got captured
         List<Piece> pieces = board.getPieces();
         for (Piece piece: pieces) {
             if (piece.getPieceType() == PieceType.KING && piece.getCaptured()) {
@@ -260,8 +262,9 @@ public class GameService {
                 endGame(game);
             }
         }
-        /*
-        if (this.board.checkForCheck()) {
+
+        // check for check
+        if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.BLACK_IN_CHECK);
             }
@@ -269,7 +272,8 @@ public class GameService {
                 game.setGameStatus(GameStatus.WHITE_IN_CHECK);
             }
         }
-        else if (this.board.checkForCheckmate()) {
+
+        /*else if (this.board.checkForCheckmate()) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.WON);
                 game.setWinner(game.getPlayerWhite().getUserId());
@@ -437,10 +441,12 @@ public class GameService {
         gameRepository.flush();
     }
 
-    public void draw(Long gameId) {
+    public Game draw(Long gameId, Long userId) {
         Game game = findGameByGameId(gameId);
         User playerWhite = game.getPlayerWhite();
         User playerBlack = game.getPlayerBlack();
+
+
         game.setEndTime(Instant.now());
         Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
 
@@ -458,5 +464,6 @@ public class GameService {
         gameRepository.save(game);
         gameRepository.flush();
 
+        return game;
     }
 }

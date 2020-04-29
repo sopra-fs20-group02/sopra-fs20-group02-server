@@ -144,4 +144,11 @@ public class GameController {
         return gameService.getGameHistory(userId);
     }
 
+    @PostMapping(value = "/games/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Game offerOrAcceptDraw(@PathVariable("gameId") Long gameId, @RequestBody UserPostDTO userPostDTO) {
+        return gameService.draw(gameId);
+    }
+
 }

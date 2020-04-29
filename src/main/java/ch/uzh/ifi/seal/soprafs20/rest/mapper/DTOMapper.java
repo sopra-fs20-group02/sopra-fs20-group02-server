@@ -72,6 +72,8 @@ public interface DTOMapper {
     @Mapping(source = "gameStatus", target = "gameStatus")
     @Mapping(source = "isWhiteTurn", target = "isWhiteTurn")
     @Mapping(source = "winner", target = "winner")
+    @Mapping(source = "whiteOffersDraw", target = "whiteOffersDraw")
+    @Mapping(source = "blackOffersDraw", target = "blackOffersDraw")
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
     /*@Mapping(source = "gameId", target = "gameId")

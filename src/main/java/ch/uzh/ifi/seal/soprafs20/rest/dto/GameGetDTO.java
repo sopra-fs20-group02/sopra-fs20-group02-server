@@ -24,4 +24,6 @@ public class GameGetDTO {
     private GameStatus gameStatus;
     private Boolean isWhiteTurn;
     private Long winner;
+    private Boolean whiteOffersDraw;
+    private Boolean blackOffersDraw;
 }

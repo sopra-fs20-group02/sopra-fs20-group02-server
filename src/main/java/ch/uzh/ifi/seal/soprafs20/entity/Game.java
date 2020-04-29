@@ -59,4 +59,10 @@ public class Game implements Serializable {
     @Column()
     private Long winner;
 
+    @Column()
+    private Boolean whiteOffersDraw;
+
+    @Column()
+    private Boolean blackOffersDraw;
+
 }
