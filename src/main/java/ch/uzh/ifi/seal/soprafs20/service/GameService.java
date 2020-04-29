@@ -353,15 +353,18 @@ public class GameService {
         return piece;
     }
 
-    private void updateUserStats(User user, Boolean winner, int time){
+    private void updateUserStats(User user, Boolean winner, Boolean draw, int time){
         UserStats userStats = user.getUserStats();
-        if(winner != null) {
+        if(!draw) {
             if (winner) {
                 userStats.setNumberOfWinnings(userStats.getNumberOfWinnings() + 1);
             }
             else {
                 userStats.setNumberOfLosses(userStats.getNumberOfLosses() + 1);
             }
+        }
+        else if(draw) {
+            userStats.setNumberOfDraws(userStats.getNumberOfDraws()+1);
         }
         userStats.setTotalTimePlayed(userStats.getTotalTimePlayed()+time);
         userStatsRepository.save(userStats);
@@ -380,8 +383,8 @@ public class GameService {
             Long time = game.getEndTime().getEpochSecond() - game.getStartTime().getEpochSecond();
 
             // update userStats
-            updateUserStats(playerBlack, winner == game.getPlayerBlack(), time.intValue());
-            updateUserStats(playerWhite, winner == game.getPlayerWhite(), time.intValue());
+            updateUserStats(playerBlack, winner == game.getPlayerBlack(),false, time.intValue());
+            updateUserStats(playerWhite, winner == game.getPlayerWhite(),false, time.intValue());
 
             playerWhite.setStatus(UserStatus.ONLINE);
             playerBlack.setStatus(UserStatus.ONLINE);
@@ -443,8 +446,8 @@ public class GameService {
 
         game.setGameStatus(GameStatus.DRAW);
 
-        updateUserStats(playerWhite,null,time.intValue());
-        updateUserStats(playerBlack,null,time.intValue());
+        updateUserStats(playerWhite,null, true, time.intValue());
+        updateUserStats(playerBlack,null, true, time.intValue());
 
         playerWhite.setStatus(UserStatus.ONLINE);
         playerBlack.setStatus(UserStatus.ONLINE);

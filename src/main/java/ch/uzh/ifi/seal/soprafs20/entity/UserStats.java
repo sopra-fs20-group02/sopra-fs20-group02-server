@@ -24,7 +24,9 @@ public class UserStats implements Serializable {
     private Integer numberOfLosses;
 
     @Column()
-    private Integer totalTimePlayed;
+    private Integer numberOfDraws;
 
+    @Column()
+    private Integer totalTimePlayed;
 
 }
