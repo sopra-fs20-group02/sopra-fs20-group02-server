@@ -111,6 +111,7 @@ public class UserService {
         userstats.setTotalTimePlayed(0);
         userstats.setNumberOfLosses(0);
         userstats.setNumberOfWinnings(0);
+        userstats.setNumberOfDraws(0);
         newUser.setUserStats(userstats);
         userStatsRepository.save(userstats);
         userStatsRepository.flush();

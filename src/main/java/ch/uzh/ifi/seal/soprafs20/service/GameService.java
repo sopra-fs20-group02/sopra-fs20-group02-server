@@ -96,6 +96,8 @@ public class GameService {
             game.setPlayerBlack(player);
         }
         game.setGameStatus(GameStatus.WAITING);
+        game.setBlackOffersDraw(false);
+        game.setWhiteOffersDraw(false);
         // white starts
         game.setIsWhiteTurn(true);
         //createNewBoard(game.getBoard());
@@ -393,8 +395,8 @@ public class GameService {
 
         }
         else if (game.getGameStatus() == GameStatus.DRAW) {
-            updateUserStats(playerWhite,null, true, time.intValue());
-            updateUserStats(playerBlack,null, true, time.intValue());
+            updateUserStats(playerWhite,false, true, time.intValue());
+            updateUserStats(playerBlack,false, true, time.intValue());
         }
 
         playerWhite.setStatus(UserStatus.ONLINE);
