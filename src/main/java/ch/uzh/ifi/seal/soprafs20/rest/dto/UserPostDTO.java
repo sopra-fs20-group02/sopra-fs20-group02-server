@@ -19,6 +19,5 @@ public class UserPostDTO {
     private String creationDate;
     private String birthDate;
     private String token;
-    private List<Game> gameHistory;
     private UserStats userStats;
 }

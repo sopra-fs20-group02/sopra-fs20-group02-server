@@ -148,7 +148,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Game offerOrAcceptDraw(@PathVariable("gameId") Long gameId, @RequestBody UserPostDTO userPostDTO) {
-        return gameService.draw(gameId);
+        return gameService.draw(gameId, userPostDTO.getUserId());
     }
 
 }
