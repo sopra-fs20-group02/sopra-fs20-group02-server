@@ -72,9 +72,9 @@ public class GameController {
                     // Found game that can be joined
                     game = g;
                 }
-                else {
-                    throw new JoinGameException("No free game could be found");
-                }
+            }
+            if (game == null) {
+                throw new JoinGameException("No free game could be found");
             }
         }
 
