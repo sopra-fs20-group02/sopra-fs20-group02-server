@@ -226,6 +226,7 @@ public class GameService {
             throw new SopraServiceException("Other users turn");
         }
 
+        game.setGameStatus(GameStatus.FULL);
         this.board.setGame(game);
         this.board.makeMove(pieceId, new Vector(x,y));
 
@@ -268,16 +269,14 @@ public class GameService {
         }
 
         // check for check
-        if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON) {
+        if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON
+                && game.getGameStatus() != GameStatus.DRAW) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.BLACK_IN_CHECK);
             }
             else {
                 game.setGameStatus(GameStatus.WHITE_IN_CHECK);
             }
-        }
-        else if (game.getGameStatus() == GameStatus.WHITE_IN_CHECK || game.getGameStatus() == GameStatus.BLACK_IN_CHECK) {
-            game.setGameStatus(GameStatus.FULL);
         }
 
         /*else if (this.board.checkForCheckmate()) {
