@@ -63,7 +63,6 @@ public class GameController {
         Game game = null;
         if(joinPutDTO.getGameId()!=null) {
             game = gameService.findGameByGameId(joinPutDTO.getGameId());
-            //User userInput = DTOMapper.INSTANCE.convertJoinPutDTOToEntity(joinPutDTO);
         }
         else {
             List<Game> games = gameService.getGames();
@@ -93,7 +92,6 @@ public class GameController {
         for (Game game : games) {
             gameGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
         }
-
         return gameGetDTOs;
         // TODO: add tests
     }
@@ -133,8 +131,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<Vector> getMoves(@PathVariable("gameId") Long gameId, @PathVariable("pieceId") Long pieceId) {
-        List<Vector> moves = gameService.getPossibleMoves(gameId,pieceId);
-        return moves;
+        return gameService.getPossibleMoves(gameId,pieceId);
     }
 
     @GetMapping(value = "/users/{userId}/gameHistory")

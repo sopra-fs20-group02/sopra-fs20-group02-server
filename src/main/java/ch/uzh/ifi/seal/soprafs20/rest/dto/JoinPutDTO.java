@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-import ch.uzh.ifi.seal.soprafs20.entity.Game;
-import ch.uzh.ifi.seal.soprafs20.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 

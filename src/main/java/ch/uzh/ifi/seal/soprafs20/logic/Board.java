@@ -255,12 +255,8 @@ public class Board {
     }
 
     // TODO: implement a check for stalemate
-    public boolean checkForStalemate() {
+    public void checkForStalemate() {
         Piece king = getOpponentsKing();
-        if (king.getPossibleMoves() == null) {
-
-        }
-        return false;
     }
 
     public void setGame(Game game){

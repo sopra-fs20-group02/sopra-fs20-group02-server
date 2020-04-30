@@ -463,6 +463,8 @@ public class GameService {
             }
             else {
                 game.setWhiteOffersDraw(true);
+                gameRepository.save(game);
+                gameRepository.flush();
             }
         }
 
@@ -474,6 +476,9 @@ public class GameService {
             }
             else {
                 game.setBlackOffersDraw(true);
+                gameRepository.save(game);
+                gameRepository.flush();
+
             }
         }
 

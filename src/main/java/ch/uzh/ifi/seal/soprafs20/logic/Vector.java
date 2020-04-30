@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Simple integer vector class
@@ -76,10 +77,7 @@ public class Vector implements Serializable {
     }
 
     private boolean checkBounds(Vector vector){
-        if (vector.x > boardSize || x < 1 || y > boardSize || y < 1 ){
-            return false;
-        }
-        return true;
+        return vector.x <= boardSize && x >= 1 && y <= boardSize && y >= 1;
     }
 
     public Integer getX() {
@@ -91,15 +89,19 @@ public class Vector implements Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Vector)) {
-            return false;
-        }
-        if (this.getX() == ((Vector) other).getX() && this.getY() == ((Vector) other).getY()) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        else {
+        if (!(o instanceof Vector)) {
             return false;
         }
+        Vector vector = (Vector) o;
+        return x.equals(vector.x) && y.equals(vector.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

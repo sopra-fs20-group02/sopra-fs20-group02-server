@@ -13,7 +13,7 @@ public class Pawn extends Piece {
     ArrayList<Vector> captureVectors;
     public Pawn(PieceDB pieceDB, Board board){
        super(pieceDB, board);
-        this.captureVectors = new ArrayList<Vector>();
+        this.captureVectors = new ArrayList<>();
 
         if (color == Color.WHITE){
             this.movementVectors.add(new Vector(0,1));
