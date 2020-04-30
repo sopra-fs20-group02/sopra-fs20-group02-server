@@ -276,6 +276,9 @@ public class GameService {
                 game.setGameStatus(GameStatus.WHITE_IN_CHECK);
             }
         }
+        else if (game.getGameStatus() == GameStatus.WHITE_IN_CHECK || game.getGameStatus() == GameStatus.BLACK_IN_CHECK) {
+            game.setGameStatus(GameStatus.FULL);
+        }
 
         /*else if (this.board.checkForCheckmate()) {
             if (myColor.equals(Color.WHITE)) {
