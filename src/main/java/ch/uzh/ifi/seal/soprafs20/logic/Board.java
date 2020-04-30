@@ -97,7 +97,7 @@ public class Board {
     public ArrayList<Vector> getAllPossibleNextMoves(Color playerColor) {
         ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Piece piece: getPieces()) {
-            if (piece.getColor() == playerColor) {
+            if (piece.getColor() == playerColor && !piece.getCaptured()) {
                 for (Vector vector: piece.getPossibleMoves()) {
                     if (!possibleMoves.contains(vector)) {
                         possibleMoves.add(vector);
