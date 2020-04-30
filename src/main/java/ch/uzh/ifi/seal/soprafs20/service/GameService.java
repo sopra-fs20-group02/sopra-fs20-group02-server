@@ -211,9 +211,9 @@ public class GameService {
 
     public Game makeMove(Long gameId, Long pieceId, int x, int y){
         Game game = this.findGameByGameId(gameId);
-        if (game.getGameStatus() != GameStatus.FULL
-                || game.getGameStatus() != GameStatus.WHITE_IN_CHECK
-                || game.getGameStatus() != GameStatus.BLACK_IN_CHECK){
+        if (!(game.getGameStatus() == GameStatus.FULL
+                || game.getGameStatus() == GameStatus.WHITE_IN_CHECK
+                || game.getGameStatus() == GameStatus.BLACK_IN_CHECK)){
             // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");
         }
@@ -292,9 +292,9 @@ public class GameService {
 
     public List<Vector> getPossibleMoves(Long gameId, Long pieceId){
         Game game = this.findGameByGameId(gameId);
-        if (game.getGameStatus() != GameStatus.FULL
-                || game.getGameStatus() != GameStatus.WHITE_IN_CHECK
-                || game.getGameStatus() != GameStatus.BLACK_IN_CHECK){
+        if (!(game.getGameStatus() == GameStatus.FULL
+                || game.getGameStatus() == GameStatus.WHITE_IN_CHECK
+                || game.getGameStatus() == GameStatus.BLACK_IN_CHECK)){
             // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");
         }
