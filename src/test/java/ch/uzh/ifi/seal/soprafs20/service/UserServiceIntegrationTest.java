@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test class for the UserResource REST resource.
  *
  * @see UserService
- *//*
+ */
 @WebAppConfiguration
 @SpringBootTest
 public class UserServiceIntegrationTest {
@@ -81,4 +81,4 @@ public class UserServiceIntegrationTest {
         SopraServiceException exception = assertThrows(SopraServiceException.class, () -> userService.createUser(testUser2), exceptionMessage);
         assertEquals(exceptionMessage, exception.getMessage());
     }
-}*/
+}

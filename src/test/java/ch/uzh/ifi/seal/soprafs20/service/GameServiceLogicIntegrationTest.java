@@ -100,6 +100,7 @@ public class GameServiceLogicIntegrationTest {
 
     /**
      * fast way to achieve checkmate
+     * https://www.thesprucecrafts.com/fools-mate-the-fastest-checkmate-611599
      */
     @Test
     public void foolsMate() {
