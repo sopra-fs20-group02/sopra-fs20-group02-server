@@ -7,7 +7,9 @@ import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserStatsRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +44,14 @@ public class GameServiceIntegrationTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PieceRepository pieceRepository;
+
+    @Qualifier("userStatsRepository")
+    @Autowired
+    private UserStatsRepository userStatsRepository;
+
+
     private User playerA;
 
     private User playerB;
@@ -52,6 +62,8 @@ public class GameServiceIntegrationTest {
     public void setup() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
+        pieceRepository.deleteAll();
+        userStatsRepository.deleteAll();
 
         // register and login two users
         assertNull(userRepository.findByUsername("playerA"));

@@ -4,7 +4,10 @@ import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserStatsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +30,27 @@ public class UserServiceIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Qualifier("userStatsRepository")
+    @Autowired
+    private UserStatsRepository userStatsRepository;
+
+    @Qualifier("gameRepository")
+    @Autowired
+    private GameRepository gameRepository;
+
+    @Autowired
+    private PieceRepository pieceRepository;
+
     @Autowired
     private UserService userService;
 
+
     @BeforeEach
     public void setup() {
+        gameRepository.deleteAll();
         userRepository.deleteAll();
+        pieceRepository.deleteAll();
+        userStatsRepository.deleteAll();
     }
 
     @Test

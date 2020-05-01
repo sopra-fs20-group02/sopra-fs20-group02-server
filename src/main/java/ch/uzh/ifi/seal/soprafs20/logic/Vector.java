@@ -54,26 +54,8 @@ public class Vector implements Serializable {
         return this;
     }
 
-    public ArrayList<Vector> getAlongVector(Vector vector, Integer num) {
-        ArrayList<Vector> vectors = new ArrayList<>();
-        for (int i = 1 ; i < num; ++i){
-            Vector current = new Vector(vector).mulS(i).add(this);
-            if (checkBounds(current)){
-                vector.add(current);
-            }
-        }
-        return vectors;
-    }
-
     public Boolean checkBounds(){
         return this.checkBounds(this);
-    }
-
-    private boolean checkBounds(Integer x, Integer y){
-        if (x > boardSize || x < 1 || y > boardSize || y < 1 ){
-            return false;
-        }
-        return true;
     }
 
     private boolean checkBounds(Vector vector){

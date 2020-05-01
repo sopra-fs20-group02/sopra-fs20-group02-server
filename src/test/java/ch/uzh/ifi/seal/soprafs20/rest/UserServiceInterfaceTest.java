@@ -22,7 +22,7 @@ import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class InterfaceTest {
+public class UserServiceInterfaceTest {
 
     @LocalServerPort
     private int port;
@@ -110,80 +110,6 @@ public class InterfaceTest {
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
     }
-
-    /**
-     * Get list of games
-     * @throws Exception
-     */
-    /*@Test
-    @Order(3)
-    public void listOfGames_givenValidId_shouldReturnGames() throws Exception {
-        JSONObject json = new JSONObject();
-
-        json.put("userId", 1);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> request =
-                new HttpEntity<String>(json.toString(), headers);
-
-        ResponseEntity<String> response =
-                this.restTemplate.postForEntity("http://localhost:" + port + "/games", request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("playersOnline");
-        assertThat(response.getBody()).contains("gamesBeingPlayed");
-    }*/
-
-    /**
-     * Make move in chess game
-     * @throws Exception
-     */
-    /*@Test
-    @Order(4)
-    public void makeMove_givenValidId_shouldReturnStatus() throws Exception {
-        JSONObject json = new JSONObject();
-
-        json.put("userId", 1);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> request =
-                new HttpEntity<String>(json.toString(), headers);
-
-        ResponseEntity<String> response =
-                this.restTemplate.postForEntity("http://localhost:" + port + "/games/1/A1B2", request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("game");
-        assertThat(response.getBody()).contains("gameStatus");
-    }*/
-
-    /**
-     * Make move in chess game
-     * @throws Exception
-     */
-    /*@Test
-    @Order(5)
-    public void getHistory_givenValidId_shouldReturnOk() throws Exception {
-        JSONObject json = new JSONObject();
-
-        json.put("userId", 1);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> request =
-                new HttpEntity<String>(json.toString(), headers);
-
-        ResponseEntity<String> response =
-                this.restTemplate.postForEntity("http://localhost:" + port + "/gamesHistory", request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("userStats");
-    }*/
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed

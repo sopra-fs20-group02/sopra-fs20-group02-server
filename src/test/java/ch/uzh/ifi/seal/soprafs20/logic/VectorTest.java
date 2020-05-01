@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VectorTest {
@@ -81,5 +83,14 @@ public class VectorTest {
     public void getYCord() {
         assertEquals(vector1.getY(),1);
     }
+
+    @Test
+    @Order(9)
+    public void initFromVector() {
+        Vector vector3 = new Vector(vector1);
+        assertEquals(vector3.getX(),vector1.getX() );
+        assertEquals(vector3.getX(), vector1.getY());
+    }
+
 
 }
