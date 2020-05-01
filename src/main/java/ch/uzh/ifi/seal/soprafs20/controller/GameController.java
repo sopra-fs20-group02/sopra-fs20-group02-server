@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * This class handles all the REST requests related to the game creation and join.
@@ -66,15 +67,19 @@ public class GameController {
         }
         else {
             List<Game> games = gameService.getGames();
+            List<Game> gamesToJoin = new ArrayList<>();
             for (Game g : games){
                 if (g.getGameStatus() == GameStatus.WAITING){
                     // Found game that can be joined
-                    game = g;
+                    gamesToJoin.add(g);
                 }
             }
-            if (game == null) {
+            if (gamesToJoin == null) {
                 throw new JoinGameException("No free game could be found");
             }
+            Random random = new Random();
+            int n = random.nextInt(gamesToJoin.size());
+            game = gamesToJoin.get(n);
         }
 
         gameService.joinGame(user, game);
