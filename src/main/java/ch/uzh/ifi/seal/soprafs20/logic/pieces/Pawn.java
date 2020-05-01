@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Pawn extends Piece {
     ArrayList<Vector> captureVectors;
@@ -51,11 +52,7 @@ public class Pawn extends Piece {
             }
         }
 
-        for (Vector vector : captureVectors){
-            Vector current = new Vector(vector).mulS(1).add(this.position);
-            if (!current.checkBounds()){
-                continue;
-            }
+        for (Vector current : getCaptureMoves()){
             Piece piece = this.board.getPieceOnTile(current);
             if (piece != null && piece.getColor() != this.color){
                 possibleMoves.add(current);
@@ -63,6 +60,17 @@ public class Pawn extends Piece {
         }
 
         return possibleMoves;
-    };
+    }
+
+    public ArrayList<Vector> getCaptureMoves() {
+        ArrayList<Vector> captureMoves = new ArrayList<>();
+        for (Vector vector : captureVectors) {
+            Vector current = new Vector(vector).mulS(1).add(this.position);
+            if (current.checkBounds()) {
+                captureMoves.add(current);
+            }
+        }
+        return captureMoves;
+    }
 }
 
