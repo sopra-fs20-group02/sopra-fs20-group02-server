@@ -462,9 +462,9 @@ public class GameService {
             }
             else {
                 game.setWhiteOffersDraw(true);
-                gameRepository.save(game);
-                gameRepository.flush();
             }
+            gameRepository.save(game);
+            gameRepository.flush();
         }
 
         // if black player offers draw
@@ -475,10 +475,9 @@ public class GameService {
             }
             else {
                 game.setBlackOffersDraw(true);
-                gameRepository.save(game);
-                gameRepository.flush();
-
             }
+            gameRepository.save(game);
+            gameRepository.flush();
         }
 
         return game;

@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -158,5 +159,54 @@ public class GameServiceIntegrationTest {
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
         assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.ONLINE);
         assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WON);
+    }
+
+    @Test
+    public void deleteGame_validInput_throwsException() {
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
+
+        Game game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
+
+        gameService.deleteGame(game.getGameId());
+        assertThrows(
+                UserException.class,
+                () -> {
+                    gameService.deleteGame(game.getGameId());
+                }
+        );
+    }
+
+    @Test
+    public void offerDraw_validInput_success() {
+        Game game = gameService.createNewGame(playerA);
+        gameService.joinGame(playerB, game);
+
+        assertEquals(false, gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw());
+        assertEquals(false, gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
+
+        gameService.draw(game.getGameId(),playerA.getUserId());
+        assertEquals(
+                true,
+                gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() ||
+                        gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw()
+        );
+
+        assertEquals(
+                false,
+                gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
+                        gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw()
+        );
+
+        assertEquals(GameStatus.FULL, gameService.findGameByGameId(game.getGameId()).getGameStatus());
+
+        gameService.draw(game.getGameId(),playerB.getUserId());
+        assertEquals(
+                true,
+                gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
+                        gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw()
+        );
+        assertEquals(GameStatus.DRAW, gameService.findGameByGameId(game.getGameId()).getGameStatus());
     }
 }

@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
+import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -97,17 +98,54 @@ public class GameServiceLogicIntegrationTest {
         assertEquals(gameRepository.findByGameId(this.game.getGameId()).getGameStatus(), GameStatus.FULL);
     }
 
-    /*@Test
-    public void getPossibleMoves_validInput_success() {
-        List<PieceDB> pieces = this.game.getPieces();
+    /**
+     * fast way to achieve checkmate
+     */
+    @Test
+    public void foolsMate() {
+        User playerWhite = this.game.getPlayerWhite();
+        User playerBlack = this.game.getPlayerBlack();
 
-        for (PieceDB pieceDB : pieces){
-            this.gameService.getPossibleMoves(game.getGameId(), pieceDB.getPieceId());
+        Long id = this.game.getGameId();
+
+        // first move
+        for (PieceDB pieceDB : game.getPieces()){
+            if (pieceDB.getYCord() == 2 && pieceDB.getXCord() == 6){
+                List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
+                assertEquals(2, moves.size());
+                gameService.makeMove(id, pieceDB.getPieceId(), 6,3);
+            }
         }
+
+        // second move
+        for (PieceDB pieceDB : game.getPieces()){
+            if (pieceDB.getYCord() == 7 && pieceDB.getXCord() == 5){
+                List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
+                assertEquals(2, moves.size());
+                gameService.makeMove(id, pieceDB.getPieceId(), 5,5);
+            }
+        }
+
+        // third move
+        for (PieceDB pieceDB : game.getPieces()){
+            if (pieceDB.getYCord() == 2 && pieceDB.getXCord() == 7){
+                List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
+                assertEquals(2, moves.size());
+                gameService.makeMove(id, pieceDB.getPieceId(), 7,4);
+            }
+        }
+
+        // fourth move
+        for (PieceDB pieceDB : game.getPieces()){
+            if (pieceDB.getYCord() == 8 && pieceDB.getXCord() == 4){
+                List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
+                assertEquals(4, moves.size());
+                gameService.makeMove(id, pieceDB.getPieceId(), 8,4);
+            }
+        }
+
+        assertEquals(GameStatus.WON,gameService.findGameByGameId(id).getGameStatus());
     }
 
-    @Test void playRandomChessGame(){
-        // TODO
-    }*/
 
 }

@@ -44,7 +44,7 @@ public class InterfaceTest {
      * User registration with valid information
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(0)
     public void userRegistration_givenValidInformation_shouldReturnURL() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -62,13 +62,13 @@ public class InterfaceTest {
                 this.restTemplate.postForEntity("http://localhost:" + port + "/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.CREATED);
-    }*/
+    }
 
     /**
      * User registration with invalid information
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(1)
     public void userRegistration_givenInvalidInformation_shouldReturnConflict() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -86,13 +86,13 @@ public class InterfaceTest {
                 this.restTemplate.postForEntity("http://localhost:" + port + "/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.CONFLICT);
-    }*/
+    }
 
     /**
      * User login with valid information
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(2)
     public void userLogin_givenValidInformation_shouldReturnUser() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -109,7 +109,7 @@ public class InterfaceTest {
                 restTemplate.exchange("http://localhost:" + port + "/login", HttpMethod.PUT, request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-    }*/
+    }
 
     /**
      * Get list of games

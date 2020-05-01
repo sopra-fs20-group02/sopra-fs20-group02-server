@@ -13,8 +13,8 @@ public class VectorTest {
 
     @BeforeEach
     public void setup() {
-    vector1 = new Vector(1,1);
-    vector2 = new Vector(2,2);
+        vector1 = new Vector(1,1);
+        vector2 = new Vector(2,2);
     }
 
     @Test
