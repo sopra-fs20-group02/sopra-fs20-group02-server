@@ -74,7 +74,7 @@ public class GameController {
                     gamesToJoin.add(g);
                 }
             }
-            if (gamesToJoin == null) {
+            if (gamesToJoin.isEmpty()) {
                 throw new JoinGameException("No free game could be found");
             }
             Random random = new Random();

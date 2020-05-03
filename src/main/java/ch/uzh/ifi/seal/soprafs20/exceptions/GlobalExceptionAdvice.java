@@ -93,4 +93,16 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         log.error(String.format("LeaveGameException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(OthersTurnException.class)
+    public ResponseEntity handelOthersTurnException (Exception ex) {
+        log.error(String.format("OthersTurnException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MakeMoveException.class)
+    public ResponseEntity handelMakeMoveException (Exception ex) {
+        log.error(String.format("MakeMoveException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 }

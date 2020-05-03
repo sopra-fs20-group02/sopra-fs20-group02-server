@@ -8,10 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
-import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.LeaveGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
 import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
@@ -214,16 +211,14 @@ public class GameService {
         if (!(game.getGameStatus() == GameStatus.FULL
                 || game.getGameStatus() == GameStatus.WHITE_IN_CHECK
                 || game.getGameStatus() == GameStatus.BLACK_IN_CHECK)){
-            // TODO: specific exception
-            throw new SopraServiceException("Game is either finished or hasn't started yet");
+            throw new MakeMoveException("Game is either finished or hasn't started yet");
         }
 
         if (
             (pieceRepository.findByPieceId(pieceId).getColor() == Color.WHITE && !game.getIsWhiteTurn()) ||
             (pieceRepository.findByPieceId(pieceId).getColor() == Color.BLACK && game.getIsWhiteTurn())
         ){
-            // TODO: specific exception
-            throw new SopraServiceException("Other users turn");
+            throw new OthersTurnException("Other users turn");
         }
 
         game.setGameStatus(GameStatus.FULL);
