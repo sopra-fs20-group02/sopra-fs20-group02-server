@@ -103,7 +103,7 @@ public class GameServiceLogicIntegrationTest {
      * https://www.thesprucecrafts.com/fools-mate-the-fastest-checkmate-611599
      */
 
-    /*
+
     @Test
     public void foolsMate() {
         User playerWhite = this.game.getPlayerWhite();
@@ -155,9 +155,33 @@ public class GameServiceLogicIntegrationTest {
             }
         }
         assertEquals(true, found);
-
+        found = false;
+        assertEquals(GameStatus.WHITE_IN_CHECK,gameService.findGameByGameId(id).getGameStatus());
+        // fifth move
+        for (PieceDB pieceDB : game.getPieces()){
+            if (pieceDB.getYCord() == 2 && pieceDB.getXCord() == 4){
+                List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
+                assertEquals(2, moves.size());
+                gameService.makeMove(id, pieceDB.getPieceId(), 4,4);
+                found = true;
+            }
+        }
+        assertEquals(true, found);
+        found = false;
+        //assertEquals(GameStatus.WHITE_IN_CHECK,gameService.findGameByGameId(id).getGameStatus());
+        // sixth move
+        for (PieceDB pieceDB : game.getPieces()){
+            if (pieceDB.getYCord() == 8 && pieceDB.getXCord() == 4){
+                List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
+                assertEquals(12, moves.size());
+                gameService.makeMove(id, pieceDB.getPieceId(), 5,1);
+                found = true;
+            }
+        }
+        assertEquals(true, found);
         assertEquals(GameStatus.WON,gameService.findGameByGameId(id).getGameStatus());
-    }*/
+        //assertEquals();
+    }
 
 
 }
