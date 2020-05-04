@@ -102,6 +102,7 @@ public class GameServiceLogicIntegrationTest {
      * fast way to achieve checkmate
      * https://www.thesprucecrafts.com/fools-mate-the-fastest-checkmate-611599
      */
+
     /*
     @Test
     public void foolsMate() {
@@ -110,44 +111,53 @@ public class GameServiceLogicIntegrationTest {
 
         Long id = this.game.getGameId();
 
+        Boolean found = false;
         // first move
         for (PieceDB pieceDB : game.getPieces()){
             if (pieceDB.getYCord() == 2 && pieceDB.getXCord() == 6){
                 List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
                 assertEquals(2, moves.size());
                 gameService.makeMove(id, pieceDB.getPieceId(), 6,3);
+                found = true;
             }
         }
-
+        assertEquals(true, found);
+        found = false;
         // second move
         for (PieceDB pieceDB : game.getPieces()){
             if (pieceDB.getYCord() == 7 && pieceDB.getXCord() == 5){
                 List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
                 assertEquals(2, moves.size());
                 gameService.makeMove(id, pieceDB.getPieceId(), 5,5);
+                found = true;
             }
         }
-
+        assertEquals(true, found);
+        found = false;
         // third move
         for (PieceDB pieceDB : game.getPieces()){
             if (pieceDB.getYCord() == 2 && pieceDB.getXCord() == 7){
                 List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
                 assertEquals(2, moves.size());
                 gameService.makeMove(id, pieceDB.getPieceId(), 7,4);
+                found = true;
             }
         }
-
+        assertEquals(true, found);
+        found = false;
         // fourth move
         for (PieceDB pieceDB : game.getPieces()){
             if (pieceDB.getYCord() == 8 && pieceDB.getXCord() == 4){
                 List<Vector> moves = gameService.getPossibleMoves(id, pieceDB.getPieceId());
                 assertEquals(4, moves.size());
                 gameService.makeMove(id, pieceDB.getPieceId(), 8,4);
+                found = true;
             }
         }
+        assertEquals(true, found);
 
         assertEquals(GameStatus.WON,gameService.findGameByGameId(id).getGameStatus());
-    }
-*/
+    }*/
+
 
 }
