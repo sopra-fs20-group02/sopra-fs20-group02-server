@@ -8,10 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
-import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.LeaveGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.*;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
 import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
@@ -214,18 +211,17 @@ public class GameService {
         if (!(game.getGameStatus() == GameStatus.FULL
                 || game.getGameStatus() == GameStatus.WHITE_IN_CHECK
                 || game.getGameStatus() == GameStatus.BLACK_IN_CHECK)){
-            // TODO: specific exception
-            throw new SopraServiceException("Game is either finished or hasn't started yet");
+            throw new MakeMoveException("Game is either finished or hasn't started yet");
         }
 
         if (
             (pieceRepository.findByPieceId(pieceId).getColor() == Color.WHITE && !game.getIsWhiteTurn()) ||
             (pieceRepository.findByPieceId(pieceId).getColor() == Color.BLACK && game.getIsWhiteTurn())
         ){
-            // TODO: specific exception
-            throw new SopraServiceException("Other users turn");
+            throw new OthersTurnException("Other users turn");
         }
 
+        game.setGameStatus(GameStatus.FULL);
         this.board.setGame(game);
         this.board.makeMove(pieceId, new Vector(x,y));
 
@@ -268,16 +264,14 @@ public class GameService {
         }
 
         // check for check
-        if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON) {
+        if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON
+                && game.getGameStatus() != GameStatus.DRAW) {
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.BLACK_IN_CHECK);
             }
             else {
                 game.setGameStatus(GameStatus.WHITE_IN_CHECK);
             }
-        }
-        else if (game.getGameStatus() == GameStatus.WHITE_IN_CHECK || game.getGameStatus() == GameStatus.BLACK_IN_CHECK) {
-            game.setGameStatus(GameStatus.FULL);
         }
 
         /*else if (this.board.checkForCheckmate()) {
@@ -464,6 +458,8 @@ public class GameService {
             else {
                 game.setWhiteOffersDraw(!game.getWhiteOffersDraw());
             }
+            gameRepository.save(game);
+            gameRepository.flush();
         }
 
         // if black player offers draw
@@ -475,6 +471,8 @@ public class GameService {
             else {
                 game.setBlackOffersDraw(!game.getBlackOffersDraw());
             }
+            gameRepository.save(game);
+            gameRepository.flush();
         }
 
         return game;

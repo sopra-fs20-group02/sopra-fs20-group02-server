@@ -47,12 +47,12 @@ public abstract class Piece {
     }
 
     public void initializeDefaultVectors(){
-        this.diagonalsFront = new ArrayList<Vector>();
-        this.diagonalsBack = new ArrayList<Vector>();
-        this.diagonals = new ArrayList<Vector>();
-        this.verticals = new ArrayList<Vector>();
-        this.horizontals = new ArrayList<Vector>();
-        this.straights = new ArrayList<Vector>();
+        this.diagonalsFront = new ArrayList<>();
+        this.diagonalsBack = new ArrayList<>();
+        this.diagonals = new ArrayList<>();
+        this.verticals = new ArrayList<>();
+        this.horizontals = new ArrayList<>();
+        this.straights = new ArrayList<>();
 
         // initialize default vector lists
         this.diagonalsFront.addAll(Arrays.asList(new Vector(-1,1), new Vector(1,1)));
@@ -73,7 +73,7 @@ public abstract class Piece {
 
     public ArrayList<Vector> getPossibleMoves(){
         // TODO: test this !!
-        ArrayList<Vector> possibleMoves = new ArrayList<Vector>();
+        ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {
                 Vector current = new Vector(vector).mulS(i).add(this.position);
@@ -93,7 +93,7 @@ public abstract class Piece {
             }
         }
         return possibleMoves;
-    };
+    }
 
     public PieceDB convertToDB(){
         PieceDB pieceDB = new PieceDB();

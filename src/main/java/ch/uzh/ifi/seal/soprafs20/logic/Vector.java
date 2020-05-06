@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Simple integer vector class
@@ -53,33 +54,12 @@ public class Vector implements Serializable {
         return this;
     }
 
-    public ArrayList<Vector> getAlongVector(Vector vector, Integer num) {
-        ArrayList<Vector> vectors = new ArrayList<>();
-        for (int i = 1 ; i < num; ++i){
-            Vector current = new Vector(vector).mulS(i).add(this);
-            if (checkBounds(current)){
-                vector.add(current);
-            }
-        }
-        return vectors;
-    }
-
     public Boolean checkBounds(){
         return this.checkBounds(this);
     }
 
-    private boolean checkBounds(Integer x, Integer y){
-        if (x > boardSize || x < 1 || y > boardSize || y < 1 ){
-            return false;
-        }
-        return true;
-    }
-
     private boolean checkBounds(Vector vector){
-        if (vector.x > boardSize || x < 1 || y > boardSize || y < 1 ){
-            return false;
-        }
-        return true;
+        return vector.x <= boardSize && x >= 1 && y <= boardSize && y >= 1;
     }
 
     public Integer getX() {
@@ -91,15 +71,19 @@ public class Vector implements Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Vector)) {
-            return false;
-        }
-        if (this.getX() == ((Vector) other).getX() && this.getY() == ((Vector) other).getY()) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        else {
+        if (!(o instanceof Vector)) {
             return false;
         }
+        Vector vector = (Vector) o;
+        return x.equals(vector.x) && y.equals(vector.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

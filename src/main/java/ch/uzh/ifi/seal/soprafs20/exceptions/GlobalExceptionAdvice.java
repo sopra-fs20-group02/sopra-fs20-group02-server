@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.exceptions;
 
-import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
@@ -94,6 +91,18 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(LeaveGameException.class)
     public ResponseEntity handelLeaveGameException (Exception ex) {
         log.error(String.format("LeaveGameException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(OthersTurnException.class)
+    public ResponseEntity handelOthersTurnException (Exception ex) {
+        log.error(String.format("OthersTurnException raised:%s", ex));
+        return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MakeMoveException.class)
+    public ResponseEntity handelMakeMoveException (Exception ex) {
+        log.error(String.format("MakeMoveException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
     }
 }

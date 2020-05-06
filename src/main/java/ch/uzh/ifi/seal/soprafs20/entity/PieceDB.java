@@ -1,10 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
+
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
-//import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
 

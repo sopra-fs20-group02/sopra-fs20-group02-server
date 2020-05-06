@@ -1,4 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.logic.pieces;
+import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.logic.Board;
@@ -55,12 +56,13 @@ public class King extends Piece {
                     if (piece.getColor() != this.getColor() && piece.getPieceType() != PieceType.KING){
                         // special case for PAWN
                         if (piece.getPieceType() == PieceType.PAWN) {
-                            for (Vector otherMove : piece.getPossibleMoves()){
-
-                                if (!otherMove.equals(new Vector(0,1).add(piece.getPosition()))
-                                        && !otherMove.equals(new Vector(0,-1).add(piece.getPosition()))
-                                        && otherMove.equals(myMove)) {
+                            // only check capture moves
+                            // add capture moves manually, because pawn can not capture an empty tile
+                            Pawn pawn = (Pawn) piece;
+                            for (Vector otherMove : pawn.getCaptureMoves()) {
+                                if (otherMove.equals(myMove)) {
                                     valid = false;
+                                    break;
                                 }
                             }
                         }

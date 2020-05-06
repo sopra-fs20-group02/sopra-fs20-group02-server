@@ -238,13 +238,15 @@ public class Board {
         }
         ArrayList<Vector> nextMoves = getAllPossibleNextMoves(getIsTurnColor());
         for (Vector vector: nextMoves) {
-            if (vector.getX().equals(king.getPosition().getX()) && vector.getY().equals(king.getPosition().getY())) {
+            if (vector.equals(king.getPosition())) {
                 return true;
             }
         }
         return false;
     }
 
+    // not finished yet
+    // What about blocking the enemy's attack with another piece?
     public boolean checkForCheckmate() {
         Piece king = getOpponentsKing();
         if (king == null) {
@@ -255,12 +257,8 @@ public class Board {
     }
 
     // TODO: implement a check for stalemate
-    public boolean checkForStalemate() {
+    public void checkForStalemate() {
         Piece king = getOpponentsKing();
-        if (king.getPossibleMoves() == null) {
-
-        }
-        return false;
     }
 
     public void setGame(Game game){

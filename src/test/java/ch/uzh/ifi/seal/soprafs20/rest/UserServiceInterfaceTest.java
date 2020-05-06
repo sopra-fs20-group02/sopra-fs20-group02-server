@@ -22,7 +22,7 @@ import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class InterfaceTest {
+public class UserServiceInterfaceTest {
 
     @LocalServerPort
     private int port;
@@ -44,7 +44,7 @@ public class InterfaceTest {
      * User registration with valid information
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(0)
     public void userRegistration_givenValidInformation_shouldReturnURL() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -62,13 +62,13 @@ public class InterfaceTest {
                 this.restTemplate.postForEntity("http://localhost:" + port + "/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.CREATED);
-    }*/
+    }
 
     /**
      * User registration with invalid information
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(1)
     public void userRegistration_givenInvalidInformation_shouldReturnConflict() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -86,13 +86,13 @@ public class InterfaceTest {
                 this.restTemplate.postForEntity("http://localhost:" + port + "/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.CONFLICT);
-    }*/
+    }
 
     /**
      * User login with valid information
      * @throws Exception
      */
-    /*@Test
+    @Test
     @Order(2)
     public void userLogin_givenValidInformation_shouldReturnUser() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
@@ -109,81 +109,7 @@ public class InterfaceTest {
                 restTemplate.exchange("http://localhost:" + port + "/login", HttpMethod.PUT, request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-    }*/
-
-    /**
-     * Get list of games
-     * @throws Exception
-     */
-    /*@Test
-    @Order(3)
-    public void listOfGames_givenValidId_shouldReturnGames() throws Exception {
-        JSONObject json = new JSONObject();
-
-        json.put("userId", 1);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> request =
-                new HttpEntity<String>(json.toString(), headers);
-
-        ResponseEntity<String> response =
-                this.restTemplate.postForEntity("http://localhost:" + port + "/games", request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("playersOnline");
-        assertThat(response.getBody()).contains("gamesBeingPlayed");
-    }*/
-
-    /**
-     * Make move in chess game
-     * @throws Exception
-     */
-    /*@Test
-    @Order(4)
-    public void makeMove_givenValidId_shouldReturnStatus() throws Exception {
-        JSONObject json = new JSONObject();
-
-        json.put("userId", 1);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> request =
-                new HttpEntity<String>(json.toString(), headers);
-
-        ResponseEntity<String> response =
-                this.restTemplate.postForEntity("http://localhost:" + port + "/games/1/A1B2", request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("game");
-        assertThat(response.getBody()).contains("gameStatus");
-    }*/
-
-    /**
-     * Make move in chess game
-     * @throws Exception
-     */
-    /*@Test
-    @Order(5)
-    public void getHistory_givenValidId_shouldReturnOk() throws Exception {
-        JSONObject json = new JSONObject();
-
-        json.put("userId", 1);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<String> request =
-                new HttpEntity<String>(json.toString(), headers);
-
-        ResponseEntity<String> response =
-                this.restTemplate.postForEntity("http://localhost:" + port + "/gamesHistory", request, String.class);
-
-        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("userStats");
-    }*/
+    }
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input can be processed

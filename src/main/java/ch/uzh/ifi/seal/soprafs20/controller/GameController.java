@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * This class handles all the REST requests related to the game creation and join.
@@ -63,19 +64,22 @@ public class GameController {
         Game game = null;
         if(joinPutDTO.getGameId()!=null) {
             game = gameService.findGameByGameId(joinPutDTO.getGameId());
-            //User userInput = DTOMapper.INSTANCE.convertJoinPutDTOToEntity(joinPutDTO);
         }
         else {
             List<Game> games = gameService.getGames();
+            List<Game> gamesToJoin = new ArrayList<>();
             for (Game g : games){
                 if (g.getGameStatus() == GameStatus.WAITING){
                     // Found game that can be joined
-                    game = g;
+                    gamesToJoin.add(g);
                 }
             }
-            if (game == null) {
+            if (gamesToJoin.isEmpty()) {
                 throw new JoinGameException("No free game could be found");
             }
+            Random random = new Random();
+            int n = random.nextInt(gamesToJoin.size());
+            game = gamesToJoin.get(n);
         }
 
         gameService.joinGame(user, game);
@@ -93,7 +97,6 @@ public class GameController {
         for (Game game : games) {
             gameGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
         }
-
         return gameGetDTOs;
         // TODO: add tests
     }
@@ -133,8 +136,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<Vector> getMoves(@PathVariable("gameId") Long gameId, @PathVariable("pieceId") Long pieceId) {
-        List<Vector> moves = gameService.getPossibleMoves(gameId,pieceId);
-        return moves;
+        return gameService.getPossibleMoves(gameId,pieceId);
     }
 
     @GetMapping(value = "/users/{userId}/gameHistory")
