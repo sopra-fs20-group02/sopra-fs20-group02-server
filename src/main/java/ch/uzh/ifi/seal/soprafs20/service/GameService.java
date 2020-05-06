@@ -458,22 +458,22 @@ public class GameService {
         // if white player offers draw
         if (playerWhite.getUserId().equals(userId)) {
             if (game.getBlackOffersDraw()) {
-                game.setWhiteOffersDraw(true);
+                game.setWhiteOffersDraw(!game.getWhiteOffersDraw());
                 endGame(game, GameStatus.DRAW);
             }
             else {
-                game.setWhiteOffersDraw(true);
+                game.setWhiteOffersDraw(!game.getWhiteOffersDraw());
             }
         }
 
         // if black player offers draw
         else if (playerBlack.getUserId().equals(userId)) {
             if (game.getWhiteOffersDraw()) {
-                game.setBlackOffersDraw(true);
+                game.setBlackOffersDraw(!game.getBlackOffersDraw());
                 endGame(game, GameStatus.DRAW);
             }
             else {
-                game.setBlackOffersDraw(true);
+                game.setBlackOffersDraw(!game.getBlackOffersDraw());
             }
         }
 
