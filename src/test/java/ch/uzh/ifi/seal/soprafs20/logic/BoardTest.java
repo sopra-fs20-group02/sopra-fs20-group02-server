@@ -76,8 +76,8 @@ public class BoardTest {
 
     @Test
     public void getAllPossibleMoves() {
-        assertEquals(8, this.board.getAllPossibleNextMoves(Color.WHITE).size());
-        assertEquals(0, this.board.getAllPossibleNextMoves(Color.BLACK).size());
+        assertEquals(8, this.board.getPlayersPossibleNextMoves(Color.WHITE).size());
+        assertEquals(0, this.board.getPlayersPossibleNextMoves(Color.BLACK).size());
     }
 
 }

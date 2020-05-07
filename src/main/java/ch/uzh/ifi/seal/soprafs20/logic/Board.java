@@ -1,12 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.logic;
 
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
+import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.exceptions.InvalidMoveException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PieceNotInGameException;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +27,16 @@ public class Board {
     private Piece[][] board = new Piece[9][9];
     private ArrayList<Piece> piecesOutGame;
 
+    @Setter
+    private Game currentGame;
+
     private Boolean isWhiteTurn;
 
+    @Getter
+    private GameStatus status;
+
     public Board() {}
+
 
     public Piece getPieceOnTile(Vector vector) {
         return this.board[vector.getX()][vector.getY()];
@@ -81,20 +91,51 @@ public class Board {
         throw new PieceNotInGameException("Piece with " +id+ " could not be found.");
     }
 
+    private Piece getColorsKing(Color color) {
+        for (Piece piece: getPieces()) {
+            if (piece.getColor() != getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
+                return piece;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Vector> getPossibleMoves(Long pieceId){
         Piece piece = getById(pieceId);
         ArrayList<Vector> possibleMoves = piece.getPossibleMoves();
+        // check castling in case of a king
         if (piece.getPieceType() == PieceType.KING && !piece.getHasMoved()) {
             ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
             if (!possibleCastling.isEmpty()) {
                 possibleMoves.addAll(possibleCastling);
             }
         }
+        else if (piece.getPieceType() != PieceType.KING)
+            for (Vector move: piece.getPossibleMoves()) {
+                if (!isSaveMove(move, pieceId)) {
+                    possibleMoves.remove(move);
+                }
+            }
 
         return possibleMoves;
     }
 
-    public ArrayList<Vector> getAllPossibleNextMoves(Color playerColor) {
+
+    private Boolean isSaveMove(Vector dest, Long pieceId) {
+        Board copiedBoard = this.copyBoard();
+        copiedBoard.makeMove(pieceId, dest);
+        return !copiedBoard.checkForCheck();
+    }
+
+    /*
+    private Boolean isSafeMove(Vector dest, Long pieceId) {
+        Board copiedBoard = this.copyBoard();
+        copiedBoard.makeMove(pieceId, dest);
+        // default
+        return true;
+    }*/
+
+    public ArrayList<Vector> getPlayersPossibleNextMoves(Color playerColor) {
         ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Piece piece: getPieces()) {
             if (piece.getColor() == playerColor && !piece.getCaptured()) {
@@ -142,10 +183,10 @@ public class Board {
         boolean hasCastled = false;
 
         // check for valid move
-        ArrayList<Vector> possibleMoves = getPossibleMoves(pieceId);
+        /*ArrayList<Vector> possibleMoves = getPossibleMoves(pieceId);
         if (!possibleMoves.contains(moveTo)) {
             throw new InvalidMoveException("This piece can not move to the desired position");
-        }
+        }*/
 
 
 
@@ -165,28 +206,29 @@ public class Board {
             else if (piece.getColor() == captured.getColor() && piece.getPieceType() == PieceType.KING) {
                 if (piece.getPosition().equals(new Vector(5,1))) {
                     if (moveTo.equals(new Vector(1,1))) {
-                        castle(piece, captured, new Vector(2,1), new Vector(3,1));
+                        executeCastle(piece, captured, new Vector(2,1), new Vector(3,1));
                         hasCastled = true;
                     }
                     else if (moveTo.equals(new Vector(8,1))) {
-                        castle(piece, captured, new Vector(7,1), new Vector(6,1));
+                        executeCastle(piece, captured, new Vector(7,1), new Vector(6,1));
                         hasCastled = true;
                     }
                 }
 
                 else if (piece.getPosition().equals(new Vector(5,8))) {
                     if (moveTo.equals(new Vector(1,8))) {
-                        castle(piece, captured, new Vector(2,8), new Vector(3,8));
+                        executeCastle(piece, captured, new Vector(2,8), new Vector(3,8));
                         hasCastled = true;
                     }
                     else if (moveTo.equals(new Vector(8,8))) {
-                        castle(piece, captured, new Vector(7,8), new Vector(6,8));
+                        executeCastle(piece, captured, new Vector(7,8), new Vector(6,8));
                         hasCastled = true;
                     }
                 }
             }
         }
 
+        // execute the move
         if (!hasCastled) {
             this.board[piece.position.getX()][piece.position.getY()] = null;
             this.board[moveTo.getX()][moveTo.getY()] = piece;
@@ -197,46 +239,23 @@ public class Board {
     }
 
     // Effective castling, king and rook get on their new position
-    public void castle(Piece king, Piece rook, Vector kingDest, Vector rookDest) {
+    public void executeCastle(Piece king, Piece rook, Vector kingDest, Vector rookDest) {
         this.board[kingDest.getX()][kingDest.getY()] = king;
         this.board[rookDest.getX()][rookDest.getY()] = rook;
         rook.move(rookDest);
         king.move(kingDest);
     }
 
-
-    /*public void updateGameStatus(){
-        Color myColor = Color.BLACK;
-        if (isWhiteTurn) {
-            myColor = Color.WHITE;
-        }
-        // TODO: check for different win/draw conditions
-
-        // TODO: checkmate
-
-        for (Piece piece : this.getPieces()){
-            if (piece.getPieceType() == PieceType.KING){
-
-            }
-        }
-        // TODO: stalemate
-    }*/
-
-    private Piece getOpponentsKing() {
-        for (Piece piece: getPieces()) {
-            if (piece.getColor() != getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
-                return piece;
-            }
-        }
-        return null;
-    }
-
     public boolean checkForCheck() {
-        Piece king = getOpponentsKing();
+        Color color = Color.BLACK;
+        if (isWhiteTurn) {
+            color = Color.WHITE;
+        }
+        Piece king = getColorsKing(color);
         if (king == null) {
             return false;
         }
-        ArrayList<Vector> nextMoves = getAllPossibleNextMoves(getIsTurnColor());
+        ArrayList<Vector> nextMoves = getPlayersPossibleNextMoves(getIsTurnColor());
         for (Vector vector: nextMoves) {
             if (vector.equals(king.getPosition())) {
                 return true;
@@ -248,7 +267,7 @@ public class Board {
     // not finished yet
     // What about blocking the enemy's attack with another piece?
     public boolean checkForCheckmate() {
-        Piece king = getOpponentsKing();
+        Piece king = getColorsKing(Color.WHITE);
         if (king == null) {
             return true;
         }
@@ -258,13 +277,21 @@ public class Board {
 
     // TODO: implement a check for stalemate
     public void checkForStalemate() {
-        Piece king = getOpponentsKing();
+        Piece king = getColorsKing(Color.WHITE);
+    }
+
+    private Board copyBoard() {
+        Board boardCopy = new Board();
+        boardCopy.setGame(currentGame);
+        return boardCopy;
     }
 
     public void setGame(Game game){
+        this.setCurrentGame(game);
         this.emptyBoard();
         this.isWhiteTurn = game.getIsWhiteTurn();
         List<PieceDB> pieces = game.getPieces();
+        this.status = game.getGameStatus();
 
         for (PieceDB piece : pieces){
             int x = piece.getXCord();
