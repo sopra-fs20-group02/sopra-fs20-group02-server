@@ -444,6 +444,7 @@ public class GameService {
         gameRepository.flush();
     }
 
+    //Todo: Delete this function as soon as it is not needed anymore
     public Game draw(Long gameId, Long userId) {
         Game game = findGameByGameId(gameId);
         User playerWhite = game.getPlayerWhite();
@@ -477,4 +478,61 @@ public class GameService {
 
         return game;
     }
+
+    public Game offerOrAcceptDraw(Long gameId, Long userId) {
+        Game game = findGameByGameId(gameId);
+        User playerWhite = game.getPlayerWhite();
+        User playerBlack = game.getPlayerBlack();
+
+        // if white player offers draw
+        if (playerWhite.getUserId().equals(userId)) {
+            if (game.getBlackOffersDraw()) {
+                game.setWhiteOffersDraw(true);
+                endGame(game, GameStatus.DRAW);
+            }
+            else {
+                game.setWhiteOffersDraw(true);
+            }
+            gameRepository.save(game);
+            gameRepository.flush();
+        }
+
+        // if black player offers draw
+        else if (playerBlack.getUserId().equals(userId)) {
+            if (game.getWhiteOffersDraw()) {
+                game.setBlackOffersDraw(true);
+                endGame(game, GameStatus.DRAW);
+            }
+            else {
+                game.setBlackOffersDraw(true);
+            }
+            gameRepository.save(game);
+            gameRepository.flush();
+        }
+
+        return game;
+    }
+
+    public Game declineDraw(Long gameId, Long userId) {
+        Game game = findGameByGameId(gameId);
+        User playerWhite = game.getPlayerWhite();
+        User playerBlack = game.getPlayerBlack();
+
+        // if white player offers draw
+        if (playerWhite.getUserId().equals(userId)) {
+            game.setBlackOffersDraw(false);
+            gameRepository.save(game);
+            gameRepository.flush();
+        }
+
+        // if black player offers draw
+        else if (playerBlack.getUserId().equals(userId)) {
+            game.setWhiteOffersDraw(false);
+            gameRepository.save(game);
+            gameRepository.flush();
+        }
+
+        return game;
+    }
+
 }
