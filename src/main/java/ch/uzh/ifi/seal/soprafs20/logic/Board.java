@@ -124,16 +124,10 @@ public class Board {
     private Boolean isSaveMove(Vector dest, Long pieceId) {
         Board copiedBoard = this.copyBoard();
         copiedBoard.makeMove(pieceId, dest);
+        copiedBoard.isWhiteTurn = !this.isWhiteTurn;
         return !copiedBoard.checkForCheck();
     }
 
-    /*
-    private Boolean isSafeMove(Vector dest, Long pieceId) {
-        Board copiedBoard = this.copyBoard();
-        copiedBoard.makeMove(pieceId, dest);
-        // default
-        return true;
-    }*/
 
     public ArrayList<Vector> getPlayersPossibleNextMoves(Color playerColor) {
         ArrayList<Vector> possibleMoves = new ArrayList<>();
@@ -247,15 +241,16 @@ public class Board {
     }
 
     public boolean checkForCheck() {
-        Color color = Color.BLACK;
+        Color myColor = Color.BLACK;
+
         if (isWhiteTurn) {
-            color = Color.WHITE;
+            myColor = Color.WHITE;
         }
-        Piece king = getColorsKing(color);
+        Piece king = getColorsKing(myColor);
         if (king == null) {
             return false;
         }
-        ArrayList<Vector> nextMoves = getPlayersPossibleNextMoves(getIsTurnColor());
+        ArrayList<Vector> nextMoves = getPlayersPossibleNextMoves(myColor);
         for (Vector vector: nextMoves) {
             if (vector.equals(king.getPosition())) {
                 return true;
@@ -267,12 +262,27 @@ public class Board {
     // not finished yet
     // What about blocking the enemy's attack with another piece?
     public boolean checkForCheckmate() {
-        Piece king = getColorsKing(Color.WHITE);
-        if (king == null) {
+        Color enemyColor = Color.WHITE;
+        if (isWhiteTurn) {
+            enemyColor = Color.BLACK;
+        }
+        ArrayList<Vector> possibleMoves = new ArrayList<>();
+        for (Piece piece: getPieces()) {
+            if (piece.getColor() == enemyColor && !piece.getCaptured()) {
+                for (Vector vector: this.getPossibleMoves(piece.getPieceId())) {
+                    if (!possibleMoves.contains(vector)) {
+                        System.out.print(piece.getPieceId() + " - " + piece.getColor());
+                        System.out.println(" - " + piece.getPieceType() + " - move: x=" + vector.getX() + " y="+ vector.getY());
+                        possibleMoves.add(vector);
+                    }
+                }
+            }
+        }
+        System.out.println(possibleMoves);
+        if (possibleMoves.isEmpty()) {
             return true;
         }
-        return checkForCheck() && king.getPossibleMoves() == null;
-
+        return false;
     }
 
     // TODO: implement a check for stalemate

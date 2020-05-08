@@ -263,18 +263,7 @@ public class GameService {
             }
         }
 
-        // check for check
-        if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON
-                && game.getGameStatus() != GameStatus.DRAW) {
-            if (myColor.equals(Color.WHITE)) {
-                game.setGameStatus(GameStatus.BLACK_IN_CHECK);
-            }
-            else {
-                game.setGameStatus(GameStatus.WHITE_IN_CHECK);
-            }
-        }
-
-        /*else if (this.board.checkForCheckmate()) {
+        if (this.board.checkForCheckmate()){
             if (myColor.equals(Color.WHITE)) {
                 game.setGameStatus(GameStatus.WON);
                 game.setWinner(game.getPlayerWhite().getUserId());
@@ -283,7 +272,19 @@ public class GameService {
                 game.setGameStatus(GameStatus.WON);
                 game.setWinner(game.getPlayerBlack().getUserId());
             }
-        }*/
+            endGame(game, GameStatus.WON);
+        }
+
+        // check for check
+        else if (this.board.checkForCheck() && game.getGameStatus() != GameStatus.WON
+                && game.getGameStatus() != GameStatus.DRAW) {
+            if (myColor.equals(Color.WHITE)) {
+                game.setGameStatus(GameStatus.BLACK_IN_CHECK);
+            }
+            else {
+                game.setGameStatus(GameStatus.WHITE_IN_CHECK);
+            }
+        }
 
     }
 
