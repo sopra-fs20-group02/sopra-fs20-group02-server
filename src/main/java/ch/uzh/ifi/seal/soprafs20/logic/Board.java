@@ -150,28 +150,48 @@ public class Board {
     public ArrayList<Vector> checkForCastle(Long pieceId) {
         Piece piece = getById(pieceId);
         ArrayList<Vector> possibleCastling = new ArrayList<>();
+        Color enemyColor = Color.BLACK;
+        if (piece.getColor() == Color.BLACK) {
+            enemyColor = Color.WHITE;
+        }
 
+        // white king
         if (piece.getPosition().equals(new Vector(5,1))) {
 
-            if (board[4][1] == null && board[3][1] == null && board[2][1] == null && !board[1][1].getHasMoved()) {
+            if (board[4][1] == null && board[3][1] == null && board[2][1] == null && !board[1][1].getHasMoved()
+                    && !canPlayerReach(enemyColor, new Vector(2,1))) {
                 possibleCastling.add(new Vector(1,1));
             }
-            if (board[6][1] == null && board[7][1] == null && !board[8][1].getHasMoved()) {
+            if (board[6][1] == null && board[7][1] == null && !board[8][1].getHasMoved()
+                    && !canPlayerReach(enemyColor, new Vector(7,1))) {
                 possibleCastling.add(new Vector(8,1));
             }
         }
 
+        // black king
         else if (piece.getPosition().equals(new Vector(5,8))) {
 
-            if (board[4][8] == null && board[3][8] == null && board[2][8] == null && !board[1][8].getHasMoved()) {
+            if (board[4][8] == null && board[3][8] == null && board[2][8] == null && !board[1][8].getHasMoved()
+                    && !canPlayerReach(enemyColor, new Vector(2,8))) {
                 possibleCastling.add(new Vector(1,8));
             }
-            if (board[6][8] == null && board[7][8] == null && !board[8][8].getHasMoved()) {
+            if (board[6][8] == null && board[7][8] == null && !board[8][8].getHasMoved()
+                    && !canPlayerReach(enemyColor, new Vector(7,8))) {
                 possibleCastling.add(new Vector(8,8));
             }
         }
 
         return possibleCastling;
+    }
+
+    private boolean canPlayerReach(Color color, Vector vector) {
+        List<Vector> moves = getPlayersPossibleNextMoves(color);
+        for (Vector v: moves) {
+            if (v.equals(vector)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void makeMove(Long pieceId, Vector moveTo){
