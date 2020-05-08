@@ -30,6 +30,8 @@ public class Board {
     @Setter
     private Game currentGame;
 
+    @Getter
+    @Setter
     private Boolean isWhiteTurn;
 
     @Getter
@@ -93,7 +95,7 @@ public class Board {
 
     private Piece getColorsKing(Color color) {
         for (Piece piece: getPieces()) {
-            if (piece.getColor() != getIsTurnColor() && piece.getPieceType() == PieceType.KING) {
+            if (piece.getColor() == color && piece.getPieceType() == PieceType.KING) {
                 return piece;
             }
         }
@@ -124,7 +126,7 @@ public class Board {
     private Boolean isSaveMove(Vector dest, Long pieceId) {
         Board copiedBoard = this.copyBoard();
         copiedBoard.makeMove(pieceId, dest);
-        copiedBoard.isWhiteTurn = !this.isWhiteTurn;
+        copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
         return !copiedBoard.checkForCheck();
     }
 
@@ -229,7 +231,6 @@ public class Board {
             piece.move(moveTo);
         }
 
-
     }
 
     // Effective castling, king and rook get on their new position
@@ -242,11 +243,13 @@ public class Board {
 
     public boolean checkForCheck() {
         Color myColor = Color.BLACK;
+        Color enemyColor = Color.WHITE;
 
         if (isWhiteTurn) {
             myColor = Color.WHITE;
+            enemyColor = Color.BLACK;
         }
-        Piece king = getColorsKing(myColor);
+        Piece king = getColorsKing(enemyColor);
         if (king == null) {
             return false;
         }
@@ -259,26 +262,27 @@ public class Board {
         return false;
     }
 
-    // not finished yet
-    // What about blocking the enemy's attack with another piece?
+
+    // needs some improvements to make it reusable
     public boolean checkForCheckmate() {
         Color enemyColor = Color.WHITE;
         if (isWhiteTurn) {
             enemyColor = Color.BLACK;
         }
+        this.setIsWhiteTurn(!this.isWhiteTurn);
         ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Piece piece: getPieces()) {
             if (piece.getColor() == enemyColor && !piece.getCaptured()) {
-                for (Vector vector: this.getPossibleMoves(piece.getPieceId())) {
-                    if (!possibleMoves.contains(vector)) {
-                        System.out.print(piece.getPieceId() + " - " + piece.getColor());
-                        System.out.println(" - " + piece.getPieceType() + " - move: x=" + vector.getX() + " y="+ vector.getY());
-                        possibleMoves.add(vector);
-                    }
+                ArrayList<Vector> moves = this.getPossibleMoves(piece.getPieceId());
+                for (Vector vector: moves) {
+                    System.out.print(piece.getPieceId() + " - " + piece.getColor());
+                    System.out.println(" - " + piece.getPieceType() + " - move: x=" + vector.getX() + " y="+ vector.getY());
+                    possibleMoves.add(vector);
                 }
             }
         }
-        System.out.println(possibleMoves);
+        this.setIsWhiteTurn(!this.isWhiteTurn);
+        System.out.println("--------------------");
         if (possibleMoves.isEmpty()) {
             return true;
         }
