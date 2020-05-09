@@ -107,17 +107,21 @@ public class Board {
         ArrayList<Vector> possibleMoves = piece.getPossibleMoves();
         // check castling in case of a king
         if (piece.getPieceType() == PieceType.KING && !piece.getHasMoved()) {
-            ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
-            if (!possibleCastling.isEmpty()) {
-                possibleMoves.addAll(possibleCastling);
+            if(!piece.getHasMoved()) {
+                ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
+                if (!possibleCastling.isEmpty()) {
+                    possibleMoves.addAll(possibleCastling);
+                }
             }
-            // king cannot capture capture a piece that protects him
-            for(Vector move: possibleMoves) {
-                Board copiedBoard = this.copyBoard();
-                copiedBoard.makeMove(piece.getPieceId(), move);
-                copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
-                if(copiedBoard.checkForCheck()) {
-                    possibleMoves.remove(move);
+            else {
+                // king cannot capture capture a piece that protects him
+                for (Vector move : possibleMoves) {
+                    Board copiedBoard = this.copyBoard();
+                    copiedBoard.makeMove(piece.getPieceId(), move);
+                    copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
+                    if (copiedBoard.checkForCheck()) {
+                        possibleMoves.remove(move);
+                    }
                 }
             }
         }
