@@ -106,7 +106,7 @@ public class Board {
         Piece piece = getById(pieceId);
         ArrayList<Vector> possibleMoves = piece.getPossibleMoves();
         // check castling in case of a king
-        if (piece.getPieceType() == PieceType.KING && !piece.getHasMoved()) {
+        if (piece.getPieceType() == PieceType.KING) {
             if(!piece.getHasMoved()) {
                 ArrayList<Vector> possibleCastling = checkForCastle(pieceId);
                 if (!possibleCastling.isEmpty()) {
