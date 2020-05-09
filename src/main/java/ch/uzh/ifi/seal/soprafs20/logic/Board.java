@@ -111,6 +111,15 @@ public class Board {
             if (!possibleCastling.isEmpty()) {
                 possibleMoves.addAll(possibleCastling);
             }
+            // king cannot capture capture a piece that protects him
+            for(Vector move: possibleMoves) {
+                Board copiedBoard = this.copyBoard();
+                copiedBoard.makeMove(piece.getPieceId(), move);
+                copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
+                if(copiedBoard.checkForCheck()) {
+                    possibleMoves.remove(move);
+                }
+            }
         }
         else if (piece.getPieceType() != PieceType.KING)
             for (Vector move: piece.getPossibleMoves()) {
@@ -314,7 +323,7 @@ public class Board {
         Piece king = getColorsKing(Color.WHITE);
     }
 
-    private Board copyBoard() {
+    public Board copyBoard() {
         Board boardCopy = new Board();
         boardCopy.setGame(currentGame);
         return boardCopy;
