@@ -113,15 +113,13 @@ public class Board {
                     possibleMoves.addAll(possibleCastling);
                 }
             }
-            else {
-                // king cannot capture capture a piece that protects him
-                for (Vector move : possibleMoves) {
-                    Board copiedBoard = this.copyBoard();
-                    copiedBoard.makeMove(piece.getPieceId(), move);
-                    copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
-                    if (copiedBoard.checkForCheck()) {
-                        possibleMoves.remove(move);
-                    }
+            // king cannot capture capture a piece that protects him
+            for (Vector move : possibleMoves) {
+                Board copiedBoard = this.copyBoard();
+                copiedBoard.makeMove(piece.getPieceId(), move);
+                copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
+                if (copiedBoard.checkForCheck()) {
+                    possibleMoves.remove(move);
                 }
             }
         }
