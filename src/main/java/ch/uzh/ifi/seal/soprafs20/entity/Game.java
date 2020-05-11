@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.entity;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,6 +50,9 @@ public class Game implements Serializable {
 
     @Column()
     private GameStatus gameStatus;
+
+    @Column()
+    private GameMode gameMode;
 
     @Column()
     private Boolean isWhiteTurn;

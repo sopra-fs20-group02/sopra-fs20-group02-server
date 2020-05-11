@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
@@ -22,6 +23,7 @@ public class GameGetDTO {
     private Duration whiteDuration;
     private Duration blackDuration;
     private GameStatus gameStatus;
+    private GameMode gameMode;
     private Boolean isWhiteTurn;
     private Long winner;
     private Boolean whiteOffersDraw;
