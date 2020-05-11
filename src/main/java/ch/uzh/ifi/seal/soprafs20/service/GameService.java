@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContainerFactoryConfigurer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -537,6 +538,28 @@ public class GameService {
         }
 
         return game;
+    }
+
+    public List<PieceDB> getMovablePieces(Long gameId, Long userId){
+        Game game = findGameByGameId(gameId);
+        this.board.setGame(game);
+        User player = findUserByUserId(userId);
+        Color color;
+        if(player == game.getPlayerWhite()) {
+            color = Color.WHITE;
+        }
+        else {
+            color = Color.BLACK;
+        }
+        List<PieceDB> allPieces = game.getPieces();
+        List<PieceDB> movablePieces = new ArrayList<>();
+
+        for(PieceDB piece: allPieces) {
+            if(!piece.isCaptured() && piece.getColor() == color && !board.getPossibleMoves(piece.getPieceId()).isEmpty()) {
+                movablePieces.add(piece);
+            }
+        }
+        return movablePieces;
     }
 
 }

@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.Move;
+import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
 import ch.uzh.ifi.seal.soprafs20.logic.Vector;
@@ -166,6 +167,12 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
-
+    @PutMapping(value = "/games/{gameId}/movable")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<PieceDB> getMovablePieces(@PathVariable("gameId") Long gameId, @RequestBody UserPostDTO userPostDTO) {
+        List<PieceDB> pieces = gameService.getMovablePieces(gameId, userPostDTO.getUserId());
+        return pieces;
+    }
 
 }
