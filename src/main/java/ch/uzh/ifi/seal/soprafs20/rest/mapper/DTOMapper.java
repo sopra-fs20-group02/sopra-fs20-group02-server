@@ -68,6 +68,7 @@ public interface DTOMapper {
     @Mapping(source = "whiteDuration", target = "whiteDuration")
     @Mapping(source = "blackDuration", target = "blackDuration")
     @Mapping(source = "gameStatus", target = "gameStatus")
+    @Mapping(source = "gameMode", target = "gameMode")
     @Mapping(source = "isWhiteTurn", target = "isWhiteTurn")
     @Mapping(source = "winner", target = "winner")
     @Mapping(source = "whiteOffersDraw", target = "whiteOffersDraw")

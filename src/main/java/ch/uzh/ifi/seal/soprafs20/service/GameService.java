@@ -1,9 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.constant.Color;
-import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
-import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.constant.*;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
@@ -77,7 +74,12 @@ public class GameService {
         }
     }
 
+    // default option
     public Game createNewGame(User userInput) {
+        return this.createNewGame(userInput ,GameMode.CLASSIC);
+    }
+
+    public Game createNewGame(User userInput, GameMode mode) {
 
         checkIfUserIsAllowedToJoinOrCreateGame(userInput);
 
@@ -93,6 +95,7 @@ public class GameService {
             game.setPlayerBlack(player);
         }
         game.setGameStatus(GameStatus.WAITING);
+        game.setGameMode(mode);
         game.setBlackOffersDraw(false);
         game.setWhiteOffersDraw(false);
         // white starts

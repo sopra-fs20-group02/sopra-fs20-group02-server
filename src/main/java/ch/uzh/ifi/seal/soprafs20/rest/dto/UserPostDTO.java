@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
+import ch.uzh.ifi.seal.soprafs20.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import lombok.Getter;
@@ -17,4 +18,5 @@ public class UserPostDTO {
     private String birthDate;
     private String token;
     private UserStats userStats;
+    private GameMode gameMode;
 }

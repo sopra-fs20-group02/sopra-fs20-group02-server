@@ -52,7 +52,7 @@ public class GameController {
         }*/
 
         // precondition: no game can be joined
-        Game newGame = gameService.createNewGame(userInput);
+        Game newGame = gameService.createNewGame(userInput, userPostDTO.getGameMode());
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(newGame);
     }
 
