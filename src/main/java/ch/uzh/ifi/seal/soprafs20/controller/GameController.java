@@ -41,18 +41,13 @@ public class GameController {
     @ResponseBody
     public GameGetDTO createNewGame(@RequestBody UserPostDTO userPostDTO) {
         User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        /*List<Game> games = gameService.getGames();
-
-        for (Game game : games){
-            if (game.getGameStatus() == GameStatus.WAITING){
-                // Found game that can be joined
-                gameService.joinGame(userInput, game);
-                return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
-            }
-        }*/
-
-        // precondition: no game can be joined
-        Game newGame = gameService.createNewGame(userInput, userPostDTO.getGameMode());
+        Game newGame;
+        if(userPostDTO.getGameMode()==null){
+            newGame = gameService.createNewGame(userInput);
+        }
+        else {
+            newGame = gameService.createNewGame(userInput, userPostDTO.getGameMode());
+        }
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(newGame);
     }
 
