@@ -42,12 +42,12 @@ public class King extends Piece {
             }
         }
 
-        ArrayList<Vector> possibleMovesNoSuicide = new ArrayList<>();
-        List<Piece> pieces = this.board.getPieces();
+        //ArrayList<Vector> possibleMovesNoSuicide = new ArrayList<>();
+        //List<Piece> pieces = this.board.getPieces();
 
         // May be slow !
         // TODO: king suicide
-        for (Vector myMove : possibleMoves){
+        /*for (Vector myMove : possibleMoves){
             boolean valid = true;
             for (Piece piece : pieces){
                 // only check for non-captured pieces
@@ -89,9 +89,9 @@ public class King extends Piece {
             if (valid){
                 possibleMovesNoSuicide.add(myMove);
             }
-        }
+        }*/
 
-        return possibleMovesNoSuicide;
+        return possibleMoves;
     };
 }
 

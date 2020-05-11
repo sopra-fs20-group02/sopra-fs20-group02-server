@@ -105,6 +105,7 @@ public class Board {
     public ArrayList<Vector> getPossibleMoves(Long pieceId){
         Piece piece = getById(pieceId);
         ArrayList<Vector> possibleMoves = piece.getPossibleMoves();
+        ArrayList<Vector> possibleMoves2 = new ArrayList<>();
         // check castling in case of a king
         if (piece.getPieceType() == PieceType.KING) {
             if(!piece.getHasMoved()) {
@@ -114,23 +115,23 @@ public class Board {
                 }
             }
             // king cannot capture capture a piece that protects him
-            /*for (Vector move : possibleMoves) {
+            for (Vector move : possibleMoves) {
                 Board copiedBoard = this.copyBoard();
                 copiedBoard.makeMove(piece.getPieceId(), move);
                 copiedBoard.setIsWhiteTurn(!this.getIsWhiteTurn());
-                if (copiedBoard.checkForCheck()) {
-                    possibleMoves.remove(move);
+                if (!copiedBoard.checkForCheck()) {
+                    possibleMoves2.add(move);
                 }
-            }*/
+            }
         }
         else if (piece.getPieceType() != PieceType.KING)
             for (Vector move: piece.getPossibleMoves()) {
-                if (!isSaveMove(move, pieceId)) {
-                    possibleMoves.remove(move);
+                if (isSaveMove(move, pieceId)) {
+                    possibleMoves2.add(move);
                 }
             }
 
-        return possibleMoves;
+        return possibleMoves2;
     }
 
 
@@ -306,14 +307,11 @@ public class Board {
             if (piece.getColor() == enemyColor && !piece.getCaptured()) {
                 ArrayList<Vector> moves = this.getPossibleMoves(piece.getPieceId());
                 for (Vector vector: moves) {
-                    System.out.print(piece.getPieceId() + " - " + piece.getColor());
-                    System.out.println(" - " + piece.getPieceType() + " - move: x=" + vector.getX() + " y="+ vector.getY());
                     possibleMoves.add(vector);
                 }
             }
         }
         this.setIsWhiteTurn(!this.isWhiteTurn);
-        System.out.println("--------------------");
         if (possibleMoves.isEmpty()) {
             return true;
         }
