@@ -48,7 +48,6 @@ public class UserServiceInterfaceTest {
     @Order(0)
     public void userRegistration_givenValidInformation_shouldReturnURL() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
-        userPostDTO.setName("Test User");
         userPostDTO.setUsername("testUsername");
         userPostDTO.setPassword("password");
 
@@ -72,7 +71,6 @@ public class UserServiceInterfaceTest {
     @Order(1)
     public void userRegistration_givenInvalidInformation_shouldReturnConflict() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
-        userPostDTO.setName("Test User");
         userPostDTO.setUsername("testUsername");
         userPostDTO.setPassword("password");
 

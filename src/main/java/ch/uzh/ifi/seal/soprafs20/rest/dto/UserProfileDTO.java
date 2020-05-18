@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class UserProfileDTO {
     private Long userId;
-    private String name;
     private String username;
     private UserStatus status;
     private String creationDate;

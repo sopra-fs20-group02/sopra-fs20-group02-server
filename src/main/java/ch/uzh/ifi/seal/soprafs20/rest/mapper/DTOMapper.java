@@ -21,7 +21,6 @@ public interface DTOMapper {
     DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
     @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "name", target = "name")
     @Mapping(source = "username", target = "username")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "password", target = "password")
@@ -38,7 +37,6 @@ public interface DTOMapper {
     Move convertMovePostDTOtoEntity(MovePostDTO movePostDTO);
 
     @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "name", target = "name")
     @Mapping(source = "username", target = "username")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "password", target = "password")
