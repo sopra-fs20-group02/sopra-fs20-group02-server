@@ -3,10 +3,9 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
-import ch.uzh.ifi.seal.soprafs20.exceptions.AlreadyLoggedInException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserStatsRepository;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ public class UserService {
             return user;
         }
         else {
-            throw new UserException("User with id: " + id + " was not found.");
+            throw new NotFoundException("User with id: " + id + " was not found.");
         }
     }
 
@@ -149,14 +148,8 @@ public class UserService {
         User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
 
         String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-        /*if (userByUsername != null && userByName != null) {
-            throw new SopraServiceException(String.format(baseErrorMessage, "username and the name", "are"));
-        }*/
         if (userByUsername != null) {
             throw new SopraServiceException(String.format(baseErrorMessage, "username", "is"));
         }
-        /*else if (userByName != null) {
-            throw new SopraServiceException(String.format(baseErrorMessage, "name", "is"));
-        }*/
     }
 }
