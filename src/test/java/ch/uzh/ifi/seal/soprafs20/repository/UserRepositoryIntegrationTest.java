@@ -22,39 +22,9 @@ public class UserRepositoryIntegrationTest {
     private UserRepository userRepository;
 
     @Test
-    public void findByName_success() {
-        // given
-        User user = new User();
-        user.setName("Firstname Lastname");
-        user.setUsername("firstname@lastname");
-        user.setStatus(UserStatus.OFFLINE);
-        user.setToken("1");
-
-        user.setUserId(1L);
-        user.setPassword("password");
-        user.setCreationDate("00/00/0000");
-
-        //entityManager.persist(user);
-        //entityManager.flush();
-        userRepository.save(user);
-        userRepository.flush();
-
-        // when
-        User found = userRepository.findByName(user.getName());
-
-        // then
-        assertNotNull(found.getUserId());
-        assertEquals(found.getName(), user.getName());
-        assertEquals(found.getUsername(), user.getUsername());
-        assertEquals(found.getToken(), user.getToken());
-        assertEquals(found.getStatus(), user.getStatus());
-    }
-
-    @Test
     public void findByUsername_success() {
         // given
         User user = new User();
-        user.setName("Firstname Lastname");
         user.setUsername("firstname@lastname");
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
@@ -73,7 +43,6 @@ public class UserRepositoryIntegrationTest {
 
         // then
         assertNotNull(found.getUserId());
-        assertEquals(found.getName(), user.getName());
         assertEquals(found.getUsername(), user.getUsername());
         assertEquals(found.getToken(), user.getToken());
         assertEquals(found.getStatus(), user.getStatus());
@@ -83,7 +52,6 @@ public class UserRepositoryIntegrationTest {
     public void findByToken_success() {
         // given
         User user = new User();
-        user.setName("Firstname Lastname");
         user.setUsername("firstname@lastname");
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
@@ -102,7 +70,6 @@ public class UserRepositoryIntegrationTest {
 
         // then
         assertNotNull(found.getUserId());
-        assertEquals(found.getName(), user.getName());
         assertEquals(found.getUsername(), user.getUsername());
         assertEquals(found.getToken(), user.getToken());
         assertEquals(found.getStatus(), user.getStatus());

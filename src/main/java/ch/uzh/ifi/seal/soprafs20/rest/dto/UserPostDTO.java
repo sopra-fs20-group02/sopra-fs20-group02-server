@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class UserPostDTO {
     private Long userId;
-    private String name;
     private String username;
     private UserStatus status;
     private String password;

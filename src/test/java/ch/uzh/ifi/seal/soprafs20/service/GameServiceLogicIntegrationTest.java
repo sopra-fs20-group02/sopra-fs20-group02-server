@@ -73,7 +73,6 @@ public class GameServiceLogicIntegrationTest {
 
         UserPostDTO dtoA = new UserPostDTO();
         dtoA.setUsername("pA");
-        dtoA.setName("playerA");
         dtoA.setPassword("123456");
 
         User userA = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(dtoA);
@@ -84,7 +83,6 @@ public class GameServiceLogicIntegrationTest {
 
         UserPostDTO dtoB = new UserPostDTO();
         dtoB.setUsername("pB");
-        dtoB.setName("playerB");
         dtoB.setPassword("123456");
 
         User userB = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(dtoB);
@@ -95,7 +93,6 @@ public class GameServiceLogicIntegrationTest {
 
         UserPostDTO dtoC = new UserPostDTO();
         dtoC.setUsername("pC");
-        dtoC.setName("playerC");
         dtoC.setPassword("123456");
 
         this.game = gameService.createNewGame(playerA);
