@@ -5,7 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
@@ -183,7 +183,7 @@ public class GameServiceIntegrationTest {
 
         gameService.deleteGame(game.getGameId());
         assertThrows(
-                UserException.class,
+                NotFoundException.class,
                 () -> {
                     gameService.deleteGame(game.getGameId());
                 }

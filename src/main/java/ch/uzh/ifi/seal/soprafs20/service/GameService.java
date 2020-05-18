@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContainerFactoryConfigurer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +60,7 @@ public class GameService {
             return game;
         }
         else {
-            throw new UserException("Game with id "+gameId+" was not found.");
+            throw new NotFoundException("Game with id "+gameId+" was not found.");
         }
     }
 
@@ -71,7 +70,7 @@ public class GameService {
             return user;
         }
         else {
-            throw new UserException("User with id "+userId+" was not found.");
+            throw new NotFoundException("User with id "+userId+" was not found.");
         }
     }
 

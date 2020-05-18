@@ -61,7 +61,7 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     // Exception is raised if a user with a specific id does not exist
-    @ExceptionHandler(UserException.class)
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity handelUserException (Exception ex) {
         log.error(String.format("UserException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -83,8 +83,8 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
 
     // TODO: needs to be tested
     @ExceptionHandler(JoinGameException.class)
-    public ResponseEntity handelJoingGameException (Exception ex) {
-        log.error(String.format("InvalidMoveException raised:%s", ex));
+    public ResponseEntity handelJoinGameException (Exception ex) {
+        log.error(String.format("JoinGameException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 

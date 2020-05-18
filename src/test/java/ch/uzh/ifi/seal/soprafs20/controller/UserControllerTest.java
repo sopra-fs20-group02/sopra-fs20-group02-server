@@ -5,7 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.AlreadyLoggedInException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.LoginException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.UserException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -100,7 +100,6 @@ public class UserControllerTest {
         // given
         User user = new User();
         user.setUserId(1L);
-        user.setName("Test User");
         user.setUsername("testUsername");
         user.setToken("1");
         user.setStatus(UserStatus.ONLINE);
@@ -110,7 +109,8 @@ public class UserControllerTest {
         userPostDTO.setName("Test User");
         userPostDTO.setUsername("testUsername");
 
-        given(userService.createUser(Mockito.any())).willThrow(new SopraServiceException("The username and the name provided are not unique. Therefore, the user could not be created!"));
+        given(userService.createUser(Mockito.any()))
+                .willThrow(new SopraServiceException("The username and the name provided are not unique. Therefore, the user could not be created!"));
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/users")
@@ -153,7 +153,8 @@ public class UserControllerTest {
         userPostDTO.setUsername("testUsername");
         userPostDTO.setPassword("tpassword");
 
-        given(userService.loginUser(Mockito.any())).willThrow(new LoginException("Login failed because credentials are incorrect."));
+        given(userService.loginUser(Mockito.any()))
+                .willThrow(new LoginException("Login failed because credentials are incorrect."));
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder putRequest = put("/login")
@@ -199,7 +200,8 @@ public class UserControllerTest {
         given(userService.findUserByUserId(user.getUserId())).willReturn(user);
 
         // when
-        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId()).contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON);
 
         // then
         mockMvc.perform(getRequest).andExpect(status().isOk())
@@ -216,10 +218,12 @@ public class UserControllerTest {
         User user = new User();
         user.setUserId(1L);
 
-        given(userService.findUserByUserId(user.getUserId())).willThrow(new UserException("User with id: "+user.getUserId()+" was not found."));
+        given(userService.findUserByUserId(user.getUserId()))
+                .willThrow(new NotFoundException("User with id: "+user.getUserId()+" was not found."));
 
         // when
-        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId()).contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId())
+                .contentType(MediaType.APPLICATION_JSON);
 
         // then
         mockMvc.perform(getRequest).andExpect(status().isNotFound())
@@ -258,7 +262,8 @@ public class UserControllerTest {
         userPostDTO.setUsername("testUsername");
         userPostDTO.setBirthDate("11/11/1111");
 
-        given(userService.updateUser(Mockito.any(), Mockito.any())).willThrow(new UserException("User with id: "+user.getUserId()+" was not found."));
+        given(userService.updateUser(Mockito.any(), Mockito.any()))
+                .willThrow(new NotFoundException("User with id: "+user.getUserId()+" was not found."));
 
 
         // when/then -> do the request + validate the result
@@ -294,7 +299,7 @@ public class UserControllerTest {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setToken("1");
 
-        given(userService.logoutUser(Mockito.any())).willThrow(new UserException("Invalid token! You will be redirected to the login page."));
+        given(userService.logoutUser(Mockito.any())).willThrow(new NotFoundException("Invalid token! You will be redirected to the login page."));
 
 
         // when/then -> do the request + validate the result
