@@ -39,12 +39,12 @@ public class UserServiceInterfaceTest {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
                 String.class)).contains("The application is running.");
     }
-
+/*
     /**
      * User registration with valid information
      * @throws Exception
      */
-    @Test
+    /*@Test
     public void userRegistration_givenValidInformation_shouldReturnURL() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("testUsername");
@@ -60,7 +60,7 @@ public class UserServiceInterfaceTest {
                 this.restTemplate.postForEntity("http://localhost:" + port + "/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.CREATED);
-    }
+    }*/
 /*
     /**
      * User registration with invalid information
