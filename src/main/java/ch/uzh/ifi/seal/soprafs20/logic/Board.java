@@ -5,7 +5,6 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
-import ch.uzh.ifi.seal.soprafs20.exceptions.InvalidMoveException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.PieceNotInGameException;
 import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
 import lombok.Getter;

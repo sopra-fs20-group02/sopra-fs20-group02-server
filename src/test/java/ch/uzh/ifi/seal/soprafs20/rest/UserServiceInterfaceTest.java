@@ -45,7 +45,6 @@ public class UserServiceInterfaceTest {
      * @throws Exception
      */
     @Test
-    @Order(0)
     public void userRegistration_givenValidInformation_shouldReturnURL() throws Exception {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("testUsername");

@@ -52,7 +52,7 @@ public class BoardTest {
         rookDB2.setColor(Color.WHITE);
         rookDB2.setHasMoved(false);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
         pieces.add(rookDB1);
         pieces.add(rookDB2);

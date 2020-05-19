@@ -31,7 +31,7 @@ public class PiecesTest {
         pieceDB.setYCord(4);
         pieceDB.setPieceType(PieceType.KING);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
 
         this.game.setPieces(pieces);
@@ -47,7 +47,7 @@ public class PiecesTest {
         pieceDB.setYCord(1);
         pieceDB.setPieceType(PieceType.QUEEN);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
 
         this.game.setPieces(pieces);
@@ -64,7 +64,7 @@ public class PiecesTest {
         pieceDB.setPieceType(PieceType.PAWN);
         pieceDB.setColor(Color.WHITE);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
 
         this.game.setPieces(pieces);
@@ -81,7 +81,7 @@ public class PiecesTest {
         pieceDB.setPieceType(PieceType.BISHOP);
         pieceDB.setColor(Color.WHITE);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
 
         this.game.setPieces(pieces);
@@ -98,7 +98,7 @@ public class PiecesTest {
         pieceDB.setPieceType(PieceType.KNIGHT);
         pieceDB.setColor(Color.WHITE);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
 
         this.game.setPieces(pieces);
@@ -115,7 +115,7 @@ public class PiecesTest {
         pieceDB.setPieceType(PieceType.ROOK);
         pieceDB.setColor(Color.WHITE);
 
-        List<PieceDB> pieces = new ArrayList<PieceDB>();
+        List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
 
         this.game.setPieces(pieces);
