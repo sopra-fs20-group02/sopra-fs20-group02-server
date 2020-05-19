@@ -169,16 +169,16 @@ public class Board {
         // white king
         if (piece.getPosition().equals(new Vector(5,1))) {
 
-            if (board[4][1] == null && board[3][1] == null && board[2][1] == null && !board[1][1].getHasMoved()
+            if (board[4][1] == null && board[3][1] == null && board[2][1] == null && board[1][1] != null
                     && !canPlayerReach(enemyColor, new Vector(2,1))) {
-                if () {
+                if (!board[1][1].getHasMoved()) {
                     possibleCastling.add(new Vector(1,1));
                 }
 
             }
-            if (board[6][1] == null && board[7][1] == null && !board[8][1].getHasMoved()
+            if (board[6][1] == null && board[7][1] == null && board[8][1] != null
                     && !canPlayerReach(enemyColor, new Vector(7,1))) {
-                if () {
+                if (!board[8][1].getHasMoved()) {
                     possibleCastling.add(new Vector(8,1));
                 }
 
