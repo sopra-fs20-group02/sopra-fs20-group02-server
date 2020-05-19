@@ -150,6 +150,20 @@ public class BoardTest {
         assertEquals(possibleCastling, expectedCastling);
     }
 
+    @Test
+    public void promotionTest() {
+        Piece pawn = new Pawn(capturedPawn.convertToDB(), board);
+        pawn.setPosition(new Vector(1,8));
+        pawn.setCaptured(false);
+
+        board.promotion(pawn);
+
+        Piece piece = board.getPieceOnTile(new Vector(1,8));
+
+        assertEquals(piece.getPieceId(), pawn.getPieceId());
+        assertEquals(piece.getPieceType(), PieceType.QUEEN);
+    }
+
 
 
 }
