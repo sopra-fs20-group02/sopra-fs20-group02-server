@@ -3,8 +3,11 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
+import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.LeaveGameException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.MakeMoveException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
@@ -151,6 +154,26 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
+    public void makeMove_GameStatusIsWaiting_exception() {
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
+
+        Game game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
+
+        Long pieceId = 1L;
+        int x = 1;
+        int y = 3;
+
+        assertThrows(
+                MakeMoveException.class,
+                () -> {
+                    gameService.makeMove(game.getGameId(), pieceId, x,y);
+                }
+        );
+    }
+
+    @Test
     public void leaveGame_validInput_success() {
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
 
@@ -168,6 +191,29 @@ public class GameServiceIntegrationTest {
         assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
         assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.ONLINE);
         assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WON);
+    }
+
+    @Test
+    public void leaveGame_invalidInput_exception() {
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.ONLINE);
+
+        Game game = gameService.createNewGame(playerA);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.SEARCHING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.WAITING);
+
+        gameService.joinGame(playerB, game);
+        assertEquals(userService.findUserByUsername("pA").getStatus(), UserStatus.PLAYING);
+        assertEquals(userService.findUserByUsername("pB").getStatus(), UserStatus.PLAYING);
+        assertEquals(gameRepository.findByGameId(game.getGameId()).getGameStatus(), GameStatus.FULL);
+
+        gameService.leaveGame(game.getGameId(), playerB);
+
+        assertThrows(
+                LeaveGameException.class,
+                () -> {
+                    gameService.leaveGame(game.getGameId(), playerA);
+                }
+        );
     }
 
     @Test
@@ -196,26 +242,17 @@ public class GameServiceIntegrationTest {
         assertEquals(false, gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
 
         gameService.draw(game.getGameId(),playerA.getUserId());
-        assertEquals(
-                true,
-                gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() ||
-                        gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw()
-        );
+        assertTrue(gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() ||
+                gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
 
-        assertEquals(
-                false,
-                gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
-                        gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw()
-        );
+        assertFalse(gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
+                gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
 
         assertEquals(GameStatus.FULL, gameService.findGameByGameId(game.getGameId()).getGameStatus());
 
         gameService.draw(game.getGameId(),playerB.getUserId());
-        assertEquals(
-                true,
-                gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
-                        gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw()
-        );
+        assertTrue(gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
+                gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
         assertEquals(GameStatus.DRAW, gameService.findGameByGameId(game.getGameId()).getGameStatus());
     }
 }

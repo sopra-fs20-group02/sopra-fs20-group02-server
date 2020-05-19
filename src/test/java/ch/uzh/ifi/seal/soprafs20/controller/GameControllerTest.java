@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.constant.Color;
+import ch.uzh.ifi.seal.soprafs20.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
@@ -102,7 +103,31 @@ public class GameControllerTest {
 
         // then
         mockMvc.perform(postRequest).andExpect(status().isCreated());
+    }
 
+    @Test
+    public void createNewGameTest_ReturnJsonArray_GameMode_success() throws Exception {
+        //given
+        Game game;
+        game = new Game();
+        game.setGameId(1L);
+        game.setIsWhiteTurn(true);
+        game.setGameStatus(GameStatus.WAITING);
+
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setGameMode(GameMode.BLITZ);
+        userPostDTO.setUserId(1L);
+
+        // this mocks the GameService
+        given(gameService.createNewGame(Mockito.any())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/games")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));;
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isCreated());
     }
 
     @Test
@@ -497,6 +522,27 @@ public class GameControllerTest {
 
         // then
         mockMvc.perform(postRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$.gameId",is(1)));
+    }
+
+    @Test
+    public void declineDrawTest_ReturnJsonArray_success() throws Exception {
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setUserId(1L);
+
+        Game game = new Game();
+        game.setGameId(1L);
+
+        // this mocks the GameService
+        given(gameService.declineDraw(Mockito.anyLong(), Mockito.any())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/games/"+game.getGameId()+"/draw")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(putRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$.gameId",is(1)));
     }
 

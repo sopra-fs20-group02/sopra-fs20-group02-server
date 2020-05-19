@@ -94,7 +94,6 @@ public class GameController {
             gameGetDTOs.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
         }
         return gameGetDTOs;
-        // TODO: add tests
     }
 
     @GetMapping(value = "/games/{id}")

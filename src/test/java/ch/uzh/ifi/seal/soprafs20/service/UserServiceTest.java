@@ -28,7 +28,7 @@ public class UserServiceTest {
 
     private User testUser;
     private UserStats userStats;
-/*
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -81,5 +81,5 @@ public class UserServiceTest {
         SopraServiceException exception = assertThrows(SopraServiceException.class, () -> userService.createUser(testUser), exceptionMessage);
         assertEquals(exceptionMessage, exception.getMessage());
     }
-*/
+
 }
