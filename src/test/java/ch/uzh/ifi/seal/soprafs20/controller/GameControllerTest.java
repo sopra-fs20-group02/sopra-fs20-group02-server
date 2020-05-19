@@ -5,10 +5,12 @@ import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
+import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.MakeMoveException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
 import ch.uzh.ifi.seal.soprafs20.exceptions.SopraServiceException;
+import ch.uzh.ifi.seal.soprafs20.logic.Vector;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.JoinPutDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -22,9 +24,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -409,9 +413,126 @@ public class GameControllerTest {
                 .andExpect(jsonPath("$", is("Game is either finished or hasn't started yet")));
     }
 
+    @Test
+    public void getMovesTest_ReturnJsonArray_success() throws Exception {
+        // given
+        Game game;
+        game = new Game();
+        game.setGameId(1L);
+        game.setIsWhiteTurn(true);
+        game.setGameStatus(GameStatus.WAITING);
+
+        PieceDB piece = new PieceDB();
+        piece.setPieceId(1L);
+        piece.setPieceType(PieceType.PAWN);
+        piece.setColor(Color.BLACK);
+        piece.setXCord(1);
+        piece.setYCord(3);
+        piece.setHasMoved(false);
+        piece.setCaptured(false);
+        ArrayList<PieceDB> pieces = new ArrayList<>();
+        pieces.add(piece);
+        game.setPieces(pieces);
+
+        Vector vector = new Vector(1,4);
+        List<Vector> moves = new ArrayList<>();
+        moves.add(vector);
 
 
+        // this mocks the GameService
+        given(gameService.getPossibleMoves(Mockito.anyLong(), Mockito.anyLong())).willReturn(moves);
 
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/games/"+game.getGameId()+"/"+piece.getPieceId())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].x",is(vector.getX())))
+                .andExpect(jsonPath("$[0].y",is(vector.getY())));
+
+    }
+
+    @Test
+    public void getGameHistoryTest_ReturnJsonArray_success() throws Exception {
+        User user = new User();
+        user.setUserId(1L);
+
+        Game game1 = new Game();
+        game1.setGameId(1L);
+        Game game2 = new Game();
+        game2.setGameId(2L);
+        List<Game> games = new ArrayList<>();
+        games.add(game1);
+        games.add(game2);
+
+
+        // this mocks the GameService
+        given(gameService.getGameHistory(Mockito.anyLong())).willReturn(games);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/users/"+user.getUserId()+"/gameHistory")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].gameId",is(1)))
+                .andExpect(jsonPath("$[1].gameId",is(2)));
+    }
+
+    @Test
+    public void offerOrAcceptDrawTest_ReturnJsonArray_success() throws Exception {
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setUserId(1L);
+
+        Game game = new Game();
+        game.setGameId(1L);
+
+        // this mocks the GameService
+        given(gameService.offerOrAcceptDraw(Mockito.anyLong(), Mockito.any())).willReturn(game);
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/games/"+game.getGameId()+"/draw")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(postRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$.gameId",is(1)));
+    }
+
+    @Test
+    public void getMovablePiecesTest_ReturnJsonArray_success() throws Exception {
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setUserId(1L);
+
+        Game game = new Game();
+        game.setGameId(1L);
+        PieceDB pieceDB1 = new PieceDB();
+        PieceDB pieceDB2 = new PieceDB();
+        pieceDB1.setPieceId(1L);
+        pieceDB2.setPieceId(2L);
+        List<PieceDB> movablePieces = new ArrayList<>();
+        movablePieces.add(pieceDB1);
+        movablePieces.add(pieceDB2);
+
+
+        // this mocks the GameService
+        given(gameService.getMovablePieces(Mockito.anyLong(), Mockito.any())).willReturn(movablePieces);
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/games/"+game.getGameId()+"/movable")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(putRequest).andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(2)))
+                .andExpect(jsonPath("$[0].pieceId",is(1)))
+                .andExpect(jsonPath("$[1].pieceId",is(2)));
+    }
 
 
     /**
