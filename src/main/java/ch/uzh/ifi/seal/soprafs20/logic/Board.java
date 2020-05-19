@@ -171,24 +171,35 @@ public class Board {
 
             if (board[4][1] == null && board[3][1] == null && board[2][1] == null && !board[1][1].getHasMoved()
                     && !canPlayerReach(enemyColor, new Vector(2,1))) {
-                possibleCastling.add(new Vector(1,1));
+                if () {
+                    possibleCastling.add(new Vector(1,1));
+                }
+
             }
             if (board[6][1] == null && board[7][1] == null && !board[8][1].getHasMoved()
                     && !canPlayerReach(enemyColor, new Vector(7,1))) {
-                possibleCastling.add(new Vector(8,1));
+                if () {
+                    possibleCastling.add(new Vector(8,1));
+                }
+
             }
         }
 
         // black king
         else if (piece.getPosition().equals(new Vector(5,8))) {
 
-            if (board[4][8] == null && board[3][8] == null && board[2][8] == null && !board[1][8].getHasMoved()
+            if (board[4][8] == null && board[3][8] == null && board[2][8] == null && board[1][8] != null
                     && !canPlayerReach(enemyColor, new Vector(2,8))) {
-                possibleCastling.add(new Vector(1,8));
+                if (!board[1][8].getHasMoved()) {
+                    possibleCastling.add(new Vector(1,8));
+                }
             }
-            if (board[6][8] == null && board[7][8] == null && !board[8][8].getHasMoved()
+            if (board[6][8] == null && board[7][8] == null && board[8][8] != null
                     && !canPlayerReach(enemyColor, new Vector(7,8))) {
-                possibleCastling.add(new Vector(8,8));
+                if(!board[8][8].getHasMoved()) {
+                    possibleCastling.add(new Vector(8,8));
+                }
+
             }
         }
 
@@ -261,7 +272,25 @@ public class Board {
             this.board[moveTo.getX()][moveTo.getY()] = piece;
             piece.move(moveTo);
         }
+        if (piece.getPieceType() == PieceType.PAWN) {
+            if (piece.getColor() == Color.WHITE && piece.getPosition().getY() == 8) {
+                promotion(piece);
+            }
+            else if (piece.getColor() == Color.BLACK && piece.getPosition().getY() == 1) {
+                promotion(piece);
+            }
+        }
 
+
+    }
+
+    public void promotion(Piece piece) {
+        int x = piece.getPosition().getX();
+        int y = piece.getPosition().getY();
+        Piece queen = new Queen(piece.convertToDB(), this);
+        queen.setPieceType(PieceType.QUEEN);
+        piece.setPosition(new Vector(0,0));
+        board[x][y] = queen;
     }
 
     // Effective castling, king and rook get on their new position
@@ -317,10 +346,6 @@ public class Board {
         return false;
     }
 
-    // TODO: implement a check for stalemate
-    public void checkForStalemate() {
-        Piece king = getColorsKing(Color.WHITE);
-    }
 
     public Board copyBoard() {
         Board boardCopy = new Board();

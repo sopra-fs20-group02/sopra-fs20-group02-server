@@ -232,6 +232,7 @@ public class GameService {
         List<Piece> pieces = this.board.getPieces();
         for (Piece piece : pieces) {
             PieceDB pieceDB = pieceRepository.findByPieceId(piece.getPieceId());
+            pieceDB.setPieceType(piece.getPieceType());
             pieceDB.setXCord(piece.getPosition().getX());
             pieceDB.setYCord(piece.getPosition().getY());
             pieceDB.setCaptured(piece.getCaptured());
