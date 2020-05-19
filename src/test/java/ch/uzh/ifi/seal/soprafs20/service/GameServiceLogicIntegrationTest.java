@@ -113,12 +113,9 @@ public class GameServiceLogicIntegrationTest {
 
     @Test
     public void foolsMate() {
-        User playerWhite = this.game.getPlayerWhite();
-        User playerBlack = this.game.getPlayerBlack();
-
         Long id = this.game.getGameId();
 
-        Boolean found = false;
+        boolean found = false;
         // first move
         for (PieceDB pieceDB : game.getPieces()){
             if (pieceDB.getYCord() == 2 && pieceDB.getXCord() == 6){
@@ -128,7 +125,7 @@ public class GameServiceLogicIntegrationTest {
                 found = true;
             }
         }
-        assertEquals(true, found);
+        assertTrue(found);
         found = false;
         // second move
         for (PieceDB pieceDB : game.getPieces()){
@@ -139,7 +136,7 @@ public class GameServiceLogicIntegrationTest {
                 found = true;
             }
         }
-        assertEquals(true, found);
+        assertTrue(found);
         found = false;
         // third move
         for (PieceDB pieceDB : game.getPieces()){
@@ -150,7 +147,7 @@ public class GameServiceLogicIntegrationTest {
                 found = true;
             }
         }
-        assertEquals(true, found);
+        assertTrue(found);
         found = false;
         // fourth move
         for (PieceDB pieceDB : game.getPieces()){
@@ -161,8 +158,7 @@ public class GameServiceLogicIntegrationTest {
                 found = true;
             }
         }
-        assertEquals(true, found);
-        found = false;
+        assertTrue(found);
         assertEquals(GameStatus.WON,gameService.findGameByGameId(id).getGameStatus());
     }
 

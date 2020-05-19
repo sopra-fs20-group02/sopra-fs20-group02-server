@@ -7,7 +7,6 @@ import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -22,12 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DTOMapperTest {
 
     @Test
-    @Order(0)
     public void testCreateUser_fromUserPostDTO_toUser_success() {
         // create UserPostDTO
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("username");
-        userPostDTO.setPassword("tespassword");
+        userPostDTO.setPassword("testPassword");
         userPostDTO.setBirthDate("00/00/00");
         userPostDTO.setToken("1");
 
@@ -42,7 +40,6 @@ public class DTOMapperTest {
     }
 
     @Test
-    @Order(1)
     public void testGetUser_fromUser_toUserGetDTO_success() {
         // create User
         User user = new User();
@@ -68,7 +65,6 @@ public class DTOMapperTest {
     }
 
     @Test
-    @Order(2)
     public void testGetUser_fromUser_toUserLoginDTO_success() {
         // create User
         User user = new User();
@@ -82,7 +78,6 @@ public class DTOMapperTest {
     }
 
     @Test
-    @Order(3)
     public void testGetUser_fromUser_toUserProfileDTO_success() {
         // create User
         User user = new User();
@@ -106,7 +101,6 @@ public class DTOMapperTest {
     }
 
     @Test
-    @Order(4)
     public void testGetGame_fromGame_toGameGetDTO_success() {
         // Create Users
         User user1 = new User();

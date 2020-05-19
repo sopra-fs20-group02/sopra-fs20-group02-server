@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VectorTest {
@@ -20,7 +18,6 @@ public class VectorTest {
     }
 
     @Test
-    @Order(0)
     public void setVectorTest() {
         vector1.set(vector2);
         assertEquals(vector1.getX(),2 );
@@ -28,7 +25,6 @@ public class VectorTest {
     }
 
     @Test
-    @Order(1)
     public void setCordVectorTest() {
         vector1.set(2,2);
         assertEquals(vector1.getX(),2 );
@@ -36,7 +32,6 @@ public class VectorTest {
     }
 
     @Test
-    @Order(2)
     public void addVectorTest() {
         vector1.add(vector2);
         assertEquals(vector1.getX(),3 );
@@ -44,7 +39,6 @@ public class VectorTest {
     }
 
     @Test
-    @Order(3)
     public void addCordVectorTest() {
         vector1.add(2,2);
         assertEquals(vector1.getX(),3 );
@@ -52,7 +46,6 @@ public class VectorTest {
     }
 
     @Test
-    @Order(4)
     public void mulSVectorTest() {
         vector1.mulS(3);
         assertEquals(vector1.getX(),3 );
@@ -60,32 +53,27 @@ public class VectorTest {
     }
 
     @Test
-    @Order(5)
     public void checkBoundsTest_True() {
         assertTrue(vector2.checkBounds());
     }
 
     @Test
-    @Order(6)
     public void checkBoundsTest_False() {
         Vector vector3 =new Vector(0,0);
         assertFalse(vector3.checkBounds());
     }
 
     @Test
-    @Order(7)
     public void getXCord() {
         assertEquals(vector1.getX(), 1);
     }
 
     @Test
-    @Order(8)
     public void getYCord() {
         assertEquals(vector1.getY(),1);
     }
 
     @Test
-    @Order(9)
     public void initFromVector() {
         Vector vector3 = new Vector(vector1);
         assertEquals(vector3.getX(),vector1.getX() );
