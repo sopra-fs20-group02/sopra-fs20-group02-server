@@ -4,7 +4,10 @@ import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.PieceType;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
-import ch.uzh.ifi.seal.soprafs20.logic.pieces.*;
+import ch.uzh.ifi.seal.soprafs20.exceptions.PieceNotInGameException;
+import ch.uzh.ifi.seal.soprafs20.logic.pieces.King;
+import ch.uzh.ifi.seal.soprafs20.logic.pieces.Pawn;
+import ch.uzh.ifi.seal.soprafs20.logic.pieces.Rook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BoardTest {
 
@@ -20,6 +24,7 @@ public class BoardTest {
     King king;
     Rook rook1;
     Rook rook2;
+    Pawn capturedPawn;
 
     @BeforeEach
     public void setup() {
@@ -35,6 +40,7 @@ public class BoardTest {
         pieceDB.setPieceId((long) 1);
         pieceDB.setColor(Color.WHITE);
         pieceDB.setHasMoved(false);
+        pieceDB.setCaptured(false);
 
         PieceDB rookDB1 = new PieceDB();
         rookDB1.setXCord(1);
@@ -43,6 +49,7 @@ public class BoardTest {
         rookDB1.setPieceId((long) 2);
         rookDB1.setColor(Color.WHITE);
         rookDB1.setHasMoved(false);
+        rookDB1.setCaptured(false);
 
         PieceDB rookDB2 = new PieceDB();
         rookDB2.setXCord(8);
@@ -51,11 +58,22 @@ public class BoardTest {
         rookDB2.setPieceId((long) 3);
         rookDB2.setColor(Color.WHITE);
         rookDB2.setHasMoved(false);
+        rookDB2.setCaptured(false);
+
+        PieceDB captured = new PieceDB();
+        captured.setXCord(0);
+        captured.setYCord(0);
+        captured.setPieceType(PieceType.PAWN);
+        captured.setPieceId((long) 4);
+        captured.setColor(Color.WHITE);
+        captured.setHasMoved(false);
+        captured.setCaptured(true);
 
         List<PieceDB> pieces = new ArrayList<>();
         pieces.add(pieceDB);
         pieces.add(rookDB1);
         pieces.add(rookDB2);
+        pieces.add(captured);
 
         this.game.setPieces(pieces);
         this.board.setGame(this.game);
@@ -63,11 +81,12 @@ public class BoardTest {
         this.king = new King(pieceDB, this.board);
         this.rook1 = new Rook(rookDB1, this.board);
         this.rook2 = new Rook(rookDB2, this.board);
+        this.capturedPawn = new Pawn(captured, this.board);
     }
 
     @Test
     public void emptyBoardTest() {
-        assertEquals(3,this.board.getPieces().size());
+        assertEquals(4,this.board.getPieces().size());
         this.board.emptyBoard();
         assertEquals(0,this.board.getPieces().size());
     }
@@ -90,6 +109,16 @@ public class BoardTest {
     public void getByIdTest() {
         assertEquals(this.king.getPieceType(), this.board.getById((long) 1).getPieceType());
         assertEquals(this.rook1.getPieceType(), this.board.getById((long) 2).getPieceType());
+        assertEquals(this.rook2.getPieceType(), this.board.getById((long) 3).getPieceType());
+        assertEquals(this.capturedPawn.getPieceType(), this.board.getById((long) 4).getPieceType());
+    }
+
+    @Test
+    public void getByIdTest_PieceNotInGameException() {
+        assertThrows(
+                PieceNotInGameException.class,
+                () -> board.getById(5L)
+        );
     }
 
     @Test
@@ -120,5 +149,7 @@ public class BoardTest {
         ArrayList<Vector> possibleCastling = this.board.checkForCastle(king.getPieceId());
         assertEquals(possibleCastling, expectedCastling);
     }
+
+
 
 }
