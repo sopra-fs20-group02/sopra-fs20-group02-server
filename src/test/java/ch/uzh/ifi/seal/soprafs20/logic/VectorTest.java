@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.logic;
 
+import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,6 +78,12 @@ public class VectorTest {
         Vector vector3 = new Vector(vector1);
         assertEquals(vector3.getX(),vector1.getX() );
         assertEquals(vector3.getX(), vector1.getY());
+    }
+
+    @Test
+    public void equalsVectorTest() {
+        assertTrue(vector1.equals(vector1));
+        assertFalse(vector1.equals(new PieceDB()));
     }
 
 
