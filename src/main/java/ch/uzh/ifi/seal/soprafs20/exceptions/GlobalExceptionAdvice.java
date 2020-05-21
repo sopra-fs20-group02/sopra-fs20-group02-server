@@ -75,13 +75,6 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     // TODO: needs to be tested
-    @ExceptionHandler(InvalidMoveException.class)
-    public ResponseEntity handleInvalidMoveException (Exception ex) {
-        log.error(String.format("InvalidMoveException raised:%s", ex));
-        return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    // TODO: needs to be tested
     @ExceptionHandler(JoinGameException.class)
     public ResponseEntity handelJoinGameException (Exception ex) {
         log.error(String.format("JoinGameException raised:%s", ex));
