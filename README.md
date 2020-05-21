@@ -8,6 +8,10 @@ functionality. The main focus was implementing our own chess engine where all po
 be fetched from the backend and displayed to the user. This enables users with less knowledge about
 the game to perform better. 
 
+## Technologies
+
+Spring, WebSocket, Lombock
+
 ## High-Level components
 
 ### [Board](https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/logic/Board.java)
