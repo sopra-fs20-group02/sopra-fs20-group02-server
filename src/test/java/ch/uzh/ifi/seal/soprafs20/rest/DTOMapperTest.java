@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
+import ch.uzh.ifi.seal.soprafs20.entity.UserStats;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.junit.jupiter.api.Test;
@@ -87,6 +88,8 @@ public class DTOMapperTest {
         user.setBirthDate("00/00/0000");
         user.setUserId(1L);
         user.setCreationDate("11/11/1111");
+        UserStats userStats = new UserStats();
+        user.setUserStats(userStats);
 
         // MAP -> Create UserProfileDTO
         UserProfileDTO userProfileDTO = DTOMapper.INSTANCE.convertEntityToUserProfileDTO(user);
@@ -98,6 +101,7 @@ public class DTOMapperTest {
         assertEquals(user.getToken(), userProfileDTO.getToken());
         assertEquals(user.getBirthDate(), userProfileDTO.getBirthDate());
         assertEquals(user.getCreationDate(), userProfileDTO.getCreationDate());
+        assertEquals(user.getUserStats(), userProfileDTO.getUserStats());
     }
 
     @Test
