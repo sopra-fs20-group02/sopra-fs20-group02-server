@@ -30,7 +30,7 @@ with the specified id.
 
 ### [Piece](https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/logic/Piece.java)
 
-From the abstract class Piece all the specific piece classes are derived. They contain information about
+From the abstract class ``Piece`` all the specific piece classes are derived, namely King, Queen, Rook, Pawn, Bishop and Knight. They contain information about
 the piece's specific freedoms in movement and cover special cases which need to be considered. For example
 the pawn class needs to set its ``movementSteps`` field to 1 after completing its first move. Since the pawn
 can walk 2 tiles but only in the very first move, which makes it along with the Kind and the Rook the only 
@@ -38,10 +38,10 @@ pieces which have different freedoms in movement in different stages of the game
 
 ### [Vector](https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/logic/Vector.java)
 
-We designed a vector class specificially for the task to simplify the game logic. The vectors are constricted
+We designed a vector class specificially for this game in order to simplify the game logic. The vectors are constricted
 between (1,1) and (8,8), since the game board only consists of 8x8 tiles. It has different basic methods such as:
 ``add`` which will add another vector, ``mulS`` which multiplies the its current x and y components by a integer 
-scalar.
+scalar. The vector class is used in the ``Piece`` and ``Board`` class.
 
 ### [GameService](https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/service/GameService.java)
 
