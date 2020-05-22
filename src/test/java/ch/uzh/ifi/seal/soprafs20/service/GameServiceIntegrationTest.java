@@ -1,14 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
+import ch.uzh.ifi.seal.soprafs20.constant.Color;
 import ch.uzh.ifi.seal.soprafs20.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.Game;
 import ch.uzh.ifi.seal.soprafs20.entity.PieceDB;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
-import ch.uzh.ifi.seal.soprafs20.exceptions.JoinGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.LeaveGameException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.MakeMoveException;
-import ch.uzh.ifi.seal.soprafs20.exceptions.NotFoundException;
+import ch.uzh.ifi.seal.soprafs20.exceptions.*;
+import ch.uzh.ifi.seal.soprafs20.logic.Piece;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PieceRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
@@ -21,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -172,6 +173,42 @@ public class GameServiceIntegrationTest {
                 }
         );
     }
+
+    @Test
+    public void makeMove_OthersTurnException() {
+        Game game = gameService.createNewGame(playerA);
+        gameService.joinGame(playerB, game);
+
+        game.setPlayerWhite(playerA);
+        game.setPlayerBlack(playerB);
+
+        // default pieceId
+        Long pieceId = 1L;
+        int x = 1;
+        int y = 4;
+
+        List<PieceDB> pieces = game.getPieces();
+        for (PieceDB pieceDB: pieces) {
+            if (pieceDB.getColor() == Color.BLACK) {
+                pieceId = pieceDB.getPieceId();
+            }
+        }
+
+        Long finalPieceId = pieceId;
+        assertThrows(
+                OthersTurnException.class,
+                () -> {
+                    gameService.makeMove(game.getGameId(), finalPieceId, x,y);
+                }
+        );
+    }
+
+    @Test
+    public void makeMove_InvalidMoveException() {
+
+    }
+
+
 
     @Test
     public void leaveGame_validInput_success() {

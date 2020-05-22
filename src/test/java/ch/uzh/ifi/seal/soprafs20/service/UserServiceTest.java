@@ -82,4 +82,34 @@ public class UserServiceTest {
         assertEquals(exceptionMessage, exception.getMessage());
     }
 
+    @Test
+    public void updateUser_success() {
+        User userInput = new User();
+        userInput.setBirthDate("1111");
+        userInput.setUsername("testUsername2");
+        Long userId = 1L;
+
+        Mockito.when(userRepository.findByUserId(Mockito.anyLong())).thenReturn(testUser);
+
+        userService.updateUser(userId, userInput);
+
+        assertEquals(testUser.getUserId(), userId);
+        assertEquals(testUser.getBirthDate(), userInput.getBirthDate());
+        assertEquals(testUser.getUsername(), userInput.getUsername());
+    }
+
+    @Test
+    public void logoutUserTest() {
+        User userInput = new User();
+        userInput.setUserId(1L);
+
+        Mockito.when(userRepository.findByUserId(Mockito.anyLong())).thenReturn(testUser);
+
+        userService.logoutUser(userInput);
+
+
+        assertEquals(testUser.getUserId(), userInput.getUserId());
+        assertEquals(testUser.getStatus(), UserStatus.OFFLINE);
+    }
+
 }
