@@ -1,3 +1,18 @@
+<p>
+  <a href="https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/actions">
+      <img src="https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/workflows/Deploy%20Project/badge.svg">
+  </a>
+  <a href="https://heroku-badge.herokuapp.com/?app=sopra-fs20-group-02-server">
+      <img src="https://heroku-badge.herokuapp.com/?app=sopra-fs20-group-02-server">
+  </a>
+  <a href="https://sonarcloud.io/dashboard?id=sopra-fs20-group02_sopra-fs20-group02-server">
+      <img src="https://sonarcloud.io/api/project_badges/measure?project=sopra-fs20-group02_sopra-fs20-group02-server&metric=alert_status">
+  </a>
+  <a href="https://sonarcloud.io/dashboard?id=sopra-fs20-group02_sopra-fs20-group02-server">
+      <img src="https://sonarcloud.io/api/project_badges/measure?project=sopra-fs20-group02_sopra-fs20-group02-server&metric=coverage">
+  </a>
+</p>
+
 # Jess
 
 ## Introduction
@@ -45,9 +60,60 @@ scalar. The vector class is used in the ``Piece`` and ``Board`` class.
 
 ### [GameService](https://github.com/sopra-fs20-group02/sopra-fs20-group02-server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/service/GameService.java)
 
-//TODO
+The GameService is the connecting piece between the JPA Database, the game logic and the GameController, which handles
+all the REST requests related to the game. If a REST request is made, the GameService fetches the corresponding game
+from the database, gives it to the board where it is processed according to the request and then saves the data back to
+the database. It has different functionalities, like createNewGame, joinGame or makeMove.
 
 ## Launch & Deployment
+#### Get started
+1. Download an IDE (e.g., Eclipse, IntelliJ)
+2. Make sure you have Java 13 installed on your system
+3. Clone the github repository
+    ```
+    $ git clone git@github.com:sopra-fs20-group02/sopra-fs20-group02-server.git
+    ```
+4. Open the project with your IDE
+5. Build: right click the ``build.gradle`` file and choose ``Run Build``
 
-// TODO
+#### Run backend
+To run the project locally you can start the backend in the development mode:
+1. Open two terminal windows
+2. Navigate in both windows to the project folder
+3. Run in on window
+    ```
+    ./gradlew build –continuous
+    ```
+    or  if you want to avoid running all tests with every change
+    ```
+    ./gradlew build --continuous -xtest
+    ```
+4. Run in the other terminal
+    ```
+    ./gradlew bootRun
+    ``` 
+   
+With every push to the master branch the project gets automatically deployed to Heroku.
+Please find it under the following URL:
+
+http://sopra-fs20-group-02-server.herokuapp.com/
+
+
+## Roadmap
+* add a chess bot
+* extend the game with some more game modes
+* offer the possibility to set the level of support that the game provides to the player
+
+## Authors
+[Andrin Rehmann](https://github.com/andrinr) <br/>
+[Dominic Schmidli](https://github.com/dschmidli) <br/>
+[Michael Hodel](https://github.com/michaelhodel) <br/>
+[Philippe Schmidli](https://github.com/pschmidli)
+
+## Acknowledgement
+Thanks to group 2 for creating such a great and nice game. Special thanks to our tutor [Moritz Eck](https://github.com/meck93) who provided support
+and valuable feedback in all phases of our project. We all learned a lot and are looking forward to challenging each other in Jess.
+
+## License
+This project is licensed under the Apache License - see the [LICENSE.md](LICENSE.md) file for details.
 
