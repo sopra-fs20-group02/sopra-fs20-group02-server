@@ -114,3 +114,4 @@ and valuable feedback in all phases of our project. We all learned a lot and are
 ## License
 This project is licensed under the Apache License - see the [LICENSE.md](LICENSE.md) file for details.
 
+> © by SoPra-FS20-Group02
