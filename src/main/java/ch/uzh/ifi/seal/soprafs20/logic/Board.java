@@ -113,7 +113,7 @@ public class Board {
                     possibleMoves.addAll(possibleCastling);
                 }
             }
-            // king cannot capture capture a piece that protects him
+            // king cannot capture capture a piece that is protected by another piece
             for (Vector move : possibleMoves) {
                 Board copiedBoard = this.copyBoard();
                 copiedBoard.makeMove(piece.getPieceId(), move);
@@ -219,13 +219,6 @@ public class Board {
     public void makeMove(Long pieceId, Vector moveTo){
         Piece piece = getById(pieceId);
         boolean hasCastled = false;
-
-        // check for valid move
-        /*ArrayList<Vector> possibleMoves = getPossibleMoves(pieceId);
-        if (!possibleMoves.contains(moveTo)) {
-            throw new InvalidMoveException("This piece can not move to the desired position");
-        }*/
-
 
 
         Piece captured = this.getPieceOnTile(moveTo);

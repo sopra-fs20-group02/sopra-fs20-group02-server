@@ -278,7 +278,7 @@ public class GameServiceIntegrationTest {
         assertEquals(false, gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw());
         assertEquals(false, gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
 
-        gameService.draw(game.getGameId(),playerA.getUserId());
+        gameService.offerOrAcceptDraw(game.getGameId(),playerA.getUserId());
         assertTrue(gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() ||
                 gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
 
@@ -287,7 +287,7 @@ public class GameServiceIntegrationTest {
 
         assertEquals(GameStatus.FULL, gameService.findGameByGameId(game.getGameId()).getGameStatus());
 
-        gameService.draw(game.getGameId(),playerB.getUserId());
+        gameService.offerOrAcceptDraw(game.getGameId(),playerB.getUserId());
         assertTrue(gameService.findGameByGameId(game.getGameId()).getWhiteOffersDraw() &&
                 gameService.findGameByGameId(game.getGameId()).getBlackOffersDraw());
         assertEquals(GameStatus.DRAW, gameService.findGameByGameId(game.getGameId()).getGameStatus());

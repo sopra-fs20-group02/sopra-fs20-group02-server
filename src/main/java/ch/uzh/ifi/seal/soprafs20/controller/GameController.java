@@ -141,15 +141,6 @@ public class GameController {
         return gameService.getGameHistory(userId);
     }
 
-    //offer draw
-    @PostMapping(value = "/games/{gameId}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public GameGetDTO offerDraw(@PathVariable("gameId") Long gameId, @RequestBody UserPostDTO userPostDTO) {
-        Game game = gameService.draw(gameId, userPostDTO.getUserId());
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
-    }
-
     @PostMapping(value = "/games/{gameId}/draw")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

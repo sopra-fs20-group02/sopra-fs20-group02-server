@@ -72,7 +72,6 @@ public abstract class Piece {
     }
 
     public ArrayList<Vector> getPossibleMoves(){
-        // TODO: test this !!
         ArrayList<Vector> possibleMoves = new ArrayList<>();
         for (Vector vector : movementVectors){
             for (int i = 1; i <= this.movementSteps; i++) {

@@ -115,7 +115,6 @@ public class GameService {
         return newGame;
     }
 
-    // TODO: add option to cancel game searching mode
 
     public void joinGame(User userInput, Game game){
         checkIfUserIsAllowedToJoinOrCreateGame(userInput);
@@ -297,7 +296,6 @@ public class GameService {
         if (!(game.getGameStatus() == GameStatus.FULL
                 || game.getGameStatus() == GameStatus.WHITE_IN_CHECK
                 || game.getGameStatus() == GameStatus.BLACK_IN_CHECK)){
-            // TODO: specific exception
             throw new SopraServiceException("Game is either finished or hasn't started yet");
         }
         this.board.setGame(game);
@@ -383,7 +381,7 @@ public class GameService {
         userStatsRepository.flush();
     }
 
-    //Todo: update gameStats - time
+
     private void endGame(Game game, GameStatus gameStatus) {
         game.setGameStatus(gameStatus);
         User playerBlack = findUserByUserId(game.getPlayerBlack().getUserId());
@@ -449,40 +447,6 @@ public class GameService {
         gameRepository.flush();
     }
 
-    //Todo: Delete this function as soon as it is not needed anymore
-    public Game draw(Long gameId, Long userId) {
-        Game game = findGameByGameId(gameId);
-        User playerWhite = game.getPlayerWhite();
-        User playerBlack = game.getPlayerBlack();
-
-        // if white player offers draw
-        if (playerWhite.getUserId().equals(userId)) {
-            if (game.getBlackOffersDraw()) {
-                game.setWhiteOffersDraw(!game.getWhiteOffersDraw());
-                endGame(game, GameStatus.DRAW);
-            }
-            else {
-                game.setWhiteOffersDraw(!game.getWhiteOffersDraw());
-            }
-            gameRepository.save(game);
-            gameRepository.flush();
-        }
-
-        // if black player offers draw
-        else if (playerBlack.getUserId().equals(userId)) {
-            if (game.getWhiteOffersDraw()) {
-                game.setBlackOffersDraw(!game.getBlackOffersDraw());
-                endGame(game, GameStatus.DRAW);
-            }
-            else {
-                game.setBlackOffersDraw(!game.getBlackOffersDraw());
-            }
-            gameRepository.save(game);
-            gameRepository.flush();
-        }
-
-        return game;
-    }
 
     public Game offerOrAcceptDraw(Long gameId, Long userId) {
         Game game = findGameByGameId(gameId);

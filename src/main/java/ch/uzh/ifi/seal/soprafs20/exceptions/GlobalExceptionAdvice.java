@@ -67,14 +67,12 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // TODO: needs to be tested
     @ExceptionHandler(PieceNotInGameException.class)
     public ResponseEntity handlePieceNotInGameException (Exception ex) {
         log.error(String.format("PieceNotInGameException raised:%s", ex));
         return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    // TODO: needs to be tested
     @ExceptionHandler(JoinGameException.class)
     public ResponseEntity handelJoinGameException (Exception ex) {
         log.error(String.format("JoinGameException raised:%s", ex));

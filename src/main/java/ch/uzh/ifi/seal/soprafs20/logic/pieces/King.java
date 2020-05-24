@@ -42,55 +42,6 @@ public class King extends Piece {
             }
         }
 
-        //ArrayList<Vector> possibleMovesNoSuicide = new ArrayList<>();
-        //List<Piece> pieces = this.board.getPieces();
-
-        // May be slow !
-        // TODO: king suicide
-        /*for (Vector myMove : possibleMoves){
-            boolean valid = true;
-            for (Piece piece : pieces){
-                // only check for non-captured pieces
-                if(!piece.getCaptured()) {
-                    // only check for opponent moves
-                    if (piece.getColor() != this.getColor() && piece.getPieceType() != PieceType.KING){
-                        // special case for PAWN
-                        if (piece.getPieceType() == PieceType.PAWN) {
-                            // only check capture moves
-                            // add capture moves manually, because pawn can not capture an empty tile
-                            Pawn pawn = (Pawn) piece;
-                            for (Vector otherMove : pawn.getCaptureMoves()) {
-                                if (otherMove.equals(myMove)) {
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                        }
-                        else {
-                            for (Vector otherMove : piece.getPossibleMoves()){
-                                if (otherMove.equals(myMove)){
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    // special case for opponents KING --> otherwise loop occurs
-                    else if (piece.getColor() != this.getColor() && piece.getPieceType() == PieceType.KING) {
-                        for ( Vector otherMove: piece.getMovementVectors()) {
-                            if (otherMove.add(piece.getPosition()).equals(myMove)) {
-                                valid = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (valid){
-                possibleMovesNoSuicide.add(myMove);
-            }
-        }*/
-
         return possibleMoves;
     };
 }
