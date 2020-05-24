@@ -97,9 +97,11 @@ http://sopra-fs20-group-02-server.herokuapp.com/
 
 
 ## Roadmap
-* Chess Engine: Add a chess bot
-* More game modes: Extend the game with some more game modes
-* Level of support: Offer the possibility to set the level of support that the game provides to the player
+- Chess Engine: The possibility to play against a chess bot.
+- More game modes: Extend the game with some more game modes.
+- Level of support: Offer the possibility to set the level of support that the game provides to the player.
+- Last Moves Feed: Display the last n moves.
+- Replay Game History: Feature that allows replaying a game (as an animation).
 
 ## Authors
 [Andrin Rehmann](https://github.com/andrinr) <br/>
