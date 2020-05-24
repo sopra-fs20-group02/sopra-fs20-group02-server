@@ -17,15 +17,20 @@
 
 ## Introduction
 
-We aimed to create a state of the art online mutliplayer chess game where users can easily create
-and join games with different rules. Besides there is a extensive user statistics page and a chat 
+We aimed to create a state of the art online mutliplayer chess game, called Jess, where users can easily create
+and join games with different rules. Besides, there is an extensive user statistics page and a chat 
 functionality. The main focus was implementing our own chess engine where all possible moves can 
 be fetched from the backend and displayed to the user. This enables users with less knowledge about
 the game to perform better. 
 
 ## Technologies
-
-Spring, WebSocket, Lombock
+* Spring
+* WebSocket
+* Lombok
+* Github
+* Heroku
+* SonarQube
+* Java
 
 ## High-Level components
 
@@ -81,17 +86,11 @@ To run the project locally you can start the backend in the development mode:
 1. Open two terminal windows
 2. Navigate in both windows to the project folder
 3. Run in on window
-    ```
-    ./gradlew build –continuous
-    ```
+    #### `./gradlew build –continuous`
     or  if you want to avoid running all tests with every change
-    ```
-    ./gradlew build --continuous -xtest
-    ```
+    #### `./gradlew build --continuous -xtest`
 4. Run in the other terminal
-    ```
-    ./gradlew bootRun
-    ``` 
+    #### `./gradlew bootRun`
    
 With every push to the master branch the project gets automatically deployed to Heroku.
 Please find it under the following URL:
